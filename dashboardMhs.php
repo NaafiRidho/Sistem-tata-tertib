@@ -6,6 +6,9 @@
   <title>Si Tertib Dashboard</title>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
   <style>
     body {
       margin: 0;
@@ -38,6 +41,7 @@
     .menu a {
       display: flex;
       align-items: center;
+      gap: 10px; 
       color: white;
       padding: 15px 20px;
       text-decoration: none;
@@ -114,13 +118,13 @@
 <div class="sidebar">
   <div class="menu">
     <h2>Si Tertib</h2>
-    <a href="dashboardMhs.php"><i class="bi bi-house"></i> Dashboard</a>
+    <a href="dashboardMhs.php"><i class="bbi bi-columns-gap"></i> Dashboard</a>
     <a href="laporanMhs.php"><i class="bi bi-file-text"></i> Laporan</a>
-    <a href="#punishment"><i class="bi bi-gavel"></i> Punishment</a>
-    <a href="#history"><i class="bi bi-clock-history"></i> History Pelanggaran</a>
+    <a href="punishmentMhs.php"><i class="bi bi-exclamation-circle"></i> Punishment</a>
+    <a href="historyMhs.php"><i class="bi bi-clock-history"></i> History Pelanggaran</a>
   </div>
   <div class="logout">
-    <a href="#logout"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
   </div>
 </div>
 
@@ -128,7 +132,7 @@
 <div class="content">
   <h1>Dashboard</h1>
   <div>
-    <p style="font-size: 1.3rem; font-weight: bold; text-align: center; margin-bottom: 5px;">Selamat Datang Mahasiswa</p>
+    <p style="font-size: 1.3rem; font-weight: bold; text-align: center; margin-bottom: 5px;">Selamat Datang Abhinaya Nuzuluzzuhdi</p>
     <p style="text-align: center; margin-bottom: 20px;">Sistem Tata Tertib</p>
   </div>
 
@@ -136,15 +140,15 @@
   <div class="dashboard-card">
     <div class="card">
       <h3>Laporan</h3>
-      <a href="#laporan-details" class="btn btn-primary">Rincian &gt;&gt;</a>
+      <a href="laporanMhs.php" class="btn btn-primary">Rincian &gt;&gt;</a>
     </div>
     <div class="card">
       <h3>Punishment</h3>
-      <a href="#punishment-details" class="btn btn-primary">Rincian &gt;&gt;</a>
+      <a href="punishmentMhs.php" class="btn btn-primary">Rincian &gt;&gt;</a>
     </div>
     <div class="card">
       <h3>History Pelanggaran</h3>
-      <a href="#history-details" class="btn btn-primary">Rincian &gt;&gt;</a>
+      <a href="historyMhs.php" class="btn btn-primary">Rincian &gt;&gt;</a>
     </div>
   </div>
 
@@ -176,11 +180,7 @@
 <script>
   // Data pelanggaran dengan tingkat pelanggaran 5 (ringan) hingga 1 (berat)
   const dataPelanggaran = [
-    { nomor: 1, pelanggaran: "Terlambat Masuk Kelas", tingkat: 5 },
-    { nomor: 2, pelanggaran: "Tidak Mengumpulkan Tugas", tingkat: 4 },
-    { nomor: 3, pelanggaran: "Tidak Memakai Seragam", tingkat: 3 },
-    { nomor: 4, pelanggaran: "Tidak Mengikuti Upacara", tingkat: 2 },
-    { nomor: 5, pelanggaran: "Membawa Barang Terlarang", tingkat: 1 },
+    { nomor: 1, pelanggaran: "Melakukan tindakan kekerasan atau perkelahian di dalam kampus", tingkat: 2 },
   ];
 
   const table = document.getElementById('pelanggaran-table');
