@@ -6,6 +6,8 @@
   <title>Laporan Si Tertib</title>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -38,6 +40,7 @@
     .menu a {
       display: flex;
       align-items: center;
+      gap: 10px;
       color: white;
       padding: 15px 20px;
       text-decoration: none;
@@ -46,14 +49,21 @@
       transition: all 0.3s;
     }
 
+    .menu a.active {
+      background-color: #0056b3;
+      border-left: 5px solid #ffcc00;
+    }
+
     .menu a:hover {
       background-color: #0056b3;
       border-left: 5px solid #ffcc00;
     }
 
     .logout a {
-      display: block;
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px; /* Jarak antara ikon dan teks */
       color: white;
       padding: 10px;
       font-size: 1rem;
@@ -97,16 +107,15 @@
 <div class="sidebar">
   <div class="menu">
     <h2>Si Tertib</h2>
-    <a href="dashboardMhs.php"><i class="bi bi-house"></i> Dashboard</a>
+    <a href="dashboardMhs.php"><i class="bi bi-columns-gap"></i> Dashboard</a>
     <a href="laporanMhs.php" class="active"><i class="bi bi-file-text"></i> Laporan</a>
-    <a href="#punishment"><i class="bi bi-gavel"></i> Punishment</a>
-    <a href="#history"><i class="bi bi-clock-history"></i> History Pelanggaran</a>
+    <a href="punishmentMhs.php"><i class="bi bi-exclamation-circle"></i> Punishment</a>
+    <a href="historyMhs.php"><i class="bi bi-clock-history"></i> History Pelanggaran</a>
   </div>
   <div class="logout">
     <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
   </div>
 </div>
-
 
 <div class="content">
   <h2>Laporan</h2>
@@ -131,10 +140,10 @@
           <tr>
             <td>1</td>
             <td>Ekojono, ST., M.Kom</td>
-            <td>Merokok di luar area kawasan merokok</td>
-            <td>III</td>
-            <td>19/11/2023</td>
-            <td>Membuat surat pernyataan tidak mengulangi perbuatan tersebut, ditandatangani mahasiswa yang bersangkutan dan DPA.</td>
+            <td>Merusak sarana dan prasarana yang ada di area Polinema</td>
+            <td>II</td>
+            <td>21/11/2024</td>
+            <td>Teguran tertulis, surat pernyataan tidak mengulangi perbuatan tersebut dengan dibubuhi matrai dan tanda tagan mahasiswa dan DPA.</td>
             <td>
               <img src="bukti1.jpg" alt="Bukti">
               <br>
