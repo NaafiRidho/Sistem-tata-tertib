@@ -114,15 +114,16 @@
 <div class="sidebar">
   <div class="menu">
     <h2>Si Tertib</h2>
-    <a href="#dashboard"><i class="bi bi-house"></i>Dashboard</a>
-    <a href="#laporan"><i class="bi bi-file-text"></i>Laporan</a>
-    <a href="#punishment"><i class="bi bi-gavel"></i>Punishment</a>
-    <a href="#history"><i class="bi bi-clock-history"></i>History Pelanggaran</a>
+    <a href="dashboardMhs.php"><i class="bi bi-house"></i> Dashboard</a>
+    <a href="laporanMhs.php"><i class="bi bi-file-text"></i> Laporan</a>
+    <a href="#punishment"><i class="bi bi-gavel"></i> Punishment</a>
+    <a href="#history"><i class="bi bi-clock-history"></i> History Pelanggaran</a>
   </div>
   <div class="logout">
     <a href="#logout"><i class="bi bi-box-arrow-right"></i> Logout</a>
   </div>
 </div>
+
 
 <div class="content">
   <h1>Dashboard</h1>
