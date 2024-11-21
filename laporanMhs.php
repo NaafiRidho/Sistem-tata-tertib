@@ -97,15 +97,16 @@
 <div class="sidebar">
   <div class="menu">
     <h2>Si Tertib</h2>
-    <a href="#dashboard"><i class="bi bi-house"></i>Dashboard</a>
-    <a href="#laporan"><i class="bi bi-file-text"></i>Laporan</a>
-    <a href="#punishment"><i class="bi bi-gavel"></i>Punishment</a>
-    <a href="#history"><i class="bi bi-clock-history"></i>History Pelanggaran</a>
+    <a href="dashboardMhs.php"><i class="bi bi-house"></i> Dashboard</a>
+    <a href="laporanMhs.php" class="active"><i class="bi bi-file-text"></i> Laporan</a>
+    <a href="#punishment"><i class="bi bi-gavel"></i> Punishment</a>
+    <a href="#history"><i class="bi bi-clock-history"></i> History Pelanggaran</a>
   </div>
   <div class="logout">
-    <a href="#logout"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
   </div>
 </div>
+
 
 <div class="content">
   <h2>Laporan</h2>
@@ -137,33 +138,29 @@
             <td>
               <img src="bukti1.jpg" alt="Bukti">
               <br>
-              <a href="#" class="btn-detail">Lihat Detail</a>
-            </td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Annisa Taufika Firdausi, ST., MT</td>
-            <td>Merokok di luar area kawasan merokok</td>
-            <td>III</td>
-            <td>21/07/2024</td>
-            <td>Membuat surat pernyataan tidak mengulangi perbuatan tersebut, ditandatangani mahasiswa yang bersangkutan dan DPA.</td>
-            <td>
-              <img src="bukti2.jpg" alt="Bukti">
-              <br>
-              <a href="#" class="btn-detail">Lihat Detail</a>
+              <button class="btn-detail" data-bs-toggle="modal" data-bs-target="#modalUlasan">Lihat Detail</button>
             </td>
           </tr>
         </tbody>
       </table>
-      <div class="d-flex justify-content-between">
-        <span>Showing 1 to 2 of 2 entries</span>
-        <nav aria-label="Page navigation">
-          <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-          </ul>
-        </nav>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalUlasan" tabindex="-1" aria-labelledby="modalUlasanLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalUlasanLabel">Isi Ulasan</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <textarea class="form-control" rows="4" placeholder="Tulis ulasan Anda..."></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="btnKirim">Kirim</button>
       </div>
     </div>
   </div>
@@ -171,5 +168,10 @@
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.getElementById('btnKirim').addEventListener('click', function () {
+    alert('Ulasan berhasil dikirim');
+  });
+</script>
 </body>
 </html>
