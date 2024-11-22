@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -92,86 +93,123 @@
     }
   </style>
 </head>
+
 <body>
 
-<div class="sidebar">
-  <div class="menu">
-    <h2>Si Tertib</h2>
-    <a href="dashboardMhs.php"><i class="bi bi-house"></i> Dashboard</a>
-    <a href="laporanMhs.php" class="active"><i class="bi bi-file-text"></i> Laporan</a>
-    <a href="#punishment"><i class="bi bi-gavel"></i> Punishment</a>
-    <a href="#history"><i class="bi bi-clock-history"></i> History Pelanggaran</a>
-  </div>
-  <div class="logout">
-    <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
-  </div>
-</div>
-
-
-<div class="content">
-  <h2>Laporan</h2>
-  <div class="card">
-    <div class="card-header">
-      Laporan Dari Dosen
+  <div class="sidebar">
+    <div class="menu">
+      <h2>Si Tertib</h2>
+      <a href="dashboardMhs.php"><i class="bi bi-house"></i> Dashboard</a>
+      <a href="laporanMhs.php" class="active"><i class="bi bi-file-text"></i> Laporan</a>
+      <a href="#punishment"><i class="bi bi-gavel"></i> Punishment</a>
+      <a href="#history"><i class="bi bi-clock-history"></i> History Pelanggaran</a>
     </div>
-    <div class="card-body">
-      <table class="table table-bordered table-hover">
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>Dosen Pelapor</th>
-            <th>Pelanggaran</th>
-            <th>Tingkat</th>
-            <th>Tanggal</th>
-            <th>Sanksi</th>
-            <th>Bukti</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>Ekojono, ST., M.Kom</td>
-            <td>Merokok di luar area kawasan merokok</td>
-            <td>III</td>
-            <td>19/11/2023</td>
-            <td>Membuat surat pernyataan tidak mengulangi perbuatan tersebut, ditandatangani mahasiswa yang bersangkutan dan DPA.</td>
-            <td>
-              <img src="bukti1.jpg" alt="Bukti">
-              <br>
-              <button class="btn-detail" data-bs-toggle="modal" data-bs-target="#modalUlasan">Lihat Detail</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="logout">
+      <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
     </div>
   </div>
-</div>
 
-<!-- Modal -->
-<div class="modal fade" id="modalUlasan" tabindex="-1" aria-labelledby="modalUlasanLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalUlasanLabel">Isi Ulasan</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+  <div class="content">
+    <h2>Laporan</h2>
+    <div class="card">
+      <div class="card-header">
+        Laporan Dari Dosen
       </div>
-      <div class="modal-body">
-        <textarea class="form-control" rows="4" placeholder="Tulis ulasan Anda..."></textarea>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" id="btnKirim">Kirim</button>
+      <div class="card-body">
+        <table class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Dosen Pelapor</th>
+              <th>Pelanggaran</th>
+              <th>Tingkat</th>
+              <th>Tanggal</th>
+              <th>Sanksi</th>
+              <th>Bukti</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php
+            include "koneksi.php";
+
+            $user_id = $_COOKIE["user_id"];
+
+
+            $query = "SELECT d.nama, pl.pelanggaran, t.tingkat, CONVERT(date, p.tanggal) AS tanggal,t.sanksi ,p.[file]
+            FROM dbo.riwayat_pelaporan AS p
+            INNER JOIN dbo.mahasiswa AS m ON p.mahasiswa_id = m.mahasiswa_id
+            INNER JOIN dbo.[user] AS u ON u.user_id = m.user_id
+            INNER JOIN dbo.dosen AS d ON d.dosen_id = p.dosen_id
+            INNER JOIN dbo.tingkat AS t ON p.tingkat_id = t.tingkat_id
+            INNER JOIN dbo.pelanggaran pl ON pl.pelanggaran_id = p.pelanggaran_id
+            WHERE u.user_id = ?";
+
+
+            $params = array($user_id);
+            $stmt = sqlsrv_prepare($conn, $query, $params);
+
+            if ($stmt === false) {
+              die(print_r(sqlsrv_errors(), true));
+            }
+
+
+            if (sqlsrv_execute($stmt)) {
+              $no = 1;
+              while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+            ?>
+                <tr>
+                  <td><?php echo $no++ ?></td>
+                  <td><?php echo $row["nama"] ?></td>
+                  <td><?php echo $row["pelanggaran"] ?></td>
+                  <td><?php echo $row["tingkat"] ?></td>
+                  <td><?php echo $row["tanggal"]->format('Y-m-d') ?></td>
+                  <td><?php echo $row["sanksi"] ?></td>
+                  <td>
+                    <?php $file = $row["file"]; ?>
+                    <a href="<?php echo $file ?>" alt="Bukti" target="_blank">Lihat Bukti</a>
+                    <button class="btn-detail" data-bs-toggle="modal" data-bs-target="#modalUlasan">Lihat Detail</button>
+                  </td>
+                </tr>
+            <?php
+              }
+            } else {
+              die(print_r(sqlsrv_errors(), true));
+            }
+            ?>
+
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-  document.getElementById('btnKirim').addEventListener('click', function () {
-    alert('Ulasan berhasil dikirim');
-  });
-</script>
+  <!-- Modal -->
+  <div class="modal fade" id="modalUlasan" tabindex="-1" aria-labelledby="modalUlasanLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalUlasanLabel">Isi Ulasan</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <textarea class="form-control" rows="4" placeholder="Tulis ulasan Anda..."></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="btnKirim">Kirim</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.getElementById('btnKirim').addEventListener('click', function() {
+      alert('Ulasan berhasil dikirim');
+    });
+  </script>
 </body>
+
 </html>
