@@ -136,7 +136,7 @@
   <div class="dashboard-card">
     <div class="card">
       <h3>Laporan</h3>
-      <a href="#laporan-details" class="btn btn-primary">Rincian &gt;&gt;</a>
+      <a href="laporanMhs.php" class="btn btn-primary">Rincian &gt;&gt;</a>
     </div>
     <div class="card">
       <h3>Punishment</h3>
