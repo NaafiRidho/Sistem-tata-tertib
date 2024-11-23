@@ -7,6 +7,13 @@
   <title>Laporan Si Tertib</title>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
+  <!--JQUERY-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <!--Data Table -->
+  <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
   <style>
     body {
       margin: 0;
@@ -91,6 +98,20 @@
     .btn-detail:hover {
       background-color: #0056b3;
     }
+
+    .dataTables_paginate {
+      float: right !important;
+    }
+
+    .dataTables_filter {
+      float: right !important;
+    }
+
+    .table img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+    }
   </style>
 </head>
 
@@ -117,7 +138,7 @@
         Laporan Dari Dosen
       </div>
       <div class="card-body">
-        <table class="table table-bordered table-hover">
+        <table id="example" class="table table-bordered table-hover table-striped">
           <thead>
             <tr>
               <th>No</th>
@@ -136,7 +157,8 @@
             $user_id = $_COOKIE["user_id"];
 
 
-            $query = "SELECT d.nama, pl.pelanggaran, t.tingkat, CONVERT(date, p.tanggal) AS tanggal,t.sanksi ,p.[file]
+            $query = "SELECT d.nama, pl.pelanggaran, t.tingkat, CONVERT(date, p.tanggal) AS tanggal,t.sanksi,
+            p.[file],m.nim,m.nama as mahasiswa, p.pelaporan_id
             FROM dbo.riwayat_pelaporan AS p
             INNER JOIN dbo.mahasiswa AS m ON p.mahasiswa_id = m.mahasiswa_id
             INNER JOIN dbo.[user] AS u ON u.user_id = m.user_id
@@ -167,8 +189,15 @@
                   <td><?php echo $row["sanksi"] ?></td>
                   <td>
                     <?php $file = $row["file"]; ?>
-                    <a href="<?php echo $file ?>" alt="Bukti" target="_blank">Lihat Bukti</a>
-                    <button class="btn-detail" data-bs-toggle="modal" data-bs-target="#modalUlasan">Lihat Detail</button>
+                    <img src="<?php echo $file; ?>" alt="Bukti" class="mb-2">
+                    <button class="btn-detail" data-bs-toggle="modal" data-bs-target="#modalUlasan"
+                      data-pelanggaran="<?php echo $row['pelanggaran']; ?>"
+                      data-nama="<?php echo $row['mahasiswa']; ?>"
+                      data-nim="<?php echo $row['nim']; ?>"
+                      data-file="<?php echo $row['file']; ?>"
+                      data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>">
+                      Lihat Detail
+                    </button>
                   </td>
                 </tr>
             <?php
@@ -177,7 +206,6 @@
               die(print_r(sqlsrv_errors(), true));
             }
             ?>
-
           </tbody>
         </table>
       </div>
@@ -189,11 +217,33 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="modalUlasanLabel">Isi Ulasan</h5>
+          <h5 class="modal-title" id="modalUlasanLabel">Detail Pelanggaran</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <textarea class="form-control" rows="4" placeholder="Tulis ulasan Anda..."></textarea>
+          <div class="mb-3">
+            <label for="nama" class="form-label">Nama</label>
+            <input type="text" class="form-control" id="nama" value="Noufal Fakhri" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="nim" class="form-label">NIM</label>
+            <input type="text" class="form-control" id="nim" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="pelanggaran" class="form-label">Pelanggaran</label>
+            <input type="text" class="form-control" id="pelanggaran" value="<?php $row['pelanggaran'] ?>" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="foto" class="form-label">Foto</label>
+            <div class="text-center">
+              <img src="<?php echo $file; ?>" id="foto" alt="Foto Pelanggaran" class="img-fluid" style="width: 150px; height: auto; object-fit: cover;">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="ajubanding" class="form-label">Ajukan Banding</label>
+            <textarea class="form-control" id="ajubanding" rows="3" placeholder="Tuliskan alasan banding Anda..."></textarea>
+          </div>
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -208,6 +258,50 @@
   <script>
     document.getElementById('btnKirim').addEventListener('click', function() {
       alert('Ulasan berhasil dikirim');
+    });
+  </script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      // Inisialisasi DataTable
+      $('#example').DataTable();
+
+      // Ketika tombol 'Lihat Detail' diklik
+      $('.btn-detail').click(function() {
+        // Ambil data yang disimpan dalam atribut data-*
+        var pelanggaran = $(this).data('pelanggaran');
+        var nama = $(this).data('nama');
+        var nim = $(this).data('nim');
+        var file = $(this).data('file');
+        var pelaporan_id = $(this).data('pelaporan_id');
+
+        // Masukkan data ke dalam modal
+        $('#pelanggaran').val(pelanggaran);
+        $('#nama').val(nama);
+        $('#nim').val(nim);
+        $('#foto').attr('src', file); // Foto
+        $('#modalUlasan').data('pelaporan_id', pelaporan_id); //menyimpan id pelaporan ke dalam modal
+      });
+
+      $('#btnKirim').click(function() {
+        var pelaporanId = $('#modalUlasan').data('pelaporan_id'); // Ambil pelaporan_id dari modal
+        var alasanBanding = $('#ajubanding').val(); // Ambil alasan banding
+
+        $.ajax({
+          url: 'aju_banding.php',
+          type: 'post',
+          data: {
+            pelaporan_id: pelaporanId,
+            alasan_banding: alasanBanding
+          },
+          success: function(response) {
+            alert('Alasan Banding berhasil dikirim');
+            $('#modalUlasan').modal('hide');
+          },
+          error: function(xhr, status, error) {
+            alert('Error: ' + error);
+          }
+        })
+      })
     });
   </script>
 </body>
