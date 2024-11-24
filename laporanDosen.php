@@ -105,15 +105,12 @@
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
     <div class="sidebar">
         <h2>Si Tertib</h2>
         <a href="#"><i class="fas fa-th"></i> Dashboard</a>
         <a href="#"><i class="fas fa-comments"></i> Pelaporan</a>
         <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </div>
-
-    <!-- Content -->
     <div class="content">
         <div class="header">Laporan</div>
         <div class="card">
@@ -176,3 +173,4 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+
