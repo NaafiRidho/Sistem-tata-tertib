@@ -117,10 +117,10 @@
     <a href="dashboardMhs.php"><i class="bi bi-house"></i> Dashboard</a>
     <a href="laporanMhs.php"><i class="bi bi-file-text"></i> Laporan</a>
     <a href="#punishment"><i class="bi bi-gavel"></i> Punishment</a>
-    <a href="#history"><i class="bi bi-clock-history"></i> History Pelanggaran</a>
+    <a href="history_pelanggaran.php"><i class="bi bi-clock-history"></i> History Pelanggaran</a>
   </div>
   <div class="logout">
-    <a href="#logout"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
   </div>
 </div>
 
@@ -144,7 +144,7 @@
     </div>
     <div class="card">
       <h3>History Pelanggaran</h3>
-      <a href="#history-details" class="btn btn-primary">Rincian &gt;&gt;</a>
+      <a href="history_pelanggaran.php" class="btn btn-primary">Rincian &gt;&gt;</a>
     </div>
   </div>
 
