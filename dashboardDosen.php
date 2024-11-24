@@ -88,17 +88,13 @@
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
     <div class="sidebar">
         <h2>Si Tertib</h2>
         <a href="#" id="dashboard-link">Dashboard</a>
         <a href="#" id="laporan-link">Pelaporan</a>
         <a href="#">Logout</a>
     </div>
-
-    <!-- Content -->
     <div class="content">
-        <!-- Dashboard Section -->
         <div id="dashboard-section">
             <div class="header">Pelaporan</div>
             <div class="card">
