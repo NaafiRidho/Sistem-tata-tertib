@@ -112,6 +112,17 @@
       height: 100px;
       object-fit: cover;
     }
+
+    .form-control {
+      white-space: normal;
+      /* Membuat teks membungkus */
+      word-wrap: break-word;
+      /* Memastikan teks terputus di tempat yang sesuai */
+      overflow-wrap: break-word;
+      /* Alternatif untuk word-wrap */
+      height: auto;
+      /* Menyesuaikan tinggi secara otomatis */
+    }
   </style>
 </head>
 
@@ -233,7 +244,7 @@
           </div>
           <div class="mb-3">
             <label for="pelanggaran" class="form-label">Pelanggaran</label>
-            <input type="text" class="form-control" id="pelanggaran" value="<?php $row['pelanggaran'] ?>" readonly>
+            <textarea class="form-control" id="pelanggaran" rows="3" readonly><?php echo $row['pelanggaran']; ?></textarea>
           </div>
           <div class="mb-3">
             <label for="foto" class="form-label">Foto</label>
