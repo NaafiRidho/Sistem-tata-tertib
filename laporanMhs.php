@@ -158,9 +158,10 @@
 
 
             $query = "SELECT d.nama, pl.pelanggaran, t.tingkat, CONVERT(date, p.tanggal) AS tanggal,t.sanksi,
-            p.[file],m.nim,m.nama as mahasiswa, p.pelaporan_id
+            p.[file],m.nim,m.nama as mahasiswa, p.pelaporan_id, k.prodi
             FROM dbo.riwayat_pelaporan AS p
             INNER JOIN dbo.mahasiswa AS m ON p.mahasiswa_id = m.mahasiswa_id
+            INNER JOIN dbo.kelas AS k ON k.kelas_id = m.kelas_id
             INNER JOIN dbo.[user] AS u ON u.user_id = m.user_id
             INNER JOIN dbo.dosen AS d ON d.dosen_id = p.dosen_id
             INNER JOIN dbo.tingkat AS t ON p.tingkat_id = t.tingkat_id
@@ -195,7 +196,8 @@
                       data-nama="<?php echo $row['mahasiswa']; ?>"
                       data-nim="<?php echo $row['nim']; ?>"
                       data-file="<?php echo $row['file']; ?>"
-                      data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>">
+                      data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>"
+                      data-prodi="<?php echo $row['prodi']; ?>">
                       Lihat Detail
                     </button>
                   </td>
@@ -273,6 +275,7 @@
         var nim = $(this).data('nim');
         var file = $(this).data('file');
         var pelaporan_id = $(this).data('pelaporan_id');
+        var prodi = $(this).data('prodi');
 
         // Masukkan data ke dalam modal
         $('#pelanggaran').val(pelanggaran);
@@ -280,18 +283,21 @@
         $('#nim').val(nim);
         $('#foto').attr('src', file); // Foto
         $('#modalUlasan').data('pelaporan_id', pelaporan_id); //menyimpan id pelaporan ke dalam modal
+        $('#modalUlasan').data('prodi', prodi); //menyimpan prodi
       });
 
       $('#btnKirim').click(function() {
         var pelaporanId = $('#modalUlasan').data('pelaporan_id'); // Ambil pelaporan_id dari modal
         var alasanBanding = $('#ajubanding').val(); // Ambil alasan banding
+        var prodi = $('#modalUlasan').data('prodi'); // Ambil prodi
 
         $.ajax({
           url: 'aju_banding.php',
           type: 'post',
           data: {
             pelaporan_id: pelaporanId,
-            alasan_banding: alasanBanding
+            alasan_banding: alasanBanding,
+            prodi: prodi
           },
           success: function(response) {
             alert('Alasan Banding berhasil dikirim');
