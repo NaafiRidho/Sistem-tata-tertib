@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Si Tertib Dashboard</title>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -38,6 +41,7 @@
     .menu a {
       display: flex;
       align-items: center;
+      gap: 10px; 
       color: white;
       padding: 15px 20px;
       text-decoration: none;
@@ -109,14 +113,15 @@
     }
   </style>
 </head>
+
 <body>
 
 <div class="sidebar">
   <div class="menu">
     <h2>Si Tertib</h2>
-    <a href="dashboardMhs.php"><i class="bi bi-house"></i> Dashboard</a>
+    <a href="dashboardMhs.php"><i class="bbi bi-columns-gap"></i> Dashboard</a>
     <a href="laporanMhs.php"><i class="bi bi-file-text"></i> Laporan</a>
-    <a href="#punishment"><i class="bi bi-gavel"></i> Punishment</a>
+    <a href="punishmentMhs.php"><i class="bi bi-exclamation-circle"></i> Punishment</a>
     <a href="history_pelanggaran.php"><i class="bi bi-clock-history"></i> History Pelanggaran</a>
   </div>
   <div class="logout">
@@ -125,83 +130,103 @@
 </div>
 
 
-<div class="content">
-  <h1>Dashboard</h1>
-  <div>
-    <p style="font-size: 1.3rem; font-weight: bold; text-align: center; margin-bottom: 5px;">Selamat Datang Mahasiswa</p>
-    <p style="text-align: center; margin-bottom: 20px;">Sistem Tata Tertib</p>
+  <div class="content">
+    <h1>Dashboard</h1>
+    <div>
+      <p style="font-size: 1.3rem; font-weight: bold; text-align: center; margin-bottom: 5px;">Selamat Datang Mahasiswa</p>
+      <p style="text-align: center; margin-bottom: 20px;">Sistem Tata Tertib</p>
+    </div>
+
+    <!-- Kartu Dashboard -->
+    <div class="dashboard-card">
+      <div class="card">
+        <h3>Laporan</h3>
+        <a href="laporanMhs.php" class="btn btn-primary">Rincian &gt;&gt;</a>
+      </div>
+      <div class="card">
+        <h3>Punishment</h3>
+        <a href="#punishment-details" class="btn btn-primary">Rincian &gt;&gt;</a>
+      </div>
+      <div class="card">
+        <h3>History Pelanggaran</h3>
+        <a href="history_pelanggaran.php" class="btn btn-primary">Rincian &gt;&gt;</a>
+      </div>
+    </div>
+
+    <!-- Tabel Pelanggaran -->
+    <div class="mt-4">
+      <h2 class="mb-3">Daftar Pelanggaran</h2>
+      <div id="pelanggaran-container">
+        <!-- Pesan jika tidak ada pelanggaran -->
+        <p class="text-center text-muted" id="no-pelanggaran">Kamu belum melakukan pelanggaran.</p>
+        <!-- Tabel akan disembunyikan jika tidak ada data -->
+        <table class="table table-bordered table-striped d-none" id="pelanggaran-table">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Pelanggaran yang Dilakukan</th>
+              <th>Tingkat Pelanggaran</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Data pelanggaran -->
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
-  <!-- Kartu Dashboard -->
-  <div class="dashboard-card">
-    <div class="card">
-      <h3>Laporan</h3>
-      <a href="laporanMhs.php" class="btn btn-primary">Rincian &gt;&gt;</a>
-    </div>
-    <div class="card">
-      <h3>Punishment</h3>
-      <a href="#punishment-details" class="btn btn-primary">Rincian &gt;&gt;</a>
-    </div>
-    <div class="card">
-      <h3>History Pelanggaran</h3>
-      <a href="history_pelanggaran.php" class="btn btn-primary">Rincian &gt;&gt;</a>
-    </div>
-  </div>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Data pelanggaran dengan tingkat pelanggaran 5 (ringan) hingga 1 (berat)
+    const dataPelanggaran = [{
+        nomor: 1,
+        pelanggaran: "Terlambat Masuk Kelas",
+        tingkat: 5
+      },
+      {
+        nomor: 2,
+        pelanggaran: "Tidak Mengumpulkan Tugas",
+        tingkat: 4
+      },
+      {
+        nomor: 3,
+        pelanggaran: "Tidak Memakai Seragam",
+        tingkat: 3
+      },
+      {
+        nomor: 4,
+        pelanggaran: "Tidak Mengikuti Upacara",
+        tingkat: 2
+      },
+      {
+        nomor: 5,
+        pelanggaran: "Membawa Barang Terlarang",
+        tingkat: 1
+      },
+    ];
 
-  <!-- Tabel Pelanggaran -->
-  <div class="mt-4">
-    <h2 class="mb-3">Daftar Pelanggaran</h2>
-    <div id="pelanggaran-container">
-      <!-- Pesan jika tidak ada pelanggaran -->
-      <p class="text-center text-muted" id="no-pelanggaran">Kamu belum melakukan pelanggaran.</p>
-      <!-- Tabel akan disembunyikan jika tidak ada data -->
-      <table class="table table-bordered table-striped d-none" id="pelanggaran-table">
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>Pelanggaran yang Dilakukan</th>
-            <th>Tingkat Pelanggaran</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Data pelanggaran -->
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
+    const table = document.getElementById('pelanggaran-table');
+    const noPelanggaranMessage = document.getElementById('no-pelanggaran');
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-  // Data pelanggaran dengan tingkat pelanggaran 5 (ringan) hingga 1 (berat)
-  const dataPelanggaran = [
-    { nomor: 1, pelanggaran: "Terlambat Masuk Kelas", tingkat: 5 },
-    { nomor: 2, pelanggaran: "Tidak Mengumpulkan Tugas", tingkat: 4 },
-    { nomor: 3, pelanggaran: "Tidak Memakai Seragam", tingkat: 3 },
-    { nomor: 4, pelanggaran: "Tidak Mengikuti Upacara", tingkat: 2 },
-    { nomor: 5, pelanggaran: "Membawa Barang Terlarang", tingkat: 1 },
-  ];
-
-  const table = document.getElementById('pelanggaran-table');
-  const noPelanggaranMessage = document.getElementById('no-pelanggaran');
-
-  if (dataPelanggaran.length > 0) {
-    noPelanggaranMessage.classList.add('d-none');
-    table.classList.remove('d-none');
-    const tbody = table.querySelector('tbody');
-    tbody.innerHTML = dataPelanggaran
-      .map(
-        (item) => `
+    if (dataPelanggaran.length > 0) {
+      noPelanggaranMessage.classList.add('d-none');
+      table.classList.remove('d-none');
+      const tbody = table.querySelector('tbody');
+      tbody.innerHTML = dataPelanggaran
+        .map(
+          (item) => `
       <tr>
         <td>${item.nomor}</td>
         <td>${item.pelanggaran}</td>
         <td>${item.tingkat}</td>
       </tr>
     `
-      )
-      .join('');
-  }
-</script>
+        )
+        .join('');
+    }
+  </script>
 </body>
+
 </html>
