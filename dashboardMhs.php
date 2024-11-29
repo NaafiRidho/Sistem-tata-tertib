@@ -145,7 +145,7 @@
       </div>
       <div class="card">
         <h3>Punishment</h3>
-        <a href="#punishment-details" class="btn btn-primary">Rincian &gt;&gt;</a>
+        <a href="punishmentMhs.php" class="btn btn-primary">Rincian &gt;&gt;</a>
       </div>
       <div class="card">
         <h3>History Pelanggaran</h3>

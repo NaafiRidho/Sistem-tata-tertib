@@ -8,6 +8,8 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <!--JQUERY-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!--Data Table -->
@@ -46,6 +48,7 @@
         .menu a {
             display: flex;
             align-items: center;
+            gap: 10px;
             color: white;
             padding: 15px 20px;
             text-decoration: none;
@@ -93,10 +96,10 @@
     <div class="sidebar">
         <div class="menu">
             <h2>Si Tertib</h2>
-            <a href="dashboardMhs.php"><i class="bi bi-house"></i> Dashboard</a>
-            <a href="laporanMhs.php" class="active"><i class="bi bi-file-text"></i> Laporan</a>
-            <a href="#punishment"><i class="bi bi-gavel"></i> Punishment</a>
-            <a href="#history"><i class="bi bi-clock-history"></i> History Pelanggaran</a>
+            <a href="dashboardMhs.php"><i class="bbi bi-columns-gap"></i> Dashboard</a>
+            <a href="laporanMhs.php"><i class="bi bi-file-text"></i> Laporan</a>
+            <a href="punishmentMhs.php"><i class="bi bi-exclamation-circle"></i> Punishment</a>
+            <a href="history_pelanggaran.php"><i class="bi bi-clock-history"></i> History Pelanggaran</a>
         </div>
         <div class="logout">
             <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
