@@ -48,7 +48,7 @@
     .menu a {
       display: flex;
       align-items: center;
-      gap: 10px; 
+      gap: 10px;
       color: white;
       padding: 15px 20px;
       text-decoration: none;
@@ -60,7 +60,7 @@
     .menu a:hover {
       background-color: #0056b3;
       border-left: 5px solid #ffcc00;
-    } 
+    }
 
     .logout a {
       display: block;
@@ -96,10 +96,23 @@
       padding: 5px 10px;
       border-radius: 5px;
       text-decoration: none;
+      width: 100px;
+      text-align: center;
     }
 
     .btn-detail:hover {
       background-color: #0056b3;
+    }
+
+    td .btn-success {
+      margin-bottom: 10px;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      text-decoration: none;
+      width: 100px;
+      text-align: center;
     }
 
     .dataTables_paginate {
@@ -114,6 +127,17 @@
       width: 100px;
       height: 100px;
       object-fit: cover;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+      /* Warna latar pudar */
+      color: #666;
+      /* Warna teks pudar */
+      cursor: not-allowed;
+      /* Ubah kursor menjadi tanda larangan */
+      border-color: #aaa;
+      /* Warna border pudar */
     }
 
     .form-control {
@@ -131,18 +155,18 @@
 
 <body>
 
-<div class="sidebar">
-  <div class="menu">
-    <h2>Si Tertib</h2>
-    <a href="dashboardMhs.php"><i class="bbi bi-columns-gap"></i> Dashboard</a>
-    <a href="laporanMhs.php"><i class="bi bi-file-text"></i> Laporan</a>
-    <a href="punishmentMhs.php"><i class="bi bi-exclamation-circle"></i> Punishment</a>
-    <a href="history_pelanggaran.php"><i class="bi bi-clock-history"></i> History Pelanggaran</a>
+  <div class="sidebar">
+    <div class="menu">
+      <h2>Si Tertib</h2>
+      <a href="dashboardMhs.php"><i class="bbi bi-columns-gap"></i> Dashboard</a>
+      <a href="laporanMhs.php"><i class="bi bi-file-text"></i> Laporan</a>
+      <a href="punishmentMhs.php"><i class="bi bi-exclamation-circle"></i> Punishment</a>
+      <a href="history_pelanggaran.php"><i class="bi bi-clock-history"></i> History Pelanggaran</a>
+    </div>
+    <div class="logout">
+      <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    </div>
   </div>
-  <div class="logout">
-    <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
-  </div>
-</div>
 
 
   <div class="content">
@@ -162,6 +186,7 @@
               <th>Tanggal</th>
               <th>Sanksi</th>
               <th>Bukti</th>
+              <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -172,7 +197,7 @@
 
 
             $query = "SELECT d.nama, pl.pelanggaran, t.tingkat, CONVERT(date, p.tanggal) AS tanggal,t.sanksi,
-            p.[file],m.nim,m.nama as mahasiswa, p.pelaporan_id, k.prodi
+            p.[file],m.nim,m.nama as mahasiswa, p.pelaporan_id, k.prodi, p.status
             FROM dbo.riwayat_pelaporan AS p
             INNER JOIN dbo.mahasiswa AS m ON p.mahasiswa_id = m.mahasiswa_id
             INNER JOIN dbo.kelas AS k ON k.kelas_id = m.kelas_id
@@ -205,6 +230,18 @@
                   <td>
                     <?php $file = $row["file"]; ?>
                     <img src="<?php echo $file; ?>" alt="Bukti" class="mb-2">
+                  </td>
+                  <td>
+                    <?php
+                    if ($row['status'] !== 'Diterima') {
+                    ?><button class="btn-success" data-bs-toggle="modal" data-bs-target="#modalTerima" data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>">
+                        Terima</button><?php
+                                      } else {
+                                        ?><button class="btn-success" disabled>
+                        Diterima
+                      </button><?php
+                                      }
+                                ?>
                     <button class="btn-detail" data-bs-toggle="modal" data-bs-target="#modalUlasan"
                       data-pelanggaran="<?php echo $row['pelanggaran']; ?>"
                       data-nama="<?php echo $row['mahasiswa']; ?>"
@@ -212,7 +249,7 @@
                       data-file="<?php echo $row['file']; ?>"
                       data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>"
                       data-prodi="<?php echo $row['prodi']; ?>">
-                      Lihat Detail
+                      Banding
                     </button>
                   </td>
                 </tr>
@@ -228,7 +265,26 @@
     </div>
   </div>
 
-  <!-- Modal -->
+  <!--Modal Terima-->
+  <div class="modal fade" id="modalTerima" tabindex="-1" aria-labelledby="modalTerimaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTerimaLabel">Terima Pelanggaran</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Apakah Anda Ingin Menerima Pelanggaran Yang Dilaporkan
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-success" id="btnTerima">Terima</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Banding -->
   <div class="modal fade" id="modalUlasan" tabindex="-1" aria-labelledby="modalUlasanLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -280,6 +336,31 @@
     $(document).ready(function() {
       // Inisialisasi DataTable
       $('#example').DataTable();
+
+      $('.btn-success').click(function() {
+        var pelaporan_id = $(this).data('pelaporan_id');
+        $("#modalTerima").data('pelaporan_id', pelaporan_id);
+      });
+
+      $('#btnTerima').click(function() {
+        var pelaporan_id = $("#modalTerima").data('pelaporan_id');
+        if (confirm("Apakah Anda yakin ingin menerima laporan ini?")) {
+          $.ajax({
+            url: 'terima_laporan.php', // File PHP yang akan memproses query
+            type: 'POST',
+            data: {
+              pelaporan_id: pelaporan_id
+            },
+            success: function(response) {
+              alert('Laporan berhasil diterima!');
+              $('#modalTerima').modal('hide');
+            },
+            error: function(xhr, status, error) {
+              alert('Terjadi kesalahan: ' + error);
+            }
+          });
+        }
+      });
 
       // Ketika tombol 'Lihat Detail' diklik
       $('.btn-detail').click(function() {
