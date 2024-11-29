@@ -1,120 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tambah Pelanggaran Dosen - Si Tertib</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
-            display: flex;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f9f9f9;
         }
+
         .sidebar {
-            width: 250px;
-            background-color: #1a237e;
-            color: #fff;
-            min-height: 100vh;
-            padding: 20px;
-            box-sizing: border-box;
+            width: 240px;
+            background-color: #002a8a;
+            position: fixed;
+            height: 100%;
+            overflow: hidden;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
+
         .sidebar h2 {
-            margin-bottom: 30px;
-            font-size: 24px;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.5rem;
         }
-        .sidebar a {
+
+        .menu {
+            flex-grow: 1;
+        }
+
+        .menu a {
             display: flex;
             align-items: center;
-            color: #fff;
+            gap: 10px;
+            color: white;
+            padding: 15px 20px;
             text-decoration: none;
-            margin-bottom: 20px;
-            font-size: 18px;
+            font-size: 1rem;
+            border-left: 5px solid transparent;
+            transition: all 0.3s;
         }
-        .sidebar a:hover {
-            background-color: #3949ab;
-            padding: 5px;
-            border-radius: 5px;
+
+        .menu a:hover {
+            background-color: #0056b3;
+            border-left: 5px solid #ffcc00;
         }
-        .sidebar a i {
-            margin-right: 10px;
+
+        .menu a.active {
+            background-color: #0056b3;
+            border-left: 5px solid #ffcc00;
         }
+
+        .logout a {
+            display: block;
+            text-align: center;
+            color: white;
+            padding: 10px;
+            font-size: 1rem;
+            text-decoration: none;
+            background-color: #d9534f;
+            transition: background-color 0.3s;
+        }
+
+        .logout a:hover {
+            background-color: #c9302c;
+        }
+
         .content {
+            margin-left: 240px;
             flex: 1;
             padding: 20px;
-            background-color: #f5f5f5;
+            background-color: #f9f9f9;
         }
-        .header {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
+
         .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
         .card-header {
             background-color: #1e88e5;
-            color: #fff;
+            color: white;
             padding: 10px;
             border-radius: 5px;
-            font-size: 18px;
-            margin-bottom: 20px;
+            font-size: 1.2rem;
         }
+
         .form-group label {
             font-weight: bold;
+            margin-top: 10px;
         }
-        .form-group input, 
+
+        .form-group input,
         .form-group select {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
+            margin-top: 5px;
             border: 1px solid #ddd;
             border-radius: 5px;
         }
-        .form-group input[type="file"] {
-            padding: 3px;
-        }
+
         .form-buttons {
+            margin-top: 20px;
             display: flex;
-            justify-content: space-between;
+            gap: 10px;
         }
+
         .form-buttons .btn {
             width: 48%;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        .btn-accept {
-            background-color: #007bff;
-            color: #fff;
-        }
-        .btn-accept:hover {
-            background-color: #0056b3;
-        }
-        .btn-submit {
-            background-color: #4caf50;
-            color: #fff;
-        }
-        .btn-submit:hover {
-            background-color: #45a049;
         }
     </style>
 </head>
+
 <body>
     <div class="sidebar">
-        <h2>Si Tertib</h2>
-        <a href="#"><i class="fas fa-th"></i> Dashboard</a>
-        <a href="#"><i class="fas fa-comments"></i> Pelaporan</a>
-        <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        <div class="menu">
+            <h2>Si Tertib</h2>
+            <a href="dashboardDosen.php"><i class="bi bi-columns-gap"></i> Dashboard</a>
+            <a href="laporanDosen.php" class="active"><i class="bi bi-file-earmark-text"></i> Laporan</a>
+            <a href="ajuBanding.php"><i class="bi bi-envelope"></i> Aju Banding</a>
+        </div>
+        <div class="logout">
+            <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
+        </div>
     </div>
     <div class="content">
-        <div class="header">Laporan</div>
+        <h1>Laporan</h1>
         <div class="card">
-            <div class="card-header">Data Laporan Mahasiswa</div>
+            <div class="card-header">Tambah Data Pelanggaran</div>
             <form>
                 <div class="form-group">
                     <label for="upload-bukti">Unggah Bukti <span style="color: red;">*</span></label>
@@ -158,19 +181,15 @@
                     <input type="text" id="sanksi" placeholder="Masukkan sanksi" required>
                 </div>
                 <div class="form-buttons">
-                    <button type="button" class="btn btn-accept">ACCEPT</button>
-                    <button type="submit" class="btn btn-submit">KIRIM</button>
+                    <button type="button" class="btn btn-primary"><i class="bi bi-check-circle"></i> ACCEPT</button>
+                    <button type="submit" class="btn btn-success"><i class="bi bi-send"></i> KIRIM</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Link FontAwesome -->
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    <!-- Link Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>
 
+</html>
