@@ -164,7 +164,8 @@
                                             echo "<span class='badge badge-danger'>Dilaporkan</span>";
                                         } else if ($row["status"] == "Selesai") {
                                             echo "<span class='badge badge-success'>Selesai</span>";
-                                        } ?>
+                                        } else if ($row["status"] == "Diterima") {
+                                            echo "<span class='badge badge-warning'>Dilakukan</span>";} ?>
                                     </td>
                                 </tr>
                         <?php
