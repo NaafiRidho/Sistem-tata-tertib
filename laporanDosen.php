@@ -113,11 +113,11 @@
         .form-buttons {
             margin-top: 20px;
             display: flex;
-            gap: 10px;
+            justify-content: center;
         }
 
         .form-buttons .btn {
-            width: 48%;
+            width: 50%;
         }
 
         .image-preview {
@@ -146,7 +146,7 @@
         <div class="menu">
             <h2>Si Tertib</h2>
             <a href="dashboardDosen.php"><i class="bi bi-columns-gap"></i> Dashboard</a>
-            <a href="laporanDosen.php " class="active"><i class="bi bi-file-earmark-text"></i> Laporan</a>
+            <a href="laporanDosen.php" class="active"><i class="bi bi-file-earmark-text"></i> Laporan</a>
             <a href="ajuBanding.php"><i class="bi bi-envelope"></i> Aju Banding</a>
         </div>
         <div class="logout">
@@ -179,7 +179,7 @@
                     <select id="prodi" required>
                         <option value="" disabled selected>Pilih Program Studi</option>
                         <option value="TI">Teknik Informatika</option>
-                        <option value="SI">Sistem Informasi</option>
+                        <option value="SI">Sistem Informasi Bisnis</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -203,7 +203,6 @@
                     <input type="text" id="sanksi" placeholder="Masukkan sanksi" required>
                 </div>
                 <div class="form-buttons">
-                    <button type="button" class="btn btn-primary"><i class="bi bi-check-circle"></i> ACCEPT</button>
                     <button type="submit" class="btn btn-success"><i class="bi bi-send"></i> KIRIM</button>
                 </div>
             </form>
@@ -214,7 +213,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Set default tanggal saat ini
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('tanggal').value = today;
         });
@@ -223,11 +222,11 @@
         const uploadBukti = document.getElementById('upload-bukti');
         const imagePreview = document.getElementById('image-preview');
 
-        uploadBukti.addEventListener('change', function() {
+        uploadBukti.addEventListener('change', function () {
             const file = this.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     imagePreview.innerHTML = `<img src="${e.target.result}" alt="Image Preview">`;
                 }
                 reader.readAsDataURL(file);
