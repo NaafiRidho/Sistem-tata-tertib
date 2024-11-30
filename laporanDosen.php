@@ -33,10 +33,6 @@
             font-size: 1.5rem;
         }
 
-        .menu {
-            flex-grow: 1;
-        }
-
         .menu a {
             display: flex;
             align-items: center;
@@ -76,67 +72,105 @@
 
         .content {
             margin-left: 240px;
-            flex: 1;
             padding: 20px;
-            background-color: #f9f9f9;
         }
 
         .card {
             background-color: white;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
         }
 
         .card-header {
-            background-color: #1e88e5;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 1.2rem;
+            background-color: #d3d3d3;
+            color: black;
+            text-align: center;
         }
 
-        .form-group label {
-            font-weight: bold;
+
+        .alert-container {
             margin-top: 10px;
+            padding: 20px;
+            border-radius: 8px;
         }
 
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ddd;
+        .alert-message {
+            padding: 15px;
+            background-color: #2196f3;
+            color: white;
             border-radius: 5px;
+            text-align: left;
         }
 
-        .form-buttons {
-            margin-top: 20px;
+        .alert-button {
+            margin-top: 10px;
             display: flex;
-            justify-content: center;
+            justify-content: left;
         }
 
-        .form-buttons .btn {
-            width: 50%;
+        .alert-button .btn {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .alert-button .btn:hover {
+            background-color: #218838;
+        }
+
+        .modal-body input,
+        .modal-body select {
+            margin-bottom: 15px;
+        }
+
+        .modal-body .form-group {
+            margin-bottom: 20px;
+        }
+
+        .modal-body input:invalid {
+            border-color: #e74c3c;
+        }
+
+        .modal-body input:valid {
+            border-color: #2ecc71;
+        }
+
+        .modal-body .error-message {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .modal-body input:invalid+.error-message {
+            display: block;
         }
 
         .image-preview {
-            margin-top: 10px;
             display: flex;
             align-items: center;
+            margin-top: 10px;
         }
 
         .image-preview img {
             max-width: 100%;
             max-height: 150px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
             margin-left: 10px;
+            border-radius: 5px;
         }
 
         .image-preview span {
             margin-left: 10px;
             color: #999;
+        }
+
+        /* Menambahkan style untuk bintang */
+        .required:after {
+            content: " *";
+            color: red;
         }
     </style>
 </head>
@@ -153,88 +187,98 @@
             <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
         </div>
     </div>
+
     <div class="content">
-        <h1>Laporan</h1>
+        <h1>Pelaporan</h1>
         <div class="card">
-            <div class="card-header">Tambah Data Pelanggaran</div>
-            <form>
-                <div class="form-group">
-                    <label for="upload-bukti">Unggah Bukti <span style="color: red;">*</span></label>
-                    <input type="file" id="upload-bukti" required>
-                    <small>Ukuran Max: 5000kb</small>
+            <div class="card-header">Pelaporan Peanggaran Mahasiswa</div>
+            <div class="alert-container">
+                <div class="alert-message">
+                    Maaf, data pelaporan saat ini belum ada.
                 </div>
-                <div class="image-preview" id="image-preview">
-                    <span>Image Not Available</span>
+                <div class="alert-button">
+                    <!-- Tombol untuk membuka modal -->
+                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#laporanBaruModal">
+                        <i class="bi bi-plus-circle"></i> Laporan Baru
+                    </button>
                 </div>
-                <div class="form-group">
-                    <label for="nama">Nama Mahasiswa <span style="color: red;">*</span></label>
-                    <input type="text" id="nama" placeholder="Masukkan nama mahasiswa" required>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Bootstrap -->
+    <div class="modal fade" id="laporanBaruModal" tabindex="-1" aria-labelledby="laporanBaruModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="laporanBaruModalLabel">Tambah Data Pelanggaran</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="form-group">
-                    <label for="nim">NIM <span style="color: red;">*</span></label>
-                    <input type="text" id="nim" placeholder="Masukkan NIM mahasiswa" required>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="upload-bukti" class="required">Unggah Bukti</label>
+                            <input type="file" id="upload-bukti" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="nama" class="required">Nama Mahasiswa</label>
+                            <input type="text" id="nama" class="form-control" placeholder="Nama Mahasiswa" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="nim" class="required">NIM Mahasiswa</label>
+                            <input type="text" id="nim" class="form-control" placeholder="NIM Mahasiswa" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="prodi" class="required">Program Studi</label>
+                            <select id="prodi" class="form-control" required>
+                                <option value="" disabled selected>Pilih Program Studi</option>
+                                <option value="TI">Teknik Informatika</option>
+                                <option value="SI">Sistem Informasi Bisnis</option>
+                            </select>
+                            <div class="error-message">Program Studi wajib dipilih.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="kelas" class="required">Kelas</label>
+                            <select id="kelas" class="form-control" required>
+                                <option value="" disabled selected>Pilih Kelas</option>
+                                <option value="A">Kelas A</option>
+                                <option value="B">Kelas B</option>
+                            </select>
+                            <div class="error-message">Kelas wajib dipilih.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tanggal" class="required">Tanggal</label>
+                            <input type="date" id="tanggal" class="form-control" value="<?php echo date('Y-m-d'); ?>"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pelanggaran" class="required">Pelanggaran</label>
+                            <input type="text" id="pelanggaran" class="form-control" placeholder="Pelanggaran" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sanksi" class="required">Sanksi</label>
+                            <input type="text" id="sanksi" class="form-control" placeholder="Sanksi" required>
+                        </div>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <label for="prodi">Prodi <span style="color: red;">*</span></label>
-                    <select id="prodi" required>
-                        <option value="" disabled selected>Pilih Program Studi</option>
-                        <option value="TI">Teknik Informatika</option>
-                        <option value="SI">Sistem Informasi Bisnis</option>
-                    </select>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-success">Simpan</button>
                 </div>
-                <div class="form-group">
-                    <label for="kelas">Kelas <span style="color: red;">*</span></label>
-                    <select id="kelas" required>
-                        <option value="" disabled selected>Pilih Kelas</option>
-                        <option value="A">A</option>
-                        <option value="B">B</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="tanggal">Tanggal <span style="color: red;">*</span></label>
-                    <input type="date" id="tanggal" required>
-                </div>
-                <div class="form-group">
-                    <label for="pelanggaran">Pelanggaran <span style="color: red;">*</span></label>
-                    <input type="text" id="pelanggaran" placeholder="Masukkan jenis pelanggaran" required>
-                </div>
-                <div class="form-group">
-                    <label for="sanksi">Sanksi <span style="color: red;">*</span></label>
-                    <input type="text" id="sanksi" placeholder="Masukkan sanksi" required>
-                </div>
-                <div class="form-buttons">
-                    <button type="submit" class="btn btn-success"><i class="bi bi-send"></i> KIRIM</button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Set default tanggal saat ini
-        document.addEventListener('DOMContentLoaded', function () {
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('tanggal').value = today;
-        });
-
-        // Preview gambar yang diupload
-        const uploadBukti = document.getElementById('upload-bukti');
-        const imagePreview = document.getElementById('image-preview');
-
-        uploadBukti.addEventListener('change', function () {
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    imagePreview.innerHTML = `<img src="${e.target.result}" alt="Image Preview">`;
-                }
-                reader.readAsDataURL(file);
-            } else {
-                imagePreview.innerHTML = '<span>Image Not Available</span>';
-            }
-        });
-    </script>
 </body>
 
 </html>
