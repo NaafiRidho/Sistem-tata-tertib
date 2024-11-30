@@ -119,6 +119,25 @@
         .form-buttons .btn {
             width: 48%;
         }
+
+        .image-preview {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 150px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+
+        .image-preview span {
+            margin-left: 10px;
+            color: #999;
+        }
     </style>
 </head>
 
@@ -127,7 +146,7 @@
         <div class="menu">
             <h2>Si Tertib</h2>
             <a href="dashboardDosen.php"><i class="bi bi-columns-gap"></i> Dashboard</a>
-            <a href="laporanDosen.php" class="active"><i class="bi bi-file-earmark-text"></i> Laporan</a>
+            <a href="laporanDosen.php " class="active"><i class="bi bi-file-earmark-text"></i> Laporan</a>
             <a href="ajuBanding.php"><i class="bi bi-envelope"></i> Aju Banding</a>
         </div>
         <div class="logout">
@@ -143,6 +162,9 @@
                     <label for="upload-bukti">Unggah Bukti <span style="color: red;">*</span></label>
                     <input type="file" id="upload-bukti" required>
                     <small>Ukuran Max: 5000kb</small>
+                </div>
+                <div class="image-preview" id="image-preview">
+                    <span>Image Not Available</span>
                 </div>
                 <div class="form-group">
                     <label for="nama">Nama Mahasiswa <span style="color: red;">*</span></label>
@@ -190,6 +212,30 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Set default tanggal saat ini
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('tanggal').value = today;
+        });
+
+        // Preview gambar yang diupload
+        const uploadBukti = document.getElementById('upload-bukti');
+        const imagePreview = document.getElementById('image-preview');
+
+        uploadBukti.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.innerHTML = `<img src="${e.target.result}" alt="Image Preview">`;
+                }
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.innerHTML = '<span>Image Not Available</span>';
+            }
+        });
+    </script>
 </body>
 
 </html>
