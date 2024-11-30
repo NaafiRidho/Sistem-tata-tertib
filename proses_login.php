@@ -27,6 +27,12 @@ if (sqlsrv_execute($stmt)) {
         header("Location: dashboardMhs.php");
         exit();
     }
+    else if ($role == "Dosen"){
+        setcookie("user_id",$user_id);
+
+        header("Location: dashboardDosen.php");
+        exit();
+    }
 } else {
     die(print_r(sqlsrv_errors(), true));
 }
