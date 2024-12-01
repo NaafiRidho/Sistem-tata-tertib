@@ -24,7 +24,7 @@ $query = "SELECT d.nama AS dosen, k.nama_kelas, k.prodi, m.nama AS mahasiswa, m.
           INNER JOIN dosen AS d ON d.dosen_id = k.dosen_id
           INNER JOIN pelanggaran AS p ON rp.pelanggaran_id = p.pelanggaran_id
           INNER JOIN [user] AS u ON m.user_id = u.user_id
-          WHERE rp.status = 'Dilaporkan' AND u.user_id = ?";
+          WHERE rp.status NOT IN ('Selesai') AND u.user_id = ?";
 $params = array($user_id);
 $stmt = sqlsrv_prepare($conn, $query, $params);
 
