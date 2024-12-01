@@ -350,59 +350,40 @@
                     }
                 });
             });
+            // Kirimkan data menggunakan AJAX
             $("#simpanLaporan").click(function() {
-                var formData = new FormData(); // Membuat objek FormData
+                var formData = new FormData();
 
-                // Mengambil data dari form
-                formData.append('nama', $("#nama").val());
-                formData.append('nim', $('#nim').val());
-                formData.append('prodi', $("#prodi").val());
-                formData.append('kelas', $("#kelas").val());
-                formData.append('pelanggaran', $("#pelanggaran").val());
-                formData.append('sanksi', $("#sanksi").val());
-                formData.append('tanggal', $("#tanggal").val());
+                // Ambil data dari form
+                formData.append("nama", $("#nama").val());
+                formData.append("nim", $("#nim").val());
+                formData.append("prodi", $("#prodi").val());
+                formData.append("kelas", $("#kelas").val());
+                formData.append("pelanggaran", $("#pelanggaran").val());
+                formData.append("sanksi", $("#sanksi").val());
+                formData.append("tanggal", $("#tanggal").val());
 
-                // Mengambil file yang diunggah
-                var fileInput = $('#upload-bukti')[0];
+                // Ambil file
+                var fileInput = $("#upload-bukti")[0];
                 if (fileInput.files.length > 0) {
-                    formData.append('upload-bukti', fileInput.files[0]);
+                    formData.append("upload-bukti", fileInput.files[0]);
                 }
 
-                // Kirimkan data menggunakan AJAX
-                $("#simpanLaporan").click(function() {
-                    var formData = new FormData();
-
-                    // Ambil data dari form
-                    formData.append("nama", $("#nama").val());
-                    formData.append("nim", $("#nim").val());
-                    formData.append("prodi", $("#prodi").val());
-                    formData.append("kelas", $("#kelas").val());
-                    formData.append("pelanggaran", $("#pelanggaran").val());
-                    formData.append("sanksi", $("#sanksi").val());
-                    formData.append("tanggal", $("#tanggal").val());
-
-                    // Ambil file
-                    var fileInput = $("#upload-bukti")[0];
-                    if (fileInput.files.length > 0) {
-                        formData.append("upload-bukti", fileInput.files[0]);
-                    }
-
-                    // Kirim data menggunakan AJAX
-                    $.ajax({
-                        url: "dosenLapor.php", // URL file PHP
-                        method: "POST",
-                        data: formData,
-                        contentType: false,
-                        processData: false,
-                        success: function(response) {
-                            alert('Laporan berhasil diterima!');
-                            $("#laporanBaruModal").modal("hide");
-                        },
-                        error: function(xhr, status, error) {
-                            console.error("Error: ", xhr.responseText);
-                            alert("Terjadi kesalahan saat mengirim data ke server.");
-                        },
-                    });
+                // Kirim data menggunakan AJAX
+                $.ajax({
+                    url: "dosenLapor.php", // URL file PHP
+                    method: "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        alert('Laporan berhasil diterima!');
+                        $("#laporanBaruModal").modal("hide");
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error: ", xhr.responseText);
+                        alert("Terjadi kesalahan saat mengirim data ke server.");
+                    },
                 });
             });
         });
