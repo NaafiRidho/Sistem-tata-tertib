@@ -216,10 +216,10 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form enctype="multipart/form-data" method="POST" action="dosenLapor.php">
                         <div class="form-group">
                             <label for="upload-bukti" class="required">Unggah Bukti</label>
-                            <input type="file" id="upload-bukti" class="form-control" required>
+                            <input type="file" id="upload-bukti" class="form-control" name="upload-bukti" required>
                         </div>
 
                         <div class="form-group">
@@ -236,8 +236,21 @@
                             <label for="prodi" class="required">Program Studi</label>
                             <select id="prodi" class="form-control" required>
                                 <option value="" disabled selected>Pilih Program Studi</option>
-                                <option value="TI">Teknik Informatika</option>
-                                <option value="SI">Sistem Informasi Bisnis</option>
+                                <?php
+                                include 'koneksi.php'; // File koneksi ke SQL Server
+
+                                $query = "SELECT DISTINCT prodi FROM kelas ORDER BY prodi"; // Query SQL
+                                $result = sqlsrv_query($conn, $query); // Eksekusi query dengan sqlsrv_query
+
+                                if ($result === false) {
+                                    die(print_r(sqlsrv_errors(), true)); // Menampilkan error jika query gagal
+                                }
+
+                                // Menampilkan setiap prodi sebagai elemen <option>
+                                while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+                                    echo '<option value="' . htmlspecialchars($row['prodi']) . '">' . htmlspecialchars($row['prodi']) . '</option>';
+                                }
+                                ?>
                             </select>
                             <div class="error-message">Program Studi wajib dipilih.</div>
                         </div>
@@ -246,8 +259,6 @@
                             <label for="kelas" class="required">Kelas</label>
                             <select id="kelas" class="form-control" required>
                                 <option value="" disabled selected>Pilih Kelas</option>
-                                <option value="A">Kelas A</option>
-                                <option value="B">Kelas B</option>
                             </select>
                             <div class="error-message">Kelas wajib dipilih.</div>
                         </div>
@@ -260,18 +271,28 @@
 
                         <div class="form-group">
                             <label for="pelanggaran" class="required">Pelanggaran</label>
-                            <input type="text" id="pelanggaran" class="form-control" placeholder="Pelanggaran" required>
+                            <select name="pelanggaran" id="pelanggaran" class="form-control">
+                                <option value="" disabled selected>Pilih Pelanggaran</option>
+                                <?php
+                                $query = "SELECT tingkat_id ,pelanggaran FROM pelanggaran ORDER BY pelanggaran";
+                                $result = sqlsrv_query($conn, $query);
+
+                                while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+                                    echo '<option value="' . htmlspecialchars($row['pelanggaran']) . '" data-tingkat_id="' . htmlspecialchars($row['tingkat_id']) . '">' . htmlspecialchars($row['pelanggaran']) . '</option>';
+                                }
+                                ?>
+                            </select>
                         </div>
 
                         <div class="form-group">
                             <label for="sanksi" class="required">Sanksi</label>
-                            <input type="text" id="sanksi" class="form-control" placeholder="Sanksi" required>
+                            <input type="text" id="sanksi" class="form-control" placeholder="Sanksi" required readonly>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="button" class="btn btn-success">Simpan</button>
+                    <button type="button" class="btn btn-success" id="simpanLaporan">Simpan</button>
                 </div>
             </div>
         </div>
@@ -279,6 +300,114 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function() {
+
+            $('#prodi').change(function() {
+                const prodi = $(this).val(); // Ambil nilai dari dropdown prodi
+                const kelasDropdown = $('#kelas'); // Dropdown kelas
+
+                // Bersihkan dropdown kelas dan tampilkan opsi placeholder
+                kelasDropdown.empty().append('<option value="" disabled selected>Memuat Kelas...</option>');
+
+                // AJAX request untuk memuat kelas berdasarkan prodi
+                $.ajax({
+                    url: 'get_kelas.php',
+                    method: 'GET',
+                    data: {
+                        prodi: prodi
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        // Bersihkan dropdown kelas dan tambahkan opsi baru
+                        kelasDropdown.empty().append('<option value="" disabled selected>Pilih Kelas</option>');
+                        $.each(data, function(index, kelas) {
+                            kelasDropdown.append('<option value="' + kelas.nama_kelas + '">' + kelas.nama_kelas + '</option>');
+                        });
+                    },
+                    error: function() {
+                        // Tampilkan pesan error jika terjadi kesalahan
+                        kelasDropdown.empty().append('<option value="" disabled selected>Error memuat kelas</option>');
+                    }
+                });
+            });
+            $("#pelanggaran").change(function() {
+                var tingkat_id = $("#pelanggaran option:selected").data("tingkat_id");
+
+                $.ajax({
+                    url: 'get_sanksi.php',
+                    method: 'GET',
+                    data: {
+                        tingkat_id: tingkat_id
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        $('#sanksi').val(response.sanksi);
+                    },
+                    error: function() {
+                        alert("Error fetching sanksi data.");
+                    }
+                });
+            });
+            $("#simpanLaporan").click(function() {
+                var formData = new FormData(); // Membuat objek FormData
+
+                // Mengambil data dari form
+                formData.append('nama', $("#nama").val());
+                formData.append('nim', $('#nim').val());
+                formData.append('prodi', $("#prodi").val());
+                formData.append('kelas', $("#kelas").val());
+                formData.append('pelanggaran', $("#pelanggaran").val());
+                formData.append('sanksi', $("#sanksi").val());
+                formData.append('tanggal', $("#tanggal").val());
+
+                // Mengambil file yang diunggah
+                var fileInput = $('#upload-bukti')[0];
+                if (fileInput.files.length > 0) {
+                    formData.append('upload-bukti', fileInput.files[0]);
+                }
+
+                // Kirimkan data menggunakan AJAX
+                $("#simpanLaporan").click(function() {
+                    var formData = new FormData();
+
+                    // Ambil data dari form
+                    formData.append("nama", $("#nama").val());
+                    formData.append("nim", $("#nim").val());
+                    formData.append("prodi", $("#prodi").val());
+                    formData.append("kelas", $("#kelas").val());
+                    formData.append("pelanggaran", $("#pelanggaran").val());
+                    formData.append("sanksi", $("#sanksi").val());
+                    formData.append("tanggal", $("#tanggal").val());
+
+                    // Ambil file
+                    var fileInput = $("#upload-bukti")[0];
+                    if (fileInput.files.length > 0) {
+                        formData.append("upload-bukti", fileInput.files[0]);
+                    }
+
+                    // Kirim data menggunakan AJAX
+                    $.ajax({
+                        url: "dosenLapor.php", // URL file PHP
+                        method: "POST",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            alert('Laporan berhasil diterima!');
+                            $("#laporanBaruModal").modal("hide");
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error: ", xhr.responseText);
+                            alert("Terjadi kesalahan saat mengirim data ke server.");
+                        },
+                    });
+                });
+            });
+        });
+    </script>
+
 </body>
 
 </html>
