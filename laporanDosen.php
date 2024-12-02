@@ -8,6 +8,7 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
     <style>
         body {
             margin: 0;
@@ -172,6 +173,10 @@
             content: " *";
             color: red;
         }
+
+        .dataTables_filter {
+            display: none;
+        }
     </style>
 </head>
 
@@ -193,7 +198,27 @@
         <div class="card">
             <div class="card-header">Pelaporan Peanggaran Mahasiswa</div>
             <div class="alert-container">
-                <div class="alert-message">
+                <?php
+                include "koneksi.php";
+
+                $user_id = $_COOKIE['user_id'];
+                $query = "SELECT COUNT(*) AS total FROM riwayat_pelaporan AS r
+                          INNER JOIN dosen AS d ON d.dosen_id = r.dosen_id
+                          WHERE d.user_id = ? ";
+                $params = array($user_id);
+                $stmt = sqlsrv_prepare($conn, $query, $params);
+                if ($stmt === false) {
+                    die(print_r(sqlsrv_errors(), true));
+                }
+                sqlsrv_execute($stmt);
+                $total = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+                if ($total['total'] > 0) {
+                    $hasData = true;
+                } else {
+                    $hasData = false;
+                }
+                ?>
+                <div class="alert-message" <?php if ($hasData) echo 'style="display: none;"'; ?>>
                     Maaf, data pelaporan saat ini belum ada.
                 </div>
                 <div class="alert-button">
@@ -203,6 +228,46 @@
                     </button>
                 </div>
             </div>
+            <table id="example" class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Tanggal</th>
+                        <th>Pelanggaran</th>
+                        <th>Tingkat</th>
+                        <th>Sanksi</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $query = "SELECT rp.tanggal, p.pelanggaran, t.tingkat, t.sanksi, rp.status FROM riwayat_pelaporan AS rp
+                             INNER JOIN pelanggaran AS p ON p.pelanggaran_id = rp.pelanggaran_id
+                             INNER JOIN tingkat AS t ON t.tingkat_id = rp.tingkat_id
+                             INNER JOIN dosen AS d ON d.dosen_id = rp.dosen_id
+                             WHERE d.user_id = ? ";
+                    $params = array($user_id);
+                    $stmt = sqlsrv_prepare($conn, $query, $params);
+                    if ($stmt === false) {
+                        die(print_r(sqlsrv_errors(), true));
+                    }
+                    if (sqlsrv_execute($stmt)) {
+                        $no = 1;
+                        while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+                    ?>
+                            <tr>
+                                <td><?php echo $no++ ?></td>
+                                <td><?php echo $row['tanggal']->format('Y-m-d') ?></td>
+                                <td><?php echo $row['pelanggaran'] ?></td>
+                                <td><?php echo $row['tingkat'] ?></td>
+                                <td><?php echo $row['sanksi'] ?></td>
+                                <td><?php echo $row['status'] ?></td>
+                            </tr><?php
+                                }
+                            }
+                                    ?>
+                </tbody>
+            </table>
         </div>
     </div>
 
@@ -301,9 +366,20 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+
     <script>
         $(document).ready(function() {
-
+            const hasData = <?php echo json_encode($hasData); ?>;
+            if (hasData) {
+                $('#example').DataTable({
+                    lengthChange: false // Menghilangkan dropdown "Show entries"
+                });
+            } else {
+                $('#example').hide(); // Sembunyikan tabel jika tidak ada data
+            }
             $('#prodi').change(function() {
                 const prodi = $(this).val(); // Ambil nilai dari dropdown prodi
                 const kelasDropdown = $('#kelas'); // Dropdown kelas
