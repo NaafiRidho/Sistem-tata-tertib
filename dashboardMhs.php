@@ -26,12 +26,17 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      transition: transform 0.3s ease;
     }
 
     .sidebar h2 {
       text-align: center;
       margin: 20px 0;
       font-size: 1.5rem;
+    }
+
+    .sidebar.close {
+      transform: translateX(-100%);
     }
 
     .menu {
@@ -70,9 +75,36 @@
       background-color: #c9302c;
     }
 
+    .alert-success {
+      /*max-width: 800px;*/
+      margin: 0 auto;
+      text-align: center;
+      padding: 15px;
+      border-radius: 5px;
+    }
+
+
     .content {
       margin-left: 240px;
       padding: 20px;
+      transition: margin-left 0.3s ease;
+    }
+
+    .content.shift {
+      margin-left: 40px;
+    }
+
+    .toggle-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: #002a8a;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 100;
     }
 
     .dashboard-card {
@@ -104,7 +136,6 @@
     }
 
     .card .btn {
-      margin-top: 10px;
       background-color: #00bcd4;
       color: white;
     }
@@ -122,35 +153,41 @@
       margin-top: 30 px;
     }
 
+    
+
     /* Ukuran font untuk Selamat Datang */
-   .greeting-text {
-      font-size: 1.3 rem; /* Ukuran font lebih besar */
+    .greeting-text {
+      font-size: 1.3 rem;
+      /* Ukuran font lebih besar */
       font-weight: bold;
       text-align: center;
       margin-bottom: 5px;
-   }
+    }
 
-   .divider {
+    .divider {
       border: 1px solid #ccc;
       margin: 10px 0;
-   }
+    }
 
-   /* Ukuran font untuk Sistem Tata Tertib */
-   .system-text {
+    /* Ukuran font untuk Sistem Tata Tertib */
+    .system-text {
       font-size: 1.2 rem;
       color: gray;
       margin-bottom: 0;
-   }
+    }
 
-   @media (min-width: 768px) {
+    @media (min-width: 768px) {
       .greeting-text {
-         font-size: 2rem; /* Lebih besar di layar besar */
+        font-size: 2rem;
+        /* Lebih besar di layar besar */
       }
-   }
+    }
   </style>
 </head>
 
 <body>
+
+  <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
 
   <div class="sidebar">
     <div class="menu">
@@ -165,71 +202,68 @@
     </div>
   </div>
 
-
   <div class="content">
     <h1>Dashboard</h1>
     <div class="card-header d-flex align-items-center p-3" style="gap: 20px;">
-   <!-- Gambar Profil -->
-   <div class="rounded-circle" style="width: 180px; height: 180px; overflow: hidden;">
-      <img src="pelanggaran/profilepic.png" alt="Foto Mahasiswa" style="width: 100%; height: 100%; object-fit: cover;">
-   </div>
+      <!-- Gambar Profil -->
+      <div class="rounded-circle" style="width: 180px; height: 180px; overflow: hidden;">
+        <img src="pelanggaran/profilepic.png" alt="Foto Mahasiswa"
+          style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
 
-   <!-- Informasi Mahasiswa -->
-   <div class="flex-grow-1 card" style="padding: 20px;">
-   <?php
-   include "koneksi.php";
+      <!-- Informasi Mahasiswa -->
+      <div class="flex-grow-1 card" style="padding: 20px;">
+        <?php
+        include "koneksi.php";
 
-   $query = "SELECT nama FROM mahasiswa WHERE user_id = ?";
-   $params = array($_COOKIE['user_id']);
-   $stmt = sqlsrv_prepare($conn, $query, $params);
+        $query = "SELECT nama FROM mahasiswa WHERE user_id = ?";
+        $params = array($_COOKIE['user_id']);
+        $stmt = sqlsrv_prepare($conn, $query, $params);
 
-   if ($stmt === false) {
-      die(print_r(sqlsrv_errors(), true));
-   }
-   sqlsrv_execute($stmt);
-   $nama = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)['nama'];
-   ?>
-   <p class="greeting-text">Selamat Datang, <?= htmlspecialchars($nama) ?></p>
-   <!-- Garis Pembagi -->
-   <hr style="border: 1px solid #ccc; margin: 10px 0;">
-   <p style="font-size: 1rem; color: gray; margin-bottom: 0;">Sistem Tata Tertib</p>
-</div>
-</div>
+        if ($stmt === false) {
+          die(print_r(sqlsrv_errors(), true));
+        }
+        sqlsrv_execute($stmt);
+        $nama = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)['nama'];
+        ?>
+        <p class="greeting-text">Selamat Datang, <?= htmlspecialchars($nama) ?></p>
+        <!-- Garis Pembagi -->
+        <hr style="border: 1px solid #ccc; margin: 10px 0;">
+        <p style="font-size: 1rem; color: gray; margin-bottom: 0;">Sistem Tata Tertib</p>
+      </div>
+    </div>
 
-
-
-    
-    <div class="container mt-4">
-    <?php
-    $query = "SELECT TOP 1 t.tingkat FROM riwayat_pelaporan AS p
+    <!-- Status Dashboard -->
+  <div class="container mt-4">
+      <?php
+      $query = "SELECT TOP 1 t.tingkat FROM riwayat_pelaporan AS p
             INNER JOIN mahasiswa AS m ON m.mahasiswa_id = p.mahasiswa_id
             INNER JOIN tingkat AS t ON t.tingkat_id = p.tingkat_id
             WHERE m.user_id = ? ORDER BY t.tingkat";
-    $params = array($_COOKIE['user_id']);
-    $stmt = sqlsrv_prepare($conn, $query, $params);
+      $params = array($_COOKIE['user_id']);
+      $stmt = sqlsrv_prepare($conn, $query, $params);
 
-    if ($stmt === false) {
-      die(print_r(sqlsrv_errors(), true));
-    }
+      if ($stmt === false) {
+        die(print_r(sqlsrv_errors(), true));
+      }
 
-    sqlsrv_execute($stmt);
-    $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+      sqlsrv_execute($stmt);
+      $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
 
-    if ($row) {
-      $tingkat = htmlspecialchars($row['tingkat']);
-      echo "
+      if ($row) {
+        $tingkat = htmlspecialchars($row['tingkat']);
+        echo "
       <div class='alert alert-warning text-center' role='alert'>
           <strong>Tingkat Pelanggaran Saat Ini:</strong> $tingkat
       </div>";
-    } else {
-      echo "
+      } else {
+        echo "
       <div class='alert alert-success text-center' role='alert'>
           <strong>Mahasiswa belum melakukan pelanggaran.</strong>
       </div>";
-    }
-    ?>
-  </div>
-  
+      }
+      ?>
+    </div>
     <!-- Kartu Dashboard -->
     <div class="dashboard-card">
       <div class="card">
@@ -246,8 +280,16 @@
       </div>
     </div>
   </div>
+
+
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function toggleSidebar() {
+      document.querySelector('.sidebar').classList.toggle('close');
+      document.querySelector('.content').classList.toggle('shift');
+    }
+  </script>
 </body>
 
 </html>
