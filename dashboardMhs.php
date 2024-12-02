@@ -142,27 +142,69 @@
 
   <div class="content">
     <h1>Dashboard</h1>
-    <div class="card-header">
-      <div class="card">
-        <?php
-        include "koneksi.php";
+    <div class="card-header d-flex align-items-center p-3" style="gap: 20px;">
+   <!-- Gambar Profil -->
+   <div class="rounded-circle" style="width: 100px; height: 100px; overflow: hidden;">
+      <img src="profilpic.jpg" alt="Foto Mahasiswa" style="width: 100%; height: 100%; object-fit: cover;">
+   </div>
 
-        $query = "SELECT nama FROM mahasiswa WHERE user_id = ?";
-        $params = array($_COOKIE['user_id']);
-        $stmt = sqlsrv_prepare($conn, $query, $params);
+   <!-- Informasi Mahasiswa -->
+   <div class="flex-grow-1 card" style="padding: 20px;">
+      <?php
+      include "koneksi.php";
 
-        if ($stmt === false) {
-          die(print_r(sqlsrv_errors(), true));
-        }
-        sqlsrv_execute($stmt);
-        $nama = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)['nama'];
-        ?>
-        <p style="font-size: 1.3rem; font-weight: bold; text-align: center; margin-bottom: 5px;">Selamat Datang <?= htmlspecialchars($nama) ?></p>
-        <hr>
-        <p style="font-size: 1.3rem; text-align: center; margin-bottom: 20px;">Sistem Tata Tertib</p>
-      </div>
-    </div>
+      $query = "SELECT nama FROM mahasiswa WHERE user_id = ?";
+      $params = array($_COOKIE['user_id']);
+      $stmt = sqlsrv_prepare($conn, $query, $params);
 
+      if ($stmt === false) {
+         die(print_r(sqlsrv_errors(), true));
+      }
+      sqlsrv_execute($stmt);
+      $nama = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)['nama'];
+      ?>
+      <p style="font-size: 1.3rem; font-weight: bold; text-align: left; margin-bottom: 5px;">Selamat Datang
+         <?= htmlspecialchars($nama) ?>
+      </p>
+      <!-- Garis Pembagi -->
+      <hr style="border: 1px solid #ccc; margin: 10px 0;">
+      <p style="font-size: 1rem; color: gray; margin-bottom: 0;">Sistem Tata Tertib</p>
+   </div>
+</div>
+
+
+    
+    <div class="container mt-4">
+    <?php
+    $query = "SELECT TOP 1 t.tingkat FROM riwayat_pelaporan AS p
+            INNER JOIN mahasiswa AS m ON m.mahasiswa_id = p.mahasiswa_id
+            INNER JOIN tingkat AS t ON t.tingkat_id = p.tingkat_id
+            WHERE m.user_id = ? ORDER BY t.tingkat";
+    $params = array($_COOKIE['user_id']);
+    $stmt = sqlsrv_prepare($conn, $query, $params);
+
+    if ($stmt === false) {
+      die(print_r(sqlsrv_errors(), true));
+    }
+
+    sqlsrv_execute($stmt);
+    $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+
+    if ($row) {
+      $tingkat = htmlspecialchars($row['tingkat']);
+      echo "
+      <div class='alert alert-warning text-center' role='alert'>
+          <strong>Tingkat Pelanggaran Saat Ini:</strong> $tingkat
+      </div>";
+    } else {
+      echo "
+      <div class='alert alert-success text-center' role='alert'>
+          <strong>Mahasiswa belum melakukan pelanggaran.</strong>
+      </div>";
+    }
+    ?>
+  </div>
+  
     <!-- Kartu Dashboard -->
     <div class="dashboard-card">
       <div class="card">
@@ -179,24 +221,6 @@
       </div>
     </div>
   </div>
-
-  <div class="container">
-    <?php
-    $query = "SELECT TOP 1 t.tingkat FROM riwayat_pelaporan AS p
-              INNER JOIN mahasiswa AS m ON m.mahasiswa_id = p.mahasiswa_id
-              INNER JOIN tingkat AS t ON t.tingkat_id = p.tingkat_id
-              WHERE m.user_id = ? ORDER BY t.tingkat";
-    $params = array($_COOKIE['user_id']);
-    $stmt = sqlsrv_prepare($conn, $query, $params);
-    if ($stmt === false) {
-      die(print_r(sqlsrv_errors(), true));
-    }
-    sqlsrv_execute($stmt);
-    $tingkat = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)['tingkat'];
-    ?>
-    <p><b>Tingkat Pelanggaran Saat Ini : <?= htmlspecialchars($tingkat) ?></b></p>
-  </div>
-
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
