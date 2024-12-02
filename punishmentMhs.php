@@ -94,6 +94,29 @@
         .btn-cetak-surat:hover {
             background-color: #218838;
         }
+
+        /* Custom button style for file input */
+        .btn-upload-label {
+            margin-top: 30px;
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            font-size: 1rem;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-upload-label:hover {
+            background-color: #218838;
+        }
+
+        /* Hide the default file input */
+        input[type="file"] {
+            display: none;
+        }
     </style>
 </head>
 
@@ -131,6 +154,18 @@
                 <i class="bi bi-printer"></i> Cetak Surat
             </button>
         </form>
+        <!-- Form untuk mengunggah file -->
+        <form action="uploadFile.php" method="POST" enctype="multipart/form-data">
+            <div class="form-group mb-3 ">
+                <label for="fileUpload" class="btn-upload-label">
+                    <i class="bi bi-upload" style="margin-right: 10px;"></i>Upload File</label>
+                <input type="file" class="form-control" id="fileUpload" name="uploadedFile" required>
+            </div>
+            <button type="submit" class="btn btn-success">
+                <i class="bi bi-cloud-arrow-up" style="margin-right: 10px;"></i> Unggah
+            </button>
+        </form>
+
     </div>
 
 
