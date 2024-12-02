@@ -119,8 +119,34 @@
 
     .card-header .card {
       max-width: 100%;
-      margin-top: 30px;
+      margin-top: 30 px;
     }
+
+    /* Ukuran font untuk Selamat Datang */
+   .greeting-text {
+      font-size: 1.3 rem; /* Ukuran font lebih besar */
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 5px;
+   }
+
+   .divider {
+      border: 1px solid #ccc;
+      margin: 10px 0;
+   }
+
+   /* Ukuran font untuk Sistem Tata Tertib */
+   .system-text {
+      font-size: 1.2 rem;
+      color: gray;
+      margin-bottom: 0;
+   }
+
+   @media (min-width: 768px) {
+      .greeting-text {
+         font-size: 2rem; /* Lebih besar di layar besar */
+      }
+   }
   </style>
 </head>
 
@@ -144,33 +170,32 @@
     <h1>Dashboard</h1>
     <div class="card-header d-flex align-items-center p-3" style="gap: 20px;">
    <!-- Gambar Profil -->
-   <div class="rounded-circle" style="width: 100px; height: 100px; overflow: hidden;">
-      <img src="profilpic.jpg" alt="Foto Mahasiswa" style="width: 100%; height: 100%; object-fit: cover;">
+   <div class="rounded-circle" style="width: 180px; height: 180px; overflow: hidden;">
+      <img src="pelanggaran/profilepic.png" alt="Foto Mahasiswa" style="width: 100%; height: 100%; object-fit: cover;">
    </div>
 
    <!-- Informasi Mahasiswa -->
    <div class="flex-grow-1 card" style="padding: 20px;">
-      <?php
-      include "koneksi.php";
+   <?php
+   include "koneksi.php";
 
-      $query = "SELECT nama FROM mahasiswa WHERE user_id = ?";
-      $params = array($_COOKIE['user_id']);
-      $stmt = sqlsrv_prepare($conn, $query, $params);
+   $query = "SELECT nama FROM mahasiswa WHERE user_id = ?";
+   $params = array($_COOKIE['user_id']);
+   $stmt = sqlsrv_prepare($conn, $query, $params);
 
-      if ($stmt === false) {
-         die(print_r(sqlsrv_errors(), true));
-      }
-      sqlsrv_execute($stmt);
-      $nama = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)['nama'];
-      ?>
-      <p style="font-size: 1.3rem; font-weight: bold; text-align: left; margin-bottom: 5px;">Selamat Datang
-         <?= htmlspecialchars($nama) ?>
-      </p>
-      <!-- Garis Pembagi -->
-      <hr style="border: 1px solid #ccc; margin: 10px 0;">
-      <p style="font-size: 1rem; color: gray; margin-bottom: 0;">Sistem Tata Tertib</p>
-   </div>
+   if ($stmt === false) {
+      die(print_r(sqlsrv_errors(), true));
+   }
+   sqlsrv_execute($stmt);
+   $nama = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)['nama'];
+   ?>
+   <p class="greeting-text">Selamat Datang, <?= htmlspecialchars($nama) ?></p>
+   <!-- Garis Pembagi -->
+   <hr style="border: 1px solid #ccc; margin: 10px 0;">
+   <p style="font-size: 1rem; color: gray; margin-bottom: 0;">Sistem Tata Tertib</p>
 </div>
+</div>
+
 
 
     
