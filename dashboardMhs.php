@@ -41,7 +41,7 @@
     .menu a {
       display: flex;
       align-items: center;
-      gap: 10px; 
+      gap: 10px;
       color: white;
       padding: 15px 20px;
       text-decoration: none;
@@ -80,7 +80,7 @@
       flex-wrap: wrap;
       justify-content: space-between;
       gap: 20px;
-      margin-top: 20px;
+      margin-top: 60px;
     }
 
     .card {
@@ -91,11 +91,16 @@
       padding: 20px;
       text-align: center;
       max-width: calc(33.33% - 20px);
+      height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
     }
 
     .card h3 {
       font-size: 1.2rem;
       margin-bottom: 10px;
+      font-weight: bold;
     }
 
     .card .btn {
@@ -111,30 +116,51 @@
     .card .btn:active {
       background-color: #005f70;
     }
+
+    .card-header .card {
+      max-width: 100%;
+      margin-top: 30px;
+    }
   </style>
 </head>
 
 <body>
 
-<div class="sidebar">
-  <div class="menu">
-    <h2>Si Tertib</h2>
-    <a href="dashboardMhs.php"><i class="bbi bi-columns-gap"></i> Dashboard</a>
-    <a href="laporanMhs.php"><i class="bi bi-file-text"></i> Laporan</a>
-    <a href="punishmentMhs.php"><i class="bi bi-exclamation-circle"></i> Punishment</a>
-    <a href="history_pelanggaran.php"><i class="bi bi-clock-history"></i> History Pelanggaran</a>
+  <div class="sidebar">
+    <div class="menu">
+      <h2>Si Tertib</h2>
+      <a href="dashboardMhs.php"><i class="bbi bi-columns-gap"></i> Dashboard</a>
+      <a href="laporanMhs.php"><i class="bi bi-file-text"></i> Laporan</a>
+      <a href="punishmentMhs.php"><i class="bi bi-exclamation-circle"></i> Punishment</a>
+      <a href="history_pelanggaran.php"><i class="bi bi-clock-history"></i> History Pelanggaran</a>
+    </div>
+    <div class="logout">
+      <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    </div>
   </div>
-  <div class="logout">
-    <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
-  </div>
-</div>
 
 
   <div class="content">
     <h1>Dashboard</h1>
-    <div>
-      <p style="font-size: 1.3rem; font-weight: bold; text-align: center; margin-bottom: 5px;">Selamat Datang Mahasiswa</p>
-      <p style="text-align: center; margin-bottom: 20px;">Sistem Tata Tertib</p>
+    <div class="card-header">
+      <div class="card">
+        <?php
+        include "koneksi.php";
+
+        $query = "SELECT nama FROM mahasiswa WHERE user_id = ?";
+        $params = array($_COOKIE['user_id']);
+        $stmt = sqlsrv_prepare($conn, $query, $params);
+
+        if ($stmt === false) {
+          die(print_r(sqlsrv_errors(), true));
+        }
+        sqlsrv_execute($stmt);
+        $nama = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)['nama'];
+        ?>
+        <p style="font-size: 1.3rem; font-weight: bold; text-align: center; margin-bottom: 5px;">Selamat Datang <?= htmlspecialchars($nama) ?></p>
+        <hr>
+        <p style="font-size: 1.3rem; text-align: center; margin-bottom: 20px;">Sistem Tata Tertib</p>
+      </div>
     </div>
 
     <!-- Kartu Dashboard -->
@@ -152,81 +178,27 @@
         <a href="history_pelanggaran.php" class="btn btn-primary">Rincian &gt;&gt;</a>
       </div>
     </div>
+  </div>
 
-    <!-- Tabel Pelanggaran -->
-    <div class="mt-4">
-      <h2 class="mb-3">Daftar Pelanggaran</h2>
-      <div id="pelanggaran-container">
-        <!-- Pesan jika tidak ada pelanggaran -->
-        <p class="text-center text-muted" id="no-pelanggaran">Kamu belum melakukan pelanggaran.</p>
-        <!-- Tabel akan disembunyikan jika tidak ada data -->
-        <table class="table table-bordered table-striped d-none" id="pelanggaran-table">
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>Pelanggaran yang Dilakukan</th>
-              <th>Tingkat Pelanggaran</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- Data pelanggaran -->
-          </tbody>
-        </table>
-      </div>
-    </div>
+  <div class="container">
+    <?php
+    $query = "SELECT TOP 1 t.tingkat FROM riwayat_pelaporan AS p
+              INNER JOIN mahasiswa AS m ON m.mahasiswa_id = p.mahasiswa_id
+              INNER JOIN tingkat AS t ON t.tingkat_id = p.tingkat_id
+              WHERE m.user_id = ? ORDER BY t.tingkat";
+    $params = array($_COOKIE['user_id']);
+    $stmt = sqlsrv_prepare($conn, $query, $params);
+    if ($stmt === false) {
+      die(print_r(sqlsrv_errors(), true));
+    }
+    sqlsrv_execute($stmt);
+    $tingkat = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)['tingkat'];
+    ?>
+    <p><b>Tingkat Pelanggaran Saat Ini : <?= htmlspecialchars($tingkat) ?></b></p>
   </div>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    // Data pelanggaran dengan tingkat pelanggaran 5 (ringan) hingga 1 (berat)
-    const dataPelanggaran = [{
-        nomor: 1,
-        pelanggaran: "Terlambat Masuk Kelas",
-        tingkat: 5
-      },
-      {
-        nomor: 2,
-        pelanggaran: "Tidak Mengumpulkan Tugas",
-        tingkat: 4
-      },
-      {
-        nomor: 3,
-        pelanggaran: "Tidak Memakai Seragam",
-        tingkat: 3
-      },
-      {
-        nomor: 4,
-        pelanggaran: "Tidak Mengikuti Upacara",
-        tingkat: 2
-      },
-      {
-        nomor: 5,
-        pelanggaran: "Membawa Barang Terlarang",
-        tingkat: 1
-      },
-    ];
-
-    const table = document.getElementById('pelanggaran-table');
-    const noPelanggaranMessage = document.getElementById('no-pelanggaran');
-
-    if (dataPelanggaran.length > 0) {
-      noPelanggaranMessage.classList.add('d-none');
-      table.classList.remove('d-none');
-      const tbody = table.querySelector('tbody');
-      tbody.innerHTML = dataPelanggaran
-        .map(
-          (item) => `
-      <tr>
-        <td>${item.nomor}</td>
-        <td>${item.pelanggaran}</td>
-        <td>${item.tingkat}</td>
-      </tr>
-    `
-        )
-        .join('');
-    }
-  </script>
 </body>
 
 </html>
