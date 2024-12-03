@@ -232,6 +232,7 @@
                 <thead>
                     <tr>
                         <th>No</th>
+                        <th>Nama</th>
                         <th>Tanggal</th>
                         <th>Pelanggaran</th>
                         <th>Tingkat</th>
@@ -241,11 +242,15 @@
                 </thead>
                 <tbody>
                     <?php
-                    $query = "SELECT rp.tanggal, p.pelanggaran, t.tingkat, t.sanksi, rp.status FROM riwayat_pelaporan AS rp
-                             INNER JOIN pelanggaran AS p ON p.pelanggaran_id = rp.pelanggaran_id
-                             INNER JOIN tingkat AS t ON t.tingkat_id = rp.tingkat_id
-                             INNER JOIN dosen AS d ON d.dosen_id = rp.dosen_id
-                             WHERE d.user_id = ? ";
+                    $query = "SELECT 
+                    rp.tanggal, m.nama, p.pelanggaran, t.tingkat, t.sanksi, rp.status 
+                  FROM riwayat_pelaporan AS rp
+                  INNER JOIN pelanggaran AS p ON p.pelanggaran_id = rp.pelanggaran_id
+                  INNER JOIN tingkat AS t ON t.tingkat_id = rp.tingkat_id
+                  INNER JOIN dosen AS d ON d.dosen_id = rp.dosen_id
+                  INNER JOIN mahasiswa AS m ON m.mahasiswa_id = rp.mahasiswa_id
+                  WHERE d.user_id = ?";
+        
                     $params = array($user_id);
                     $stmt = sqlsrv_prepare($conn, $query, $params);
                     if ($stmt === false) {
@@ -257,6 +262,7 @@
                     ?>
                             <tr>
                                 <td><?php echo $no++ ?></td>
+                                <td><?php echo $row['nama'] ?></td>
                                 <td><?php echo $row['tanggal']->format('Y-m-d') ?></td>
                                 <td><?php echo $row['pelanggaran'] ?></td>
                                 <td><?php echo $row['tingkat'] ?></td>
