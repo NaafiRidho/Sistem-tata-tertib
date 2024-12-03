@@ -453,7 +453,7 @@
                     contentType: false,
                     processData: false,
                     success: function(response) {
-                        alert('Laporan berhasil diterima!');
+                        alert(response.message);
                         $("#laporanBaruModal").modal("hide");
                     },
                     error: function(xhr, status, error) {
