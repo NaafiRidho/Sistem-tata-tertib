@@ -96,7 +96,6 @@
 </head>
 
 <body>
-  <!-- Sidebar -->
   <div class="sidebar">
     <h2>Si Tertib</h2>
     <div class="menu">
@@ -109,7 +108,6 @@
     </div>
   </div>
 
-  <!-- Content -->
   <div class="content">
     <h1>List Tata Tertib</h1>
     <div class="card">
