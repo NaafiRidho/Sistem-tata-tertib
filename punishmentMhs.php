@@ -26,6 +26,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            transition: transform 0.3s ease;
         }
 
         .sidebar h2 {
@@ -33,6 +34,11 @@
             margin: 20px 0;
             font-size: 1.5rem;
         }
+
+        .sidebar.close {
+            transform: translateX(-100%);
+        }
+
 
         .menu {
             flex-grow: 1;
@@ -61,15 +67,14 @@
         }
 
         .logout a {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            display: block;
+            text-align: center;
             color: white;
-            padding: 15px;
+            padding: 10px;
             font-size: 1rem;
             text-decoration: none;
             background-color: #d9534f;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s;
         }
 
         .logout a:hover {
@@ -78,8 +83,26 @@
 
         .content {
             margin-left: 250px;
-            /* Sesuaikan dengan lebar sidebar */
             padding: 20px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .content.shift {
+            margin-left: 40px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .toggle-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #002a8a;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 100;
         }
 
         .btn-cetak-surat {
@@ -95,7 +118,6 @@
             background-color: #218838;
         }
 
-        /* Custom button style for file input */
         .btn-upload-label {
             margin-top: 30px;
             display: inline-block;
@@ -122,6 +144,8 @@
 
 <body>
 
+    <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="menu">
@@ -140,8 +164,7 @@
             </a>
         </div>
         <div class="logout">
-            <a href="login.php">
-                <i class="bi bi-box-arrow-right"></i> <span>Logout</span>
+            <a href="login.php"><i class="bi bi-box-arrow-right"></i> <span>Logout</span>
             </a>
         </div>
     </div>
@@ -171,6 +194,12 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('close');
+            document.querySelector('.content').classList.toggle('shift');
+        }
+    </script>
 </body>
 
 </html>

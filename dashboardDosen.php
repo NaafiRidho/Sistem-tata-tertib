@@ -97,6 +97,28 @@
       background-color: #ccc;
       margin: 10px 0;
     }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    table,
+    th,
+    td {
+      border: 1px solid #ddd;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
   </style>
 </head>
 
@@ -121,6 +143,67 @@
       <div class="divider"></div>
       <p>Sistem Tata Tertib</p>
     </div>
+
+    <center>
+      <h4>Pengajuan Banding dari Mahasiswa</h4>
+    </center>
+    <table>
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Nama</th>
+          <th>Pelanggaran</th>
+          <th>Sanksi</th>
+          <th>Alasan</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        include "koneksi.php";
+        $user_id = $_COOKIE["user_id"];
+        
+        $query = "SELECT m.nama, p.pelanggaran, p.sanksi, ab.alasan, ab.status
+                  FROM aju_banding AS ab
+                  JOIN pelanggaran p ON ab.pelaporan_id = p.pelanggar_id
+                  JOIN mahasiswa m ON p.pelanggar_id = m.pelanggar_id
+                  WHERE ab.user_id = ?";
+        
+        $params = array($user_id);
+        $stmt = sqlsrv_prepare($conn, $query, $params);
+        
+        if ($stmt === false) {
+          die(print_r(sqlsrv_errors(), true));
+        }
+        
+        if (sqlsrv_execute($stmt)) {
+          $no = 1;
+          while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+            ?>
+            <tr>
+              <td><?php echo $no++; ?></td>
+              <td><?php echo $row["nama"]; ?></td>
+              <td><?php echo $row["pelanggaran"]; ?></td>
+              <td><?php echo $row["sanksi"]; ?></td>
+              <td><?php echo $row["alasan"]; ?></td>
+              <td>
+                <?php 
+                if ($row["status"] == "Tolak") {
+                  echo "<span class='badge badge-danger'>Dilaporkan</span>";
+                } else if ($row["status"] == "Terima") {
+                  echo "<span class='badge badge-warning'>Dilakukan</span>";
+                }
+                ?>
+              </td>
+            </tr>
+            <?php
+          }
+        } else {
+          echo "Error executing query.";
+        }
+        ?>
+      </tbody>
+    </table>
   </div>
 
   <!-- Bootstrap JS -->

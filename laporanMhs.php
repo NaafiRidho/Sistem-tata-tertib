@@ -33,6 +33,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      transition: transform 0.3s ease;
     }
 
     .sidebar h2 {
@@ -40,6 +41,11 @@
       margin: 20px 0;
       font-size: 1.5rem;
     }
+
+    .sidebar.close {
+      transform: translateX(-100%);
+    }
+
 
     .menu {
       flex-grow: 1;
@@ -80,6 +86,24 @@
     .content {
       margin-left: 240px;
       padding: 20px;
+      transition: margin-left 0.3s ease;
+    }
+
+    .content.shift {
+      margin-left: 40px;
+    }
+
+    .toggle-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: #002a8a;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 100;
     }
 
     .table img {
@@ -131,29 +155,25 @@
 
     button:disabled {
       background-color: #ccc;
-      /* Warna latar pudar */
       color: #666;
-      /* Warna teks pudar */
       cursor: not-allowed;
-      /* Ubah kursor menjadi tanda larangan */
       border-color: #aaa;
-      /* Warna border pudar */
     }
 
     .form-control {
       white-space: normal;
-      /* Membuat teks membungkus */
       word-wrap: break-word;
-      /* Memastikan teks terputus di tempat yang sesuai */
       overflow-wrap: break-word;
-      /* Alternatif untuk word-wrap */
       height: auto;
-      /* Menyesuaikan tinggi secara otomatis */
     }
+
   </style>
 </head>
 
 <body>
+
+<button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+
 
   <div class="sidebar">
     <div class="menu">
@@ -219,7 +239,7 @@
             if (sqlsrv_execute($stmt)) {
               $no = 1;
               while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-            ?>
+                ?>
                 <tr>
                   <td><?php echo $no++ ?></td>
                   <td><?php echo $row["nama"] ?></td>
@@ -234,26 +254,24 @@
                   <td>
                     <?php
                     if ($row['status'] !== 'Diterima') {
-                    ?><button class="btn-success" data-bs-toggle="modal" data-bs-target="#modalTerima" data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>">
+                      ?><button class="btn-success" data-bs-toggle="modal" data-bs-target="#modalTerima"
+                        data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>">
                         Terima</button><?php
-                                      } else {
-                                        ?><button class="btn-success" disabled>
+                    } else {
+                      ?><button class="btn-success" disabled>
                         Diterima
                       </button><?php
-                                      }
-                                ?>
+                    }
+                    ?>
                     <button class="btn-detail" data-bs-toggle="modal" data-bs-target="#modalUlasan"
-                      data-pelanggaran="<?php echo $row['pelanggaran']; ?>"
-                      data-nama="<?php echo $row['mahasiswa']; ?>"
-                      data-nim="<?php echo $row['nim']; ?>"
-                      data-file="<?php echo $row['file']; ?>"
-                      data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>"
-                      data-prodi="<?php echo $row['prodi']; ?>">
+                      data-pelanggaran="<?php echo $row['pelanggaran']; ?>" data-nama="<?php echo $row['mahasiswa']; ?>"
+                      data-nim="<?php echo $row['nim']; ?>" data-file="<?php echo $row['file']; ?>"
+                      data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>" data-prodi="<?php echo $row['prodi']; ?>">
                       Banding
                     </button>
                   </td>
                 </tr>
-            <?php
+                <?php
               }
             } else {
               die(print_r(sqlsrv_errors(), true));
@@ -303,17 +321,20 @@
           </div>
           <div class="mb-3">
             <label for="pelanggaran" class="form-label">Pelanggaran</label>
-            <textarea class="form-control" id="pelanggaran" rows="3" readonly><?php echo $row['pelanggaran']; ?></textarea>
+            <textarea class="form-control" id="pelanggaran" rows="3"
+              readonly><?php echo $row['pelanggaran']; ?></textarea>
           </div>
           <div class="mb-3">
             <label for="foto" class="form-label">Foto</label>
             <div class="text-center">
-              <img src="<?php echo $file; ?>" id="foto" alt="Foto Pelanggaran" class="img-fluid" style="width: 150px; height: auto; object-fit: cover;">
+              <img src="<?php echo $file; ?>" id="foto" alt="Foto Pelanggaran" class="img-fluid"
+                style="width: 150px; height: auto; object-fit: cover;">
             </div>
           </div>
           <div class="mb-3">
             <label for="ajubanding" class="form-label">Ajukan Banding</label>
-            <textarea class="form-control" id="ajubanding" rows="3" placeholder="Tuliskan alasan banding Anda..."></textarea>
+            <textarea class="form-control" id="ajubanding" rows="3"
+              placeholder="Tuliskan alasan banding Anda..."></textarea>
           </div>
 
         </div>
@@ -328,21 +349,21 @@
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    document.getElementById('btnKirim').addEventListener('click', function() {
+    document.getElementById('btnKirim').addEventListener('click', function () {
       alert('Ulasan berhasil dikirim');
     });
   </script>
   <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
       // Inisialisasi DataTable
       $('#example').DataTable();
 
-      $('.btn-success').click(function() {
+      $('.btn-success').click(function () {
         var pelaporan_id = $(this).data('pelaporan_id');
         $("#modalTerima").data('pelaporan_id', pelaporan_id);
       });
 
-      $('#btnTerima').click(function() {
+      $('#btnTerima').click(function () {
         var pelaporan_id = $("#modalTerima").data('pelaporan_id');
         if (confirm("Apakah Anda yakin ingin menerima laporan ini?")) {
           $.ajax({
@@ -351,11 +372,11 @@
             data: {
               pelaporan_id: pelaporan_id
             },
-            success: function(response) {
+            success: function (response) {
               alert('Laporan berhasil diterima!');
               $('#modalTerima').modal('hide');
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
               alert('Terjadi kesalahan: ' + error);
             }
           });
@@ -363,7 +384,7 @@
       });
 
       // Ketika tombol 'Lihat Detail' diklik
-      $('.btn-detail').click(function() {
+      $('.btn-detail').click(function () {
         // Ambil data yang disimpan dalam atribut data-*
         var pelanggaran = $(this).data('pelanggaran');
         var nama = $(this).data('nama');
@@ -381,7 +402,7 @@
         $('#modalUlasan').data('prodi', prodi); //menyimpan prodi
       });
 
-      $('#btnKirim').click(function() {
+      $('#btnKirim').click(function () {
         var pelaporanId = $('#modalUlasan').data('pelaporan_id'); // Ambil pelaporan_id dari modal
         var alasanBanding = $('#ajubanding').val(); // Ambil alasan banding
         var prodi = $('#modalUlasan').data('prodi'); // Ambil prodi
@@ -394,17 +415,24 @@
             alasan_banding: alasanBanding,
             prodi: prodi
           },
-          success: function(response) {
+          success: function (response) {
             alert('Alasan Banding berhasil dikirim');
             $('#modalUlasan').modal('hide');
           },
-          error: function(xhr, status, error) {
+          error: function (xhr, status, error) {
             alert('Error: ' + error);
           }
         })
       })
     });
   </script>
+  <script>
+    function toggleSidebar() {
+      document.querySelector('.sidebar').classList.toggle('close');
+      document.querySelector('.content').classList.toggle('shift');
+    }
+</script>
+
 </body>
 
 </html>

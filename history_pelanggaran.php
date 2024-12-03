@@ -33,6 +33,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            transition: transform 0.3s ease;
         }
 
         .sidebar h2 {
@@ -40,6 +41,11 @@
             margin: 20px 0;
             font-size: 1.5rem;
         }
+
+        .sidebar.close {
+            transform: translateX(-100%);
+        }
+
 
         .menu {
             flex-grow: 1;
@@ -80,6 +86,25 @@
         .content {
             margin-left: 240px;
             padding: 20px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .content.shift {
+            margin-left: 40px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .toggle-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #002a8a;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 100;
         }
 
         .dataTables_paginate {
@@ -93,6 +118,7 @@
 </head>
 
 <body>
+    <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
     <div class="sidebar">
         <div class="menu">
             <h2>Si Tertib</h2>
@@ -152,7 +178,7 @@
                         if (sqlsrv_execute($stmt)) {
                             $no = 1;
                             while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-                        ?>
+                                ?>
                                 <tr>
                                     <td><?php echo $no++; ?></td>
                                     <td><?php echo $row["pelanggaran"] ?></td>
@@ -169,7 +195,7 @@
                                         } ?>
                                     </td>
                                 </tr>
-                        <?php
+                                <?php
                             }
                         } ?>
                     </tbody>
@@ -178,9 +204,15 @@
         </div>
     </div>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#example').DataTable();
         })
+    </script>
+    <script>
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('close');
+            document.querySelector('.content').classList.toggle('shift');
+        }
     </script>
 </body>
 
