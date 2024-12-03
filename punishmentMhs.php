@@ -67,15 +67,14 @@
         }
 
         .logout a {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            display: block;
+            text-align: center;
             color: white;
-            padding: 15px;
+            padding: 10px;
             font-size: 1rem;
             text-decoration: none;
             background-color: #d9534f;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s;
         }
 
         .logout a:hover {
@@ -165,8 +164,7 @@
             </a>
         </div>
         <div class="logout">
-            <a href="login.php">
-                <i class="bi bi-box-arrow-right"></i> <span>Logout</span>
+            <a href="login.php"><i class="bi bi-box-arrow-right"></i> <span>Logout</span>
             </a>
         </div>
     </div>
