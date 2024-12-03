@@ -26,6 +26,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            transition: transform 0.3s ease;
         }
 
         .sidebar h2 {
@@ -33,6 +34,11 @@
             margin: 20px 0;
             font-size: 1.5rem;
         }
+
+        .sidebar.close {
+            transform: translateX(-100%);
+        }
+
 
         .menu {
             flex-grow: 1;
@@ -78,8 +84,24 @@
 
         .content {
             margin-left: 250px;
-            /* Sesuaikan dengan lebar sidebar */
             padding: 20px;
+        }
+
+        .content.shift {
+            margin-left: 40px;
+        }
+
+        .toggle-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #002a8a;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 100;
         }
 
         .btn-cetak-surat {
@@ -121,6 +143,8 @@
 </head>
 
 <body>
+
+    <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
 
     <!-- Sidebar -->
     <div class="sidebar">
@@ -171,6 +195,12 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('close');
+            document.querySelector('.content').classList.toggle('shift');
+        }
+    </script>
 </body>
 
 </html>
