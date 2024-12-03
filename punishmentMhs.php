@@ -85,10 +85,12 @@
         .content {
             margin-left: 250px;
             padding: 20px;
+            transition: margin-left 0.3s ease;
         }
 
         .content.shift {
             margin-left: 40px;
+            transition: margin-left 0.3s ease;
         }
 
         .toggle-btn {
@@ -117,7 +119,6 @@
             background-color: #218838;
         }
 
-        /* Custom button style for file input */
         .btn-upload-label {
             margin-top: 30px;
             display: inline-block;
