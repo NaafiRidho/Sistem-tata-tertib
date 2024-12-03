@@ -5,8 +5,8 @@ $username = $_POST["username"];
 $password = $_POST["password"];
 
 
-$query = "SELECT * FROM dbo.[user] WHERE username = ?";
-$params = array($username);
+$query = "SELECT * FROM dbo.[user] WHERE username = ? AND password = ?";
+$params = array($username, $password);
 
 
 $stmt = sqlsrv_prepare($conn, $query, $params);
@@ -21,17 +21,24 @@ if (sqlsrv_execute($stmt)) {
         $user_id=$row["user_id"];
     }
 
-    if ($role == "Mahasiswa") {
-        setcookie("user_id",$user_id);
-
-        header("Location: dashboardMhs.php");
-        exit();
-    }
-    else if ($role == "Dosen"){
-        setcookie("user_id",$user_id);
-
-        header("Location: dashboardDosen.php");
-        exit();
+    
+    if (isset($role)){
+        if ($role == "Mahasiswa") {
+            setcookie("user_id",$user_id);
+    
+            header("Location: dashboardMhs.php");
+            exit();
+        }
+        else if ($role == "Dosen"){
+            setcookie("user_id",$user_id);
+    
+            header("Location: dashboardDosen.php");
+            exit();
+        }
+    }else{
+        echo "<script>alert('Tidak Dapat Login')
+        window.location.href = 'login.php';
+        </script>";
     }
 } else {
     die(print_r(sqlsrv_errors(), true));
