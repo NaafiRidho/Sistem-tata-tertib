@@ -624,7 +624,7 @@
                     dataType: 'json',
                     success: function(response) {
                         alert(response.message);
-                        $("modalEdit").modal("hide");
+                        $("#modalEdit").modal("hide");
                     },
                     error: function(xhr, status, error) {
                         alert(xhr.responseText);
