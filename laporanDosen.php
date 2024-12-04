@@ -238,19 +238,20 @@
                         <th>Tingkat</th>
                         <th>Sanksi</th>
                         <th>Status</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
                     $query = "SELECT 
-                    rp.tanggal, m.nama, p.pelanggaran, t.tingkat, t.sanksi, rp.status 
+                    rp.tanggal, m.nama, p.pelanggaran, t.tingkat, t.sanksi, rp.status, rp.pelaporan_id
                   FROM riwayat_pelaporan AS rp
                   INNER JOIN pelanggaran AS p ON p.pelanggaran_id = rp.pelanggaran_id
                   INNER JOIN tingkat AS t ON t.tingkat_id = rp.tingkat_id
                   INNER JOIN dosen AS d ON d.dosen_id = rp.dosen_id
                   INNER JOIN mahasiswa AS m ON m.mahasiswa_id = rp.mahasiswa_id
                   WHERE d.user_id = ?";
-        
+
                     $params = array($user_id);
                     $stmt = sqlsrv_prepare($conn, $query, $params);
                     if ($stmt === false) {
@@ -268,6 +269,9 @@
                                 <td><?php echo $row['tingkat'] ?></td>
                                 <td><?php echo $row['sanksi'] ?></td>
                                 <td><?php echo $row['status'] ?></td>
+                                <td><button class="btn btn-warning" id="button-edit" style="width: 100px; height: 38px;" data-bs-toggle="modal" data-bs-target="#modalEdit" data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>">Ubah</button>
+                                    <button class="btn btn-secondary btn mt-2" style="width: 100px; height: 38px;" data-bs-toggle="modal" data-bs-target="#batalkan">batalkan</button>
+                                </td>
                             </tr><?php
                                 }
                             }
@@ -364,6 +368,93 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                     <button type="button" class="btn btn-success" id="simpanLaporan">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Edit -->
+    <div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Data Laporan Mahasiswa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="">
+                        <div class="mb-3 text-center">
+                            <label for="buktiFoto" class="form-label">Bukti Foto</label>
+                            <div>
+                                <img src="https://via.placeholder.com/150" alt="Bukti Foto" class="img-fluid rounded buktiFotoEdit">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="namaMahasiswa" class="form-label">Nama Mahasiswa</label>
+                            <input type="text" class="form-control" id="namaMahasiswa" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nim" class="form-label">NIM</label>
+                            <input type="text" class="form-control" id="nimMahasiswa" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="prodi" class="form-label">Prodi</label>
+                            <input type="text" class="form-control" id="prodiMahasiswa" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="kelas" class="form-label">Kelas</label>
+                            <input type="text" class="form-control" id="kelasMahasiswa" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tanggal" class="form-label">Tanggal</label>
+                            <input type="date" class="form-control" id="tanggalEdit" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="pelanggaran" class="form-label">Pelanggaran</label>
+                            <select name="pelanggaran" id="pelanggaranEdit" class="form-control">
+                                <option value="" disabled selected>Pilih Pelanggaran</option>
+                                <?php
+                                $query = "SELECT tingkat_id ,pelanggaran FROM pelanggaran ORDER BY pelanggaran";
+                                $result = sqlsrv_query($conn, $query);
+
+                                while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+                                    echo '<option value="' . htmlspecialchars($row['pelanggaran']) . '" data-tingkat_id="' . htmlspecialchars($row['tingkat_id']) . '">' . htmlspecialchars($row['pelanggaran']) . '</option>';
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tingkat" class="form-label">Tingkat</label>
+                            <input type="text" class="form-control" id="tingkatEdit" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="sanksi" class="form-label">Sanksi</label>
+                            <textarea class="form-control" id="sanksiPelanggaran" rows="3" readonly>
+                            </textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-primary simpanEdit">Simpan Perubahan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Batalkan -->
+    <div class="modal fade" id="batalkan" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Judul Modal</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Ini adalah isi dari modal.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-primary">Simpan Perubahan</button>
                 </div>
             </div>
         </div>
@@ -468,6 +559,78 @@
                     },
                 });
             });
+            $(document).on('click', '.btn-warning', function() {
+                var pelanggaran_id = $(this).data('pelaporan_id'); // Get the pelanggaran_id from the button
+                $('#modalEdit').data('pelaporan_id', pelanggaran_id); //menyimpan pelaporan_id
+
+                $.ajax({
+                    url: "get_report.php",
+                    method: "GET",
+                    data: {
+                        pelanggaran_id: pelanggaran_id
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        // Populate the modal fields with the retrieved data
+                        $("#namaMahasiswa").val(data.nama);
+                        $("#nimMahasiswa").val(data.nim);
+                        $("#prodiMahasiswa").val(data.prodi);
+                        $("#kelasMahasiswa").val(data.nama_kelas);
+                        $('#tanggalEdit').val(data.tanggal);
+                        $('#pelanggaranEdit').val(data.pelanggaran).change();
+                        $('#tingkatEdit').val(data.tingkat);
+                        $('#sanksiPelanggaran').val(data.sanksi);
+                        $('.buktiFotoEdit').attr('src', data.bukti);
+                    },
+                    error: function() {
+                        alert("Error fetching report data.");
+                    }
+                });
+            });
+            $("#pelanggaranEdit").change(function() {
+                var tingkat_id = $("#pelanggaranEdit option:selected").data("tingkat_id");
+
+                $.ajax({
+                    url: 'get_sanksi.php',
+                    method: 'GET',
+                    data: {
+                        tingkat_id: tingkat_id
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        $('#sanksiPelanggaran').val(response.sanksi);
+                        $('#tingkatEdit').val(response.tingkat);
+                    },
+                    error: function() {
+                        alert("Error fetching sanksi data.");
+                    }
+                });
+            });
+            $('.simpanEdit').click(function() {
+                var pelaporan_id = $('#modalEdit').data('pelaporan_id');
+                var pelanggaran = $("#pelanggaranEdit").val();
+                var tingkat = $("#tingkatEdit").val();
+                var sanksi = $("#sanksiPelanggaran").val();
+
+                $.ajax({
+                    url: "update_report.php",
+                    method: "POST",
+                    data: {
+                        pelaporan_id: pelaporan_id,
+                        pelanggaran: pelanggaran,
+                        tingkat: tingkat,
+                        sanksi: sanksi
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        alert(response.message);
+                        $("modalEdit").modal("hide");
+                    },
+                    error: function(xhr, status, error) {
+                        alert(xhr.responseText);
+                    }
+                })
+            })
         });
     </script>
 
