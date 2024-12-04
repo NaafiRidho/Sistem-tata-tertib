@@ -5,7 +5,7 @@ if (isset($_GET['tingkat_id'])) {
     $tingkat_id = $_GET['tingkat_id'];
 
     // Query untuk mengambil sanksi berdasarkan tingkat_id
-    $query = "SELECT sanksi FROM tingkat WHERE tingkat_id = ?";
+    $query = "SELECT sanksi, tingkat FROM tingkat WHERE tingkat_id = ?";
     $params = array($tingkat_id);
     $stmt = sqlsrv_query($conn, $query, $params);
 
@@ -18,7 +18,7 @@ if (isset($_GET['tingkat_id'])) {
 
     if ($row) {
         // Mengembalikan data dalam format JSON
-        echo json_encode(['sanksi' => $row['sanksi']]);
+        echo json_encode($row);
     } else {
         echo json_encode(['sanksi' => '']);
     }
