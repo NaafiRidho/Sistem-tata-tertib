@@ -129,7 +129,7 @@
       <h2>Si Tertib</h2>
       <a href="dashboardDosen.php"><i class="bi bi-columns-gap"></i> Dashboard</a>
       <a href="laporanDosen.php"><i class="bi bi-file-earmark-text"></i> Laporan</a>
-      <a href="ajuBanding.php"><i class="bi bi-envelope"></i> Aju Banding</a>
+      <a href="ajuBandingDosen.php"><i class="bi bi-envelope"></i> Aju Banding</a>
     </div>
     <div class="logout">
       <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
