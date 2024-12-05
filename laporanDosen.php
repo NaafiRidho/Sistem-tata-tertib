@@ -186,7 +186,7 @@
             <h2>Si Tertib</h2>
             <a href="dashboardDosen.php"><i class="bi bi-columns-gap"></i> Dashboard</a>
             <a href="laporanDosen.php" class="active"><i class="bi bi-file-earmark-text"></i> Laporan</a>
-            <a href="ajuBanding.php"><i class="bi bi-envelope"></i> Aju Banding</a>
+            <a href="ajuBandingDosen.php"><i class="bi bi-envelope"></i> Aju Banding</a>
         </div>
         <div class="logout">
             <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
@@ -270,7 +270,7 @@
                                 <td><?php echo $row['sanksi'] ?></td>
                                 <td><?php echo $row['status'] ?></td>
                                 <td><button class="btn btn-warning" id="button-edit" style="width: 100px; height: 38px;" data-bs-toggle="modal" data-bs-target="#modalEdit" data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>">Ubah</button>
-                                    <button class="btn btn-secondary btn mt-2" style="width: 100px; height: 38px;" data-bs-toggle="modal" data-bs-target="#batalkan">batalkan</button>
+                                    <button class="btn btn-secondary btn mt-2" id="button-batalkan" style="width: 100px; height: 38px;" data-bs-toggle="modal" data-bs-target="#modalBatal" data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>">batalkan</button>
                                 </td>
                             </tr><?php
                                 }
@@ -442,19 +442,19 @@
     </div>
 
     <!-- Modal Batalkan -->
-    <div class="modal fade" id="batalkan" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modalBatal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Judul Modal</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Batalkan Pelanggaran</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Ini adalah isi dari modal.
+                    Apakah Anda Ingin Membatalkan Pelanggaran Ini
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-primary">Simpan Perubahan</button>
+                    <button type="button" class="btn btn-primary" id="batalkan">Iya</button>
                 </div>
             </div>
         </div>
@@ -629,8 +629,33 @@
                     error: function(xhr, status, error) {
                         alert(xhr.responseText);
                     }
-                })
-            })
+                });
+            });
+
+            $(document).on('click', '#button-batalkan', function() {
+                var pelaporan_id = $(this).data('pelaporan_id');
+                $('#modalBatal').data('pelaporan_id', pelaporan_id);
+            });
+
+            $("#batalkan").click(function() {
+                var pelaporan_id = $('#modalBatal').data('pelaporan_id');
+
+                $.ajax({
+                    url: "batalkan_report.php",
+                    method: "POST",
+                    data: {
+                        pelaporan_id: pelaporan_id
+                    },
+                    dataType: "json",
+                    success: function(response) {
+                        alert(response.message);
+                        $("#modalBatal").modal("hide");
+                    },
+                    error: function(xhr, status, error) {
+                        alert(xhr.responseText);
+                    }
+                });
+            });
         });
     </script>
 
