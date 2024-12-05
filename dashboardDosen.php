@@ -135,19 +135,9 @@
   <div class="sidebar">
     <div class="menu">
       <h2>Si Tertib</h2>
-      <!-- Tambahkan class 'active' secara dinamis -->
-      <a href="dashboardDosen.php"
-        class="<?php echo basename($_SERVER['PHP_SELF']) == 'dashboardDosen.php' ? 'active' : ''; ?>">
-        <i class="bi bi-columns-gap"></i> Dashboard
-      </a>
-      <a href="laporanDosen.php"
-        class="<?php echo basename($_SERVER['PHP_SELF']) == 'laporanDosen.php' ? 'active' : ''; ?>">
-        <i class="bi bi-file-earmark-text"></i> Laporan
-      </a>
-      <a href="ajuBandingDosen.php"
-        class="<?php echo basename($_SERVER['PHP_SELF']) == 'ajuBandingDosen.php' ? 'active' : ''; ?>">
-        <i class="bi bi-envelope"></i> Aju Banding
-      </a>
+      <a href="dashboardDosen.php" class="active"><i class="bi bi-columns-gap"></i> Dashboard</a>
+      <a href="laporanDosen.php"><i class="bi bi-file-earmark-text"></i> Laporan</a>
+      <a href="ajuBandingDosen.php" <i class="bi bi-envelope"></i> Aju Banding</a>
     </div>
     <div class="logout">
       <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>

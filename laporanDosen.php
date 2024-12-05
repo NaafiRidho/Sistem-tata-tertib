@@ -181,17 +181,18 @@
 </head>
 
 <body>
-    <div class="sidebar">
+<div class="sidebar">
         <div class="menu">
             <h2>Si Tertib</h2>
             <a href="dashboardDosen.php"><i class="bi bi-columns-gap"></i> Dashboard</a>
-            <a href="laporanDosen.php" class="active"><i class="bi bi-file-earmark-text"></i> Laporan</a>
-            <a href="ajuBanding.php"><i class="bi bi-envelope"></i> Aju Banding</a>
+            <a href="laporanDosen.php"class="active" ><i class="bi bi-file-earmark-text"></i> Laporan</a>
+            <a href="ajuBandingDosen.php" <i class="bi bi-envelope"></i> Aju Banding</a>
         </div>
         <div class="logout">
             <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
         </div>
     </div>
+
 
     <div class="content">
         <h1>Pelaporan</h1>
@@ -218,7 +219,8 @@
                     $hasData = false;
                 }
                 ?>
-                <div class="alert-message" <?php if ($hasData) echo 'style="display: none;"'; ?>>
+                <div class="alert-message" <?php if ($hasData)
+                    echo 'style="display: none;"'; ?>>
                     Maaf, data pelaporan saat ini belum ada.
                 </div>
                 <div class="alert-button">
@@ -238,19 +240,20 @@
                         <th>Tingkat</th>
                         <th>Sanksi</th>
                         <th>Status</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
                     $query = "SELECT 
-                    rp.tanggal, m.nama, p.pelanggaran, t.tingkat, t.sanksi, rp.status 
+                    rp.tanggal, m.nama, p.pelanggaran, t.tingkat, t.sanksi, rp.status, rp.pelaporan_id
                   FROM riwayat_pelaporan AS rp
                   INNER JOIN pelanggaran AS p ON p.pelanggaran_id = rp.pelanggaran_id
                   INNER JOIN tingkat AS t ON t.tingkat_id = rp.tingkat_id
                   INNER JOIN dosen AS d ON d.dosen_id = rp.dosen_id
                   INNER JOIN mahasiswa AS m ON m.mahasiswa_id = rp.mahasiswa_id
                   WHERE d.user_id = ?";
-        
+
                     $params = array($user_id);
                     $stmt = sqlsrv_prepare($conn, $query, $params);
                     if ($stmt === false) {
@@ -259,7 +262,7 @@
                     if (sqlsrv_execute($stmt)) {
                         $no = 1;
                         while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-                    ?>
+                            ?>
                             <tr>
                                 <td><?php echo $no++ ?></td>
                                 <td><?php echo $row['nama'] ?></td>
@@ -268,10 +271,16 @@
                                 <td><?php echo $row['tingkat'] ?></td>
                                 <td><?php echo $row['sanksi'] ?></td>
                                 <td><?php echo $row['status'] ?></td>
+                                <td><button class="btn btn-warning" id="button-edit" style="width: 100px; height: 38px;"
+                                        data-bs-toggle="modal" data-bs-target="#modalEdit"
+                                        data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>">Ubah</button>
+                                    <button class="btn btn-secondary btn mt-2" style="width: 100px; height: 38px;"
+                                        data-bs-toggle="modal" data-bs-target="#batalkan">batalkan</button>
+                                </td>
                             </tr><?php
-                                }
-                            }
-                                    ?>
+                        }
+                    }
+                    ?>
                 </tbody>
             </table>
         </div>
@@ -309,10 +318,10 @@
                                 <option value="" disabled selected>Pilih Program Studi</option>
                                 <?php
                                 include 'koneksi.php'; // File koneksi ke SQL Server
-
+                                
                                 $query = "SELECT DISTINCT prodi FROM kelas ORDER BY prodi"; // Query SQL
                                 $result = sqlsrv_query($conn, $query); // Eksekusi query dengan sqlsrv_query
-
+                                
                                 if ($result === false) {
                                     die(print_r(sqlsrv_errors(), true)); // Menampilkan error jika query gagal
                                 }
@@ -368,6 +377,94 @@
             </div>
         </div>
     </div>
+    <!-- Modal Edit -->
+    <div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Data Laporan Mahasiswa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="">
+                        <div class="mb-3 text-center">
+                            <label for="buktiFoto" class="form-label">Bukti Foto</label>
+                            <div>
+                                <img src="https://via.placeholder.com/150" alt="Bukti Foto"
+                                    class="img-fluid rounded buktiFotoEdit">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="namaMahasiswa" class="form-label">Nama Mahasiswa</label>
+                            <input type="text" class="form-control" id="namaMahasiswa" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nim" class="form-label">NIM</label>
+                            <input type="text" class="form-control" id="nimMahasiswa" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="prodi" class="form-label">Prodi</label>
+                            <input type="text" class="form-control" id="prodiMahasiswa" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="kelas" class="form-label">Kelas</label>
+                            <input type="text" class="form-control" id="kelasMahasiswa" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tanggal" class="form-label">Tanggal</label>
+                            <input type="date" class="form-control" id="tanggalEdit" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="pelanggaran" class="form-label">Pelanggaran</label>
+                            <select name="pelanggaran" id="pelanggaranEdit" class="form-control">
+                                <option value="" disabled selected>Pilih Pelanggaran</option>
+                                <?php
+                                $query = "SELECT tingkat_id ,pelanggaran FROM pelanggaran ORDER BY pelanggaran";
+                                $result = sqlsrv_query($conn, $query);
+
+                                while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+                                    echo '<option value="' . htmlspecialchars($row['pelanggaran']) . '" data-tingkat_id="' . htmlspecialchars($row['tingkat_id']) . '">' . htmlspecialchars($row['pelanggaran']) . '</option>';
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tingkat" class="form-label">Tingkat</label>
+                            <input type="text" class="form-control" id="tingkatEdit" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="sanksi" class="form-label">Sanksi</label>
+                            <textarea class="form-control" id="sanksiPelanggaran" rows="3" readonly>
+                            </textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-primary simpanEdit">Simpan Perubahan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Batalkan -->
+    <div class="modal fade" id="batalkan" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Judul Modal</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Ini adalah isi dari modal.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-primary">Simpan Perubahan</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
@@ -377,7 +474,7 @@
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             const hasData = <?php echo json_encode($hasData); ?>;
             if (hasData) {
                 $('#example').DataTable({
@@ -386,7 +483,7 @@
             } else {
                 $('#example').hide(); // Sembunyikan tabel jika tidak ada data
             }
-            $('#prodi').change(function() {
+            $('#prodi').change(function () {
                 const prodi = $(this).val(); // Ambil nilai dari dropdown prodi
                 const kelasDropdown = $('#kelas'); // Dropdown kelas
 
@@ -401,20 +498,20 @@
                         prodi: prodi
                     },
                     dataType: 'json',
-                    success: function(data) {
+                    success: function (data) {
                         // Bersihkan dropdown kelas dan tambahkan opsi baru
                         kelasDropdown.empty().append('<option value="" disabled selected>Pilih Kelas</option>');
-                        $.each(data, function(index, kelas) {
+                        $.each(data, function (index, kelas) {
                             kelasDropdown.append('<option value="' + kelas.nama_kelas + '">' + kelas.nama_kelas + '</option>');
                         });
                     },
-                    error: function() {
+                    error: function () {
                         // Tampilkan pesan error jika terjadi kesalahan
                         kelasDropdown.empty().append('<option value="" disabled selected>Error memuat kelas</option>');
                     }
                 });
             });
-            $("#pelanggaran").change(function() {
+            $("#pelanggaran").change(function () {
                 var tingkat_id = $("#pelanggaran option:selected").data("tingkat_id");
 
                 $.ajax({
@@ -424,16 +521,16 @@
                         tingkat_id: tingkat_id
                     },
                     dataType: 'json',
-                    success: function(response) {
+                    success: function (response) {
                         $('#sanksi').val(response.sanksi);
                     },
-                    error: function() {
+                    error: function () {
                         alert("Error fetching sanksi data.");
                     }
                 });
             });
             // Kirimkan data menggunakan AJAX
-            $("#simpanLaporan").click(function() {
+            $("#simpanLaporan").click(function () {
                 var formData = new FormData();
 
                 // Ambil data dari form
@@ -458,16 +555,88 @@
                     data: formData,
                     contentType: false,
                     processData: false,
-                    success: function(response) {
-                        alert('Laporan berhasil diterima!');
+                    success: function (response) {
+                        alert(response.message);
                         $("#laporanBaruModal").modal("hide");
                     },
-                    error: function(xhr, status, error) {
+                    error: function (xhr, status, error) {
                         console.error("Error: ", xhr.responseText);
                         alert("Terjadi kesalahan saat mengirim data ke server.");
                     },
                 });
             });
+            $(document).on('click', '.btn-warning', function () {
+                var pelanggaran_id = $(this).data('pelaporan_id'); // Get the pelanggaran_id from the button
+                $('#modalEdit').data('pelaporan_id', pelanggaran_id); //menyimpan pelaporan_id
+
+                $.ajax({
+                    url: "get_report.php",
+                    method: "GET",
+                    data: {
+                        pelanggaran_id: pelanggaran_id
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        // Populate the modal fields with the retrieved data
+                        $("#namaMahasiswa").val(data.nama);
+                        $("#nimMahasiswa").val(data.nim);
+                        $("#prodiMahasiswa").val(data.prodi);
+                        $("#kelasMahasiswa").val(data.nama_kelas);
+                        $('#tanggalEdit').val(data.tanggal);
+                        $('#pelanggaranEdit').val(data.pelanggaran).change();
+                        $('#tingkatEdit').val(data.tingkat);
+                        $('#sanksiPelanggaran').val(data.sanksi);
+                        $('.buktiFotoEdit').attr('src', data.bukti);
+                    },
+                    error: function () {
+                        alert("Error fetching report data.");
+                    }
+                });
+            });
+            $("#pelanggaranEdit").change(function () {
+                var tingkat_id = $("#pelanggaranEdit option:selected").data("tingkat_id");
+
+                $.ajax({
+                    url: 'get_sanksi.php',
+                    method: 'GET',
+                    data: {
+                        tingkat_id: tingkat_id
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                        $('#sanksiPelanggaran').val(response.sanksi);
+                        $('#tingkatEdit').val(response.tingkat);
+                    },
+                    error: function () {
+                        alert("Error fetching sanksi data.");
+                    }
+                });
+            });
+            $('.simpanEdit').click(function () {
+                var pelaporan_id = $('#modalEdit').data('pelaporan_id');
+                var pelanggaran = $("#pelanggaranEdit").val();
+                var tingkat = $("#tingkatEdit").val();
+                var sanksi = $("#sanksiPelanggaran").val();
+
+                $.ajax({
+                    url: "update_report.php",
+                    method: "POST",
+                    data: {
+                        pelaporan_id: pelaporan_id,
+                        pelanggaran: pelanggaran,
+                        tingkat: tingkat,
+                        sanksi: sanksi
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                        alert(response.message);
+                        $("modalEdit").modal("hide");
+                    },
+                    error: function (xhr, status, error) {
+                        alert(xhr.responseText);
+                    }
+                })
+            })
         });
     </script>
 
