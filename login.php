@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Si Tertib</title>
 
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap" rel="stylesheet">
     <!-- Font Awesome CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -20,6 +22,16 @@
             background-position: center;
             background-repeat: no-repeat;
         }
+
+        .tertib {
+            font-family: 'Fugaz One', sans-serif;
+            font-weight: 600;
+            color: #FFD700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 4);
+        }
+
 
         .login-container {
             width: 100%;
@@ -51,10 +63,11 @@
 </head>
 
 <body>
-
     <div class="login-container">
-        <h1>Si Tertib</h1>
-        <p class="mb-4">Login</p>
+        <img src="logo.png" style="width: 200px; height: 200px; margin-bottom: 10px;">
+        <div class="tertib">
+            <h1>Si Tertib</h1>
+        </div>
         <form action="proses_login.php" method="post">
             <div class="form-group">
                 <label for="username">Username</label>
