@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tambah Pelanggaran Dosen - Si Tertib</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap" rel="stylesheet">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
@@ -31,7 +33,13 @@
         .sidebar h2 {
             text-align: center;
             margin: 20px 0;
-            font-size: 1.5rem;
+            font-size: 2rem;
+            font-family: 'Fugaz One', sans-serif;
+            font-weight: 600;
+            color: #E38E49;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 4);
         }
 
         .menu a {
@@ -181,11 +189,12 @@
 </head>
 
 <body>
-<div class="sidebar">
-        <div class="menu">
+    <div class="sidebar">
+        <div class="menu" style="text-align: center; padding-top: 20px;">
+            <img src="logo.png" style="width: 120px; height: 120px; ;">
             <h2>Si Tertib</h2>
             <a href="dashboardDosen.php"><i class="bi bi-columns-gap"></i> Dashboard</a>
-            <a href="laporanDosen.php"class="active" ><i class="bi bi-file-earmark-text"></i> Laporan</a>
+            <a href="laporanDosen.php" class="active"><i class="bi bi-file-earmark-text"></i> Laporan</a>
             <a href="ajuBandingDosen.php" <i class="bi bi-envelope"></i> Aju Banding</a>
         </div>
         <div class="logout">
