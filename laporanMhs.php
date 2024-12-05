@@ -166,13 +166,12 @@
       overflow-wrap: break-word;
       height: auto;
     }
-
   </style>
 </head>
 
 <body>
 
-<button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+  <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
 
 
   <div class="sidebar">
@@ -225,7 +224,7 @@
             INNER JOIN dbo.dosen AS d ON d.dosen_id = p.dosen_id
             INNER JOIN dbo.tingkat AS t ON p.tingkat_id = t.tingkat_id
             INNER JOIN dbo.pelanggaran pl ON pl.pelanggaran_id = p.pelanggaran_id
-            WHERE u.user_id = ?";
+            WHERE u.user_id = ? AND p.status NOT IN('Dibatalkan','Selesai')";
 
 
             $params = array($user_id);
@@ -239,7 +238,7 @@
             if (sqlsrv_execute($stmt)) {
               $no = 1;
               while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-                ?>
+            ?>
                 <tr>
                   <td><?php echo $no++ ?></td>
                   <td><?php echo $row["nama"] ?></td>
@@ -254,15 +253,15 @@
                   <td>
                     <?php
                     if ($row['status'] !== 'Diterima') {
-                      ?><button class="btn-success" data-bs-toggle="modal" data-bs-target="#modalTerima"
+                    ?><button class="btn-success" data-bs-toggle="modal" data-bs-target="#modalTerima"
                         data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>">
                         Terima</button><?php
-                    } else {
-                      ?><button class="btn-success" disabled>
+                                      } else {
+                                        ?><button class="btn-success" disabled>
                         Diterima
                       </button><?php
-                    }
-                    ?>
+                                      }
+                                ?>
                     <button class="btn-detail" data-bs-toggle="modal" data-bs-target="#modalUlasan"
                       data-pelanggaran="<?php echo $row['pelanggaran']; ?>" data-nama="<?php echo $row['mahasiswa']; ?>"
                       data-nim="<?php echo $row['nim']; ?>" data-file="<?php echo $row['file']; ?>"
@@ -271,7 +270,7 @@
                     </button>
                   </td>
                 </tr>
-                <?php
+            <?php
               }
             } else {
               die(print_r(sqlsrv_errors(), true));
@@ -349,21 +348,21 @@
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    document.getElementById('btnKirim').addEventListener('click', function () {
+    document.getElementById('btnKirim').addEventListener('click', function() {
       alert('Ulasan berhasil dikirim');
     });
   </script>
   <script type="text/javascript">
-    $(document).ready(function () {
+    $(document).ready(function() {
       // Inisialisasi DataTable
       $('#example').DataTable();
 
-      $('.btn-success').click(function () {
+      $('.btn-success').click(function() {
         var pelaporan_id = $(this).data('pelaporan_id');
         $("#modalTerima").data('pelaporan_id', pelaporan_id);
       });
 
-      $('#btnTerima').click(function () {
+      $('#btnTerima').click(function() {
         var pelaporan_id = $("#modalTerima").data('pelaporan_id');
         if (confirm("Apakah Anda yakin ingin menerima laporan ini?")) {
           $.ajax({
@@ -372,11 +371,11 @@
             data: {
               pelaporan_id: pelaporan_id
             },
-            success: function (response) {
+            success: function(response) {
               alert('Laporan berhasil diterima!');
               $('#modalTerima').modal('hide');
             },
-            error: function (xhr, status, error) {
+            error: function(xhr, status, error) {
               alert('Terjadi kesalahan: ' + error);
             }
           });
@@ -384,7 +383,7 @@
       });
 
       // Ketika tombol 'Lihat Detail' diklik
-      $('.btn-detail').click(function () {
+      $('.btn-detail').click(function() {
         // Ambil data yang disimpan dalam atribut data-*
         var pelanggaran = $(this).data('pelanggaran');
         var nama = $(this).data('nama');
@@ -402,7 +401,7 @@
         $('#modalUlasan').data('prodi', prodi); //menyimpan prodi
       });
 
-      $('#btnKirim').click(function () {
+      $('#btnKirim').click(function() {
         var pelaporanId = $('#modalUlasan').data('pelaporan_id'); // Ambil pelaporan_id dari modal
         var alasanBanding = $('#ajubanding').val(); // Ambil alasan banding
         var prodi = $('#modalUlasan').data('prodi'); // Ambil prodi
@@ -415,11 +414,11 @@
             alasan_banding: alasanBanding,
             prodi: prodi
           },
-          success: function (response) {
+          success: function(response) {
             alert('Alasan Banding berhasil dikirim');
             $('#modalUlasan').modal('hide');
           },
-          error: function (xhr, status, error) {
+          error: function(xhr, status, error) {
             alert('Error: ' + error);
           }
         })
@@ -431,7 +430,7 @@
       document.querySelector('.sidebar').classList.toggle('close');
       document.querySelector('.content').classList.toggle('shift');
     }
-</script>
+  </script>
 
 </body>
 
