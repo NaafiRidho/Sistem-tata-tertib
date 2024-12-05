@@ -15,7 +15,10 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #002a8a;
+            background-image: url('bg.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
 
         .login-container {
@@ -37,7 +40,8 @@
         }
 
         .form-control {
-            padding-right: 50px; /* Sesuaikan padding kanan agar tidak menabrak ikon */
+            padding-right: 50px;
+            /* Sesuaikan padding kanan agar tidak menabrak ikon */
         }
 
         .input-group-text {
