@@ -55,6 +55,14 @@
       border-left: 5px solid #ffcc00;
     }
 
+    .menu a.active {
+      background-color: #0056b3;
+      /* Sama dengan warna hover */
+      border-left: 5px solid #ffcc00;
+      /* Sama dengan warna hover */
+    }
+
+
     .logout a {
       display: block;
       text-align: center;
@@ -127,14 +135,25 @@
   <div class="sidebar">
     <div class="menu">
       <h2>Si Tertib</h2>
-      <a href="dashboardDosen.php"><i class="bi bi-columns-gap"></i> Dashboard</a>
-      <a href="laporanDosen.php"><i class="bi bi-file-earmark-text"></i> Laporan</a>
-      <a href="ajuBanding.php"><i class="bi bi-envelope"></i> Aju Banding</a>
+      <!-- Tambahkan class 'active' secara dinamis -->
+      <a href="dashboardDosen.php"
+        class="<?php echo basename($_SERVER['PHP_SELF']) == 'dashboardDosen.php' ? 'active' : ''; ?>">
+        <i class="bi bi-columns-gap"></i> Dashboard
+      </a>
+      <a href="laporanDosen.php"
+        class="<?php echo basename($_SERVER['PHP_SELF']) == 'laporanDosen.php' ? 'active' : ''; ?>">
+        <i class="bi bi-file-earmark-text"></i> Laporan
+      </a>
+      <a href="ajuBandingDosen.php"
+        class="<?php echo basename($_SERVER['PHP_SELF']) == 'ajuBandingDosen.php' ? 'active' : ''; ?>">
+        <i class="bi bi-envelope"></i> Aju Banding
+      </a>
     </div>
     <div class="logout">
       <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
     </div>
   </div>
+
 
   <div class="content">
     <h1>Dashboard</h1>
@@ -162,20 +181,20 @@
         <?php
         include "koneksi.php";
         $user_id = $_COOKIE["user_id"];
-        
+
         $query = "SELECT m.nama, p.pelanggaran, p.sanksi, ab.alasan, ab.status
                   FROM aju_banding AS ab
                   JOIN pelanggaran p ON ab.pelaporan_id = p.pelanggar_id
                   JOIN mahasiswa m ON p.pelanggar_id = m.pelanggar_id
                   WHERE ab.user_id = ?";
-        
+
         $params = array($user_id);
         $stmt = sqlsrv_prepare($conn, $query, $params);
-        
+
         if ($stmt === false) {
           die(print_r(sqlsrv_errors(), true));
         }
-        
+
         if (sqlsrv_execute($stmt)) {
           $no = 1;
           while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
@@ -187,7 +206,7 @@
               <td><?php echo $row["sanksi"]; ?></td>
               <td><?php echo $row["alasan"]; ?></td>
               <td>
-                <?php 
+                <?php
                 if ($row["status"] == "Tolak") {
                   echo "<span class='badge badge-danger'>Dilaporkan</span>";
                 } else if ($row["status"] == "Terima") {
