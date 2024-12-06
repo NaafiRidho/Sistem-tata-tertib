@@ -4,6 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Si Tertib - Admin Dashboard for Managing Rules and Data.">
+  <meta name="keywords" content="Admin Dashboard, Rules, Student Data, Si Tertib">
   <title>Si Tertib Dashboard</title>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -168,6 +170,7 @@
       <a href="#listTatib"><i class="bi bi-list-check"></i> List Tata Tertib</a>
       <a href="#dataMahasiswa"><i class="bi bi-person"></i> Data Mahasiswa</a>
       <a href="#dataDosen"><i class="bi bi-person-badge"></i> Data Dosen</a>
+      <a href="#pelanggaranMahasiswa"><i class="bi bi-exclamation-circle"></i> Pelanggaran Mahasiswa</a>
     </div>
     <div class="logout">
       <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
