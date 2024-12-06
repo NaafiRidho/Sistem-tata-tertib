@@ -18,7 +18,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(rgba(44, 73, 115, 0.6), rgba(173, 216, 230, 0.6)), url('bg.png') no-repeat center center/cover;
+            background: linear-gradient(rgba(44, 73, 115, 0.6), rgba(173, 216, 230, 0.6)), 
+                        url('bg.png') no-repeat center center/cover;
             background-size: cover;
         }
 
@@ -47,12 +48,13 @@
             padding: 12px;
             margin: 10px 0;
             border: 1px solid #ccc;
-            border-radius: 10px; 
+            border-radius: 10px;
             box-sizing: border-box;
         }
 
         .password-container input {
-            border-radius: 10px;  
+            border-radius: 10px;
+            padding-right: 40px;
         }
 
         .login-container button {
@@ -61,7 +63,7 @@
             background-color: #003399;
             color: #fff;
             border: none;
-            border-radius: 10px; 
+            border-radius: 10px;
             font-size: 16px;
             cursor: pointer;
         }
@@ -84,10 +86,6 @@
             position: relative;
         }
 
-        .password-container input {
-            padding-right: 40px;
-        }
-
         .password-container .toggle-password {
             position: absolute;
             top: 50%;
@@ -102,14 +100,19 @@
     <div class="login-container">
         <img src="logo.png" alt="Logo Si Tertib">
         <h1>Si Tertib</h1>
-        <form action="/login" method="POST">
-            <input type="text" name="username" placeholder="Enter your username" required>
-            <div class="password-container">
-                <input type="password" name="password" placeholder="Enter your password" id="password" required>
-                <span class="toggle-password" id="togglePassword"><i class="fas fa-eye"></i></span>
+        <form action="proses_login.php" method="post">
+            <div class="form-group">
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
             </div>
-            <a href="#">Forgot your password?</a> <br><br>
-            <button type="submit">Login</button>
+            <div class="form-group">
+                <div class="password-container">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                    <span class="toggle-password" id="togglePassword">
+                        <i class="fas fa-eye"></i>
+                    </span>
+                </div>
+            </div><br>
+            <button type="submit" class="btn btn-primary">Login</button>
         </form>
     </div>
 
@@ -125,7 +128,7 @@
             const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordField.setAttribute('type', type);
 
-            // Ganti ikon mata
+            // Toggle icon
             this.querySelector('i').classList.toggle('fa-eye');
             this.querySelector('i').classList.toggle('fa-eye-slash');
         });
