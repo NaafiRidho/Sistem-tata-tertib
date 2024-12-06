@@ -5,6 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Si Tertib Dashboard</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap" rel="stylesheet">
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Bootstrap Icons -->
@@ -31,7 +33,13 @@
     .sidebar h2 {
       text-align: center;
       margin: 20px 0;
-      font-size: 1.5rem;
+      font-size: 2rem;
+      font-family: 'Fugaz One', sans-serif;
+      font-weight: 600;
+      color: #E38E49;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 4);
     }
 
     .menu {
@@ -54,6 +62,12 @@
       background-color: #0056b3;
       border-left: 5px solid #ffcc00;
     }
+
+    .menu a.active {
+      background-color: #0056b3;
+      border-left: 5px solid #ffcc00;
+    }
+
 
     .logout a {
       display: block;
@@ -148,9 +162,10 @@
   $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
   ?>
   <div class="sidebar">
-    <div class="menu">
+    <div class="menu" style="text-align: center; padding-top: 20px;">
+      <img src="logo.png" style="width: 120px; height: 120px;">
       <h2>Si Tertib</h2>
-      <a href="dashboardDosen.php"><i class="bi bi-columns-gap"></i> Dashboard</a>
+      <a href="dashboardDosen.php" class="active"><i class="bi bi-columns-gap"></i> Dashboard</a>
       <a href="laporanDosen.php"><i class="bi bi-file-earmark-text"></i> Laporan</a>
       <a href="ajuBandingDosen.php"><i class="bi bi-envelope"></i> Aju Banding</a>
     </div>
@@ -158,6 +173,7 @@
       <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
     </div>
   </div>
+
 
   <div class="content">
     <h1>Dashboard</h1>
@@ -189,7 +205,67 @@
         </div>
       </div>
     </div>
+    <center>
+      <h4>Pengajuan Banding dari Mahasiswa</h4>
+    </center>
+    <table>
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Nama</th>
+          <th>Pelanggaran</th>
+          <th>Sanksi</th>
+          <th>Alasan</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        include "koneksi.php";
+        $user_id = $_COOKIE["user_id"];
 
+        $query = "SELECT m.nama, p.pelanggaran, p.sanksi, ab.alasan, ab.status
+                  FROM aju_banding AS ab
+                  JOIN pelanggaran p ON ab.pelaporan_id = p.pelanggar_id
+                  JOIN mahasiswa m ON p.pelanggar_id = m.pelanggar_id
+                  WHERE ab.user_id = ?";
+
+        $params = array($user_id);
+        $stmt = sqlsrv_prepare($conn, $query, $params);
+
+        if ($stmt === false) {
+          die(print_r(sqlsrv_errors(), true));
+        }
+
+        if (sqlsrv_execute($stmt)) {
+          $no = 1;
+          while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+            ?>
+            <tr>
+              <td><?php echo $no++; ?></td>
+              <td><?php echo $row["nama"]; ?></td>
+              <td><?php echo $row["pelanggaran"]; ?></td>
+              <td><?php echo $row["sanksi"]; ?></td>
+              <td><?php echo $row["alasan"]; ?></td>
+              <td>
+                <?php
+                if ($row["status"] == "Tolak") {
+                  echo "<span class='badge badge-danger'>Dilaporkan</span>";
+                } else if ($row["status"] == "Terima") {
+                  echo "<span class='badge badge-warning'>Dilakukan</span>";
+                }
+                ?>
+              </td>
+            </tr>
+            <?php
+          }
+        } else {
+          echo "Error executing query.";
+        }
+        ?>
+      </tbody>
+    </table>
+>>>>>>> d636bda14cb8e39e58e9768037e805ab8b62a75f
   </div>
 
   <!-- Bootstrap JS -->

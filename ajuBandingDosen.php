@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aju Banding Dosen - Si Tatib</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap" rel="stylesheet">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
@@ -37,7 +40,13 @@
         .sidebar h2 {
             text-align: center;
             margin: 20px 0;
-            font-size: 1.5rem;
+            font-size: 2rem;
+            font-family: 'Fugaz One', sans-serif;
+            font-weight: 600;
+            color: #E38E49;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 4);
         }
 
         .menu {
@@ -57,6 +66,11 @@
         }
 
         .menu a:hover {
+            background-color: #0056b3;
+            border-left: 5px solid #ffcc00;
+        }
+
+        .menu a.active {
             background-color: #0056b3;
             border-left: 5px solid #ffcc00;
         }
@@ -93,11 +107,12 @@
 
 <body>
     <div class="sidebar">
-        <div class="menu">
+        <div class="menu" style="text-align: center; padding-top: 20px;">
+            <img src="logo.png" style="width: 120px; height: 120px;">
             <h2>Si Tertib</h2>
             <a href="dashboardDosen.php"><i class="bi bi-columns-gap"></i> Dashboard</a>
-            <a href="laporanDosen.php" class="active"><i class="bi bi-file-earmark-text"></i> Laporan</a>
-            <a href="ajuBandingDosen.php"><i class="bi bi-envelope"></i> Aju Banding</a>
+            <a href="laporanDosen.php"><i class="bi bi-file-earmark-text"></i> Laporan</a>
+            <a href="ajuBandingDosen.php" class="active"><i class="bi bi-envelope"></i> Aju Banding</a>
         </div>
         <div class="logout">
             <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
@@ -149,14 +164,18 @@
                                     <td><?php echo $row['alasan'] ?></td>
                                     <td>
                                         <div class="d-flex flex-column">
-                                            <button class="btn btn-danger btn-sm mb-2" id="btnTolak" data-bs-toggle="modal" data-bs-target="#modalTolak" data-banding_id="<?php echo $row['banding_id']; ?>">Tolak</button>
-                                            <button class="btn btn-success btn-sm" id="btnTerima" data-bs-toggle="modal" data-bs-target="#modalTerima" data-banding_id="<?php echo $row['banding_id']; ?>">Terima</button>
+                                            <button class="btn btn-danger btn-sm mb-2" id="btnTolak" data-bs-toggle="modal"
+                                                data-bs-target="#modalTolak"
+                                                data-banding_id="<?php echo $row['banding_id']; ?>">Tolak</button>
+                                            <button class="btn btn-success btn-sm" id="btnTerima" data-bs-toggle="modal"
+                                                data-bs-target="#modalTerima"
+                                                data-banding_id="<?php echo $row['banding_id']; ?>">Terima</button>
                                         </div>
                                     </td>
                                 </tr><?php
-                                    }
-                                }
-                                        ?>
+                            }
+                        }
+                        ?>
                     </tbody>
                 </table>
             </div>
@@ -240,6 +259,7 @@
                         banding_id: banding_id
                     },
                     dataType: "json",
+
                     success: function(response) {
                         alert(response.message);
                         $("#modalTerima").modal("hide");

@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tambah Pelanggaran Dosen - Si Tertib</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap" rel="stylesheet">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
@@ -31,7 +33,13 @@
         .sidebar h2 {
             text-align: center;
             margin: 20px 0;
-            font-size: 1.5rem;
+            font-size: 2rem;
+            font-family: 'Fugaz One', sans-serif;
+            font-weight: 600;
+            color: #E38E49;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 4);
         }
 
         .menu a {
@@ -182,7 +190,8 @@
 
 <body>
     <div class="sidebar">
-        <div class="menu">
+        <div class="menu" style="text-align: center; padding-top: 20px;">
+            <img src="logo.png" style="width: 120px; height: 120px; ;">
             <h2>Si Tertib</h2>
             <a href="dashboardDosen.php"><i class="bi bi-columns-gap"></i> Dashboard</a>
             <a href="laporanDosen.php" class="active"><i class="bi bi-file-earmark-text"></i> Laporan</a>
@@ -192,6 +201,7 @@
             <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
         </div>
     </div>
+
 
     <div class="content">
         <h1>Pelaporan</h1>
@@ -218,7 +228,8 @@
                     $hasData = false;
                 }
                 ?>
-                <div class="alert-message" <?php if ($hasData) echo 'style="display: none;"'; ?>>
+                <div class="alert-message" <?php if ($hasData)
+                    echo 'style="display: none;"'; ?>>
                     Maaf, data pelaporan saat ini belum ada.
                 </div>
                 <div class="alert-button">
@@ -260,7 +271,7 @@
                     if (sqlsrv_execute($stmt)) {
                         $no = 1;
                         while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-                    ?>
+                            ?>
                             <tr>
                                 <td><?php echo $no++ ?></td>
                                 <td><?php echo $row['nama'] ?></td>
@@ -269,13 +280,16 @@
                                 <td><?php echo $row['tingkat'] ?></td>
                                 <td><?php echo $row['sanksi'] ?></td>
                                 <td><?php echo $row['status'] ?></td>
-                                <td><button class="btn btn-warning" id="button-edit" style="width: 100px; height: 38px;" data-bs-toggle="modal" data-bs-target="#modalEdit" data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>">Ubah</button>
-                                    <button class="btn btn-secondary btn mt-2" id="button-batalkan" style="width: 100px; height: 38px;" data-bs-toggle="modal" data-bs-target="#modalBatal" data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>">batalkan</button>
+                                <td><button class="btn btn-warning" id="button-edit" style="width: 100px; height: 38px;"
+                                        data-bs-toggle="modal" data-bs-target="#modalEdit"
+                                        data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>">Ubah</button>
+                                    <button class="btn btn-secondary btn mt-2" style="width: 100px; height: 38px;"
+                                        data-bs-toggle="modal" data-bs-target="#batalkan">batalkan</button>
                                 </td>
                             </tr><?php
-                                }
-                            }
-                                    ?>
+                        }
+                    }
+                    ?>
                 </tbody>
             </table>
         </div>
@@ -313,10 +327,10 @@
                                 <option value="" disabled selected>Pilih Program Studi</option>
                                 <?php
                                 include 'koneksi.php'; // File koneksi ke SQL Server
-
+                                
                                 $query = "SELECT DISTINCT prodi FROM kelas ORDER BY prodi"; // Query SQL
                                 $result = sqlsrv_query($conn, $query); // Eksekusi query dengan sqlsrv_query
-
+                                
                                 if ($result === false) {
                                     die(print_r(sqlsrv_errors(), true)); // Menampilkan error jika query gagal
                                 }
@@ -468,7 +482,7 @@
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             const hasData = <?php echo json_encode($hasData); ?>;
             if (hasData) {
                 $('#example').DataTable({
@@ -477,7 +491,7 @@
             } else {
                 $('#example').hide(); // Sembunyikan tabel jika tidak ada data
             }
-            $('#prodi').change(function() {
+            $('#prodi').change(function () {
                 const prodi = $(this).val(); // Ambil nilai dari dropdown prodi
                 const kelasDropdown = $('#kelas'); // Dropdown kelas
 
@@ -492,20 +506,20 @@
                         prodi: prodi
                     },
                     dataType: 'json',
-                    success: function(data) {
+                    success: function (data) {
                         // Bersihkan dropdown kelas dan tambahkan opsi baru
                         kelasDropdown.empty().append('<option value="" disabled selected>Pilih Kelas</option>');
-                        $.each(data, function(index, kelas) {
+                        $.each(data, function (index, kelas) {
                             kelasDropdown.append('<option value="' + kelas.nama_kelas + '">' + kelas.nama_kelas + '</option>');
                         });
                     },
-                    error: function() {
+                    error: function () {
                         // Tampilkan pesan error jika terjadi kesalahan
                         kelasDropdown.empty().append('<option value="" disabled selected>Error memuat kelas</option>');
                     }
                 });
             });
-            $("#pelanggaran").change(function() {
+            $("#pelanggaran").change(function () {
                 var tingkat_id = $("#pelanggaran option:selected").data("tingkat_id");
 
                 $.ajax({
@@ -515,16 +529,16 @@
                         tingkat_id: tingkat_id
                     },
                     dataType: 'json',
-                    success: function(response) {
+                    success: function (response) {
                         $('#sanksi').val(response.sanksi);
                     },
-                    error: function() {
+                    error: function () {
                         alert("Error fetching sanksi data.");
                     }
                 });
             });
             // Kirimkan data menggunakan AJAX
-            $("#simpanLaporan").click(function() {
+            $("#simpanLaporan").click(function () {
                 var formData = new FormData();
 
                 // Ambil data dari form
@@ -549,16 +563,18 @@
                     data: formData,
                     contentType: false,
                     processData: false,
+
                     success: function(response) {
                         alert(response.message);
                         $("#laporanBaruModal").modal("hide");
                     },
-                    error: function(xhr, status, error) {
+                    error: function (xhr, status, error) {
                         console.error("Error: ", xhr.responseText);
                         alert("Terjadi kesalahan saat mengirim data ke server.");
                     },
                 });
             });
+
             $(document).on('click', '.btn-warning', function() {
                 var pelanggaran_id = $(this).data('pelaporan_id'); // Get the pelanggaran_id from the button
                 $('#modalEdit').data('pelaporan_id', pelanggaran_id); //menyimpan pelaporan_id
@@ -587,6 +603,7 @@
                     }
                 });
             });
+
             $("#pelanggaranEdit").change(function() {
                 var tingkat_id = $("#pelanggaranEdit option:selected").data("tingkat_id");
 
@@ -606,6 +623,7 @@
                     }
                 });
             });
+
             $('.simpanEdit').click(function() {
                 var pelaporan_id = $('#modalEdit').data('pelaporan_id');
                 var pelanggaran = $("#pelanggaranEdit").val();

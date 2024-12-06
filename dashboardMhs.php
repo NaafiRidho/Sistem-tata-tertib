@@ -60,6 +60,11 @@
       border-left: 5px solid #ffcc00;
     }
 
+    .menu a.active {
+      background-color: #0056b3;
+      border-left: 5px solid #ffcc00;
+    }
+
     .logout a {
       display: block;
       text-align: center;
@@ -153,7 +158,7 @@
       margin-top: 30 px;
     }
 
-    
+
 
     /* Ukuran font untuk Selamat Datang */
     .greeting-text {
@@ -192,13 +197,22 @@
   <div class="sidebar">
     <div class="menu">
       <h2>Si Tertib</h2>
-      <a href="dashboardMhs.php"><i class="bbi bi-columns-gap"></i> Dashboard</a>
-      <a href="laporanMhs.php"><i class="bi bi-file-text"></i> Laporan</a>
-      <a href="punishmentMhs.php"><i class="bi bi-exclamation-circle"></i> Punishment</a>
-      <a href="history_pelanggaran.php"><i class="bi bi-clock-history"></i> History Pelanggaran</a>
+      <a href="dashboardMhs.php" class="active">
+        <i class="bi bi-columns-gap"></i> <span>Dashboard</span>
+      </a>
+      <a href="laporanMhs.php">
+        <i class="bi bi-file-text"></i> <span>Laporan</span>
+      </a>
+      <a href="punishmentMhs.php">
+        <i class="bi bi-exclamation-circle"></i> <span>Punishment</span>
+      </a>
+      <a href="history_pelanggaran.php">
+        <i class="bi bi-clock-history"></i> <span>History Pelanggaran</span>
+      </a>
     </div>
     <div class="logout">
-      <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
+      <a href="login.php"><i class="bi bi-box-arrow-right"></i> <span>Logout</span>
+      </a>
     </div>
   </div>
 
@@ -234,7 +248,7 @@
     </div>
 
     <!-- Status Dashboard -->
-  <div class="container mt-4">
+    <div class="container mt-4">
       <?php
       $query = "SELECT TOP 1 t.tingkat FROM riwayat_pelaporan AS p
             INNER JOIN mahasiswa AS m ON m.mahasiswa_id = p.mahasiswa_id
