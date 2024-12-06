@@ -154,8 +154,6 @@
     }
 
     button:disabled {
-      background-color: #ccc;
-      color: #666;
       cursor: not-allowed;
       border-color: #aaa;
     }
@@ -206,6 +204,7 @@
               <th>Sanksi</th>
               <th>Bukti</th>
               <th>Aksi</th>
+              <th>Status Banding</th>
             </tr>
           </thead>
           <tbody>
@@ -216,7 +215,7 @@
 
 
             $query = "SELECT d.nama, pl.pelanggaran, t.tingkat, CONVERT(date, p.tanggal) AS tanggal,t.sanksi,
-            p.[file],m.nim,m.nama as mahasiswa, p.pelaporan_id, k.prodi, p.status
+            p.[file],m.nim,m.nama as mahasiswa, p.pelaporan_id, k.prodi, p.status, ab.status AS statusBanding
             FROM dbo.riwayat_pelaporan AS p
             INNER JOIN dbo.mahasiswa AS m ON p.mahasiswa_id = m.mahasiswa_id
             INNER JOIN dbo.kelas AS k ON k.kelas_id = m.kelas_id
@@ -224,6 +223,7 @@
             INNER JOIN dbo.dosen AS d ON d.dosen_id = p.dosen_id
             INNER JOIN dbo.tingkat AS t ON p.tingkat_id = t.tingkat_id
             INNER JOIN dbo.pelanggaran pl ON pl.pelanggaran_id = p.pelanggaran_id
+            INNER JOIN dbo.aju_banding ab ON p.pelaporan_id = ab.pelaporan_id
             WHERE u.user_id = ? AND p.status NOT IN('Dibatalkan','Selesai')";
 
 
@@ -262,13 +262,20 @@
                       </button><?php
                                       }
                                 ?>
-                    <button class="btn-detail" data-bs-toggle="modal" data-bs-target="#modalUlasan"
-                      data-pelanggaran="<?php echo $row['pelanggaran']; ?>" data-nama="<?php echo $row['mahasiswa']; ?>"
-                      data-nim="<?php echo $row['nim']; ?>" data-file="<?php echo $row['file']; ?>"
-                      data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>" data-prodi="<?php echo $row['prodi']; ?>">
-                      Banding
-                    </button>
+                    <?php
+                    if (!isset($row['statusBanding'])) { ?>
+                      <button class="btn-detail" data-bs-toggle="modal" data-bs-target="#modalUlasan"
+                        data-pelanggaran="<?php echo $row['pelanggaran']; ?>" data-nama="<?php echo $row['mahasiswa']; ?>"
+                        data-nim="<?php echo $row['nim']; ?>" data-file="<?php echo $row['file']; ?>"
+                        data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>" data-prodi="<?php echo $row['prodi']; ?>">
+                        Banding
+                      </button><?php
+                              } else {
+                                ?><button class="btn-detail" disabled>Banding</button><?php
+                                                                                    }
+                                                                                      ?>
                   </td>
+                  <td><?php echo $row['statusBanding'] ?></td>
                 </tr>
             <?php
               }
