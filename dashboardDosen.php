@@ -112,39 +112,62 @@
       margin: 10px 0;
     }
 
-    table {
-      width: 100%;
+    .card-dosen {
       margin-top: 20px;
-      border-collapse: collapse;
+      padding-left: 50px;
+      padding-right: 50px;
     }
 
-    table,
-    th,
-    td {
+    .card {
+      border-radius: 12px;
       border: 1px solid #ddd;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
-    th,
-    td {
-      padding: 12px;
-      text-align: left;
+    .card .card-title {
+      font-size: 1.25rem;
+      font-weight: bold;
     }
 
-    th {
-      background-color: #f2f2f2;
+    .card .display-5 {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .btn-primary {
+      border-radius: 20px;
+      padding: 8px 20px;
+      width: 100%;
     }
   </style>
 </head>
 
 <body>
+  <?php
+  include "koneksi.php";
 
+  $user_id = $_COOKIE['user_id'];
+  $query = "SELECT COUNT(rp.pelaporan_id) AS jumlahPelaporan, COUNT(ab.banding_id) AS jumlahBanding FROM dosen AS d
+            INNER JOIN riwayat_pelaporan AS rp ON rp.dosen_id = d.dosen_id
+            INNER JOIN aju_banding AS ab ON ab.pelaporan_Id = rp.pelaporan_id
+            INNER JOIN [user] AS u ON u.user_id = d.user_id
+            WHERE u.user_id = 7 AND rp.status NOT IN ('Selesai','Dibatal') AND ab.status NOT IN ('Diterima','Ditolak')";
+  $params = array($user_id);
+  $stmt = sqlsrv_prepare($conn, $query, $params);
+  if ($stmt === false) {
+    die(print_r(sqlsrv_errors(), true));
+  }
+  sqlsrv_execute($stmt);
+  $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+  ?>
   <div class="sidebar">
     <div class="menu" style="text-align: center; padding-top: 20px;">
       <img src="logo.png" style="width: 120px; height: 120px;">
       <h2>Si Tertib</h2>
       <a href="dashboardDosen.php" class="active"><i class="bi bi-columns-gap"></i> Dashboard</a>
       <a href="laporanDosen.php"><i class="bi bi-file-earmark-text"></i> Laporan</a>
-      <a href="ajuBandingDosen.php" <i class="bi bi-envelope"></i> Aju Banding</a>
+      <a href="ajuBandingDosen.php"><i class="bi bi-envelope"></i> Aju Banding</a>
     </div>
     <div class="logout">
       <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
@@ -159,69 +182,29 @@
       <div class="divider"></div>
       <p>Sistem Tata Tertib</p>
     </div>
-
-    <center>
-      <h4>Pengajuan Banding dari Mahasiswa</h4>
-    </center>
-    <table>
-      <thead>
-        <tr>
-          <th>No</th>
-          <th>Nama</th>
-          <th>Pelanggaran</th>
-          <th>Sanksi</th>
-          <th>Alasan</th>
-          <th>Aksi</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php
-        include "koneksi.php";
-        $user_id = $_COOKIE["user_id"];
-
-        $query = "SELECT m.nama, p.pelanggaran, p.sanksi, ab.alasan, ab.status
-                  FROM aju_banding AS ab
-                  JOIN pelanggaran p ON ab.pelaporan_id = p.pelanggar_id
-                  JOIN mahasiswa m ON p.pelanggar_id = m.pelanggar_id
-                  WHERE ab.user_id = ?";
-
-        $params = array($user_id);
-        $stmt = sqlsrv_prepare($conn, $query, $params);
-
-        if ($stmt === false) {
-          die(print_r(sqlsrv_errors(), true));
-        }
-
-        if (sqlsrv_execute($stmt)) {
-          $no = 1;
-          while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-            ?>
-            <tr>
-              <td><?php echo $no++; ?></td>
-              <td><?php echo $row["nama"]; ?></td>
-              <td><?php echo $row["pelanggaran"]; ?></td>
-              <td><?php echo $row["sanksi"]; ?></td>
-              <td><?php echo $row["alasan"]; ?></td>
-              <td>
-                <?php
-                if ($row["status"] == "Tolak") {
-                  echo "<span class='badge badge-danger'>Dilaporkan</span>";
-                } else if ($row["status"] == "Terima") {
-                  echo "<span class='badge badge-warning'>Dilakukan</span>";
-                }
-                ?>
-              </td>
-            </tr>
-            <?php
-          }
-        } else {
-          echo "Error executing query.";
-        }
-        ?>
-      </tbody>
-    </table>
-  </div>
-
+    <div class="card-dosen row mt-5">
+      <div class="col-md-6">
+        <div class="card text-center shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Pelaporan Aju Banding</h5>
+            <p class="card-text display-5"><?php echo $row['jumlahBanding']; ?></p>
+            <a href="ajuBandingDosen.php" class="btn btn-primary">
+              <i class="bi bi-arrow-repeat"></i> Info Terbaru</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card text-center shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Total Jumlah Pelaporan</h5>
+            <p class="card-text display-5"><?php echo $row['jumlahPelaporan']; ?></p>
+            <a href="laporanDosen.php" class="btn btn-primary">
+              <i class="bi bi-eye"></i> Lihat Detail
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

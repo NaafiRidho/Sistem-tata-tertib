@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aju Banding Dosen - Si Tatib</title>
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap" rel="stylesheet">
     <!-- Bootstrap CSS -->
@@ -155,8 +156,7 @@
                         if (sqlsrv_execute($stmt)) {
                             $no = 1;
                             while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-                                ?>
-                                <tr>
+                        ?> <tr>
                                     <td><?php echo $no++; ?></td>
                                     <td><?php echo $row['nama']; ?></td>
                                     <td><?php echo $row['pelanggaran'] ?></td>
@@ -218,15 +218,15 @@
         </div>
     </div>
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('#example').DataTable();
 
-            $(document).on('click', '#btnTolak', function () {
+            $(document).on('click', '#btnTolak', function() {
                 var banding_id = $(this).data("banding_id");
                 $("#modalTolak").data('banding_id', banding_id);
             });
 
-            $("#tolak").click(function () {
+            $("#tolak").click(function() {
                 var banding_id = $("#modalTolak").data('banding_id');
                 $.ajax({
                     url: "tolakBanding.php",
@@ -235,22 +235,22 @@
                     data: {
                         banding_id: banding_id
                     },
-                    success: function (response) {
+                    success: function(response) {
                         alert(response.message);
                         $("#modalTolak").modal("hide");
                         location.reload();
                     },
-                    error: function (xhr, status, error) {
+                    error: function(xhr, status, error) {
                         alert(xhr.responseText);
                     }
                 });
             });
 
-            $(document).on('click', '#btnTerima', function () {
+            $(document).on('click', '#btnTerima', function() {
                 var banding_id = $(this).data("banding_id");
                 $("#modalTerima").data('banding_id', banding_id);
             });
-            $("#terima").click(function () {
+            $("#terima").click(function() {
                 var banding_id = $("#modalTerima").data('banding_id');
                 $.ajax({
                     url: "terimaBanding.php",
@@ -259,12 +259,13 @@
                         banding_id: banding_id
                     },
                     dataType: "json",
-                    success: function (response) {
+
+                    success: function(response) {
                         alert(response.message);
                         $("#modalTerima").modal("hide");
                         location.reload();
                     },
-                    error: function (xhr, status, error) {
+                    error: function(xhr, status, error) {
                         alert(xhr.responseText);
                     }
                 });

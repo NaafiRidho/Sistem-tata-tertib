@@ -253,7 +253,7 @@
       $query = "SELECT TOP 1 t.tingkat FROM riwayat_pelaporan AS p
             INNER JOIN mahasiswa AS m ON m.mahasiswa_id = p.mahasiswa_id
             INNER JOIN tingkat AS t ON t.tingkat_id = p.tingkat_id
-            WHERE m.user_id = ? ORDER BY t.tingkat";
+            WHERE m.user_id = ? AND p.status <> 'Dibatalkan' ORDER BY t.tingkat";
       $params = array($_COOKIE['user_id']);
       $stmt = sqlsrv_prepare($conn, $query, $params);
 

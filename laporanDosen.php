@@ -195,7 +195,7 @@
             <h2>Si Tertib</h2>
             <a href="dashboardDosen.php"><i class="bi bi-columns-gap"></i> Dashboard</a>
             <a href="laporanDosen.php" class="active"><i class="bi bi-file-earmark-text"></i> Laporan</a>
-            <a href="ajuBandingDosen.php" <i class="bi bi-envelope"></i> Aju Banding</a>
+            <a href="ajuBandingDosen.php"><i class="bi bi-envelope"></i> Aju Banding</a>
         </div>
         <div class="logout">
             <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
@@ -229,7 +229,7 @@
                 }
                 ?>
                 <div class="alert-message" <?php if ($hasData)
-                    echo 'style="display: none;"'; ?>>
+                                                echo 'style="display: none;"'; ?>>
                     Maaf, data pelaporan saat ini belum ada.
                 </div>
                 <div class="alert-button">
@@ -271,7 +271,7 @@
                     if (sqlsrv_execute($stmt)) {
                         $no = 1;
                         while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-                            ?>
+                    ?>
                             <tr>
                                 <td><?php echo $no++ ?></td>
                                 <td><?php echo $row['nama'] ?></td>
@@ -283,13 +283,13 @@
                                 <td><button class="btn btn-warning" id="button-edit" style="width: 100px; height: 38px;"
                                         data-bs-toggle="modal" data-bs-target="#modalEdit"
                                         data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>">Ubah</button>
-                                    <button class="btn btn-secondary btn mt-2" style="width: 100px; height: 38px;"
-                                        data-bs-toggle="modal" data-bs-target="#batalkan">batalkan</button>
+                                    <button class="btn btn-secondary btn mt-2 btn-batalkan" style="width: 100px; height: 38px;"
+                                        data-bs-toggle="modal" data-bs-target="#modalBatal" data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>">Batalkan</button>
                                 </td>
                             </tr><?php
-                        }
-                    }
-                    ?>
+                                }
+                            }
+                                    ?>
                 </tbody>
             </table>
         </div>
@@ -327,10 +327,10 @@
                                 <option value="" disabled selected>Pilih Program Studi</option>
                                 <?php
                                 include 'koneksi.php'; // File koneksi ke SQL Server
-                                
+
                                 $query = "SELECT DISTINCT prodi FROM kelas ORDER BY prodi"; // Query SQL
                                 $result = sqlsrv_query($conn, $query); // Eksekusi query dengan sqlsrv_query
-                                
+
                                 if ($result === false) {
                                     die(print_r(sqlsrv_errors(), true)); // Menampilkan error jika query gagal
                                 }
@@ -399,8 +399,7 @@
                         <div class="mb-3 text-center">
                             <label for="buktiFoto" class="form-label">Bukti Foto</label>
                             <div>
-                                <img src="https://via.placeholder.com/150" alt="Bukti Foto"
-                                    class="img-fluid rounded buktiFotoEdit">
+                                <img src="https://via.placeholder.com/150" alt="Bukti Foto" class="img-fluid rounded buktiFotoEdit">
                             </div>
                         </div>
                         <div class="mb-3">
@@ -457,19 +456,19 @@
     </div>
 
     <!-- Modal Batalkan -->
-    <div class="modal fade" id="batalkan" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modalBatal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Judul Modal</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Batalkan Pelanggaran</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Ini adalah isi dari modal.
+                    Apakah Anda Ingin Membatalkan Pelanggaran Ini
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-primary">Simpan Perubahan</button>
+                    <button type="button" class="btn btn-primary" id="batalkan">Iya</button>
                 </div>
             </div>
         </div>
@@ -483,7 +482,7 @@
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             const hasData = <?php echo json_encode($hasData); ?>;
             if (hasData) {
                 $('#example').DataTable({
@@ -492,7 +491,7 @@
             } else {
                 $('#example').hide(); // Sembunyikan tabel jika tidak ada data
             }
-            $('#prodi').change(function () {
+            $('#prodi').change(function() {
                 const prodi = $(this).val(); // Ambil nilai dari dropdown prodi
                 const kelasDropdown = $('#kelas'); // Dropdown kelas
 
@@ -507,20 +506,20 @@
                         prodi: prodi
                     },
                     dataType: 'json',
-                    success: function (data) {
+                    success: function(data) {
                         // Bersihkan dropdown kelas dan tambahkan opsi baru
                         kelasDropdown.empty().append('<option value="" disabled selected>Pilih Kelas</option>');
-                        $.each(data, function (index, kelas) {
+                        $.each(data, function(index, kelas) {
                             kelasDropdown.append('<option value="' + kelas.nama_kelas + '">' + kelas.nama_kelas + '</option>');
                         });
                     },
-                    error: function () {
+                    error: function() {
                         // Tampilkan pesan error jika terjadi kesalahan
                         kelasDropdown.empty().append('<option value="" disabled selected>Error memuat kelas</option>');
                     }
                 });
             });
-            $("#pelanggaran").change(function () {
+            $("#pelanggaran").change(function() {
                 var tingkat_id = $("#pelanggaran option:selected").data("tingkat_id");
 
                 $.ajax({
@@ -530,16 +529,16 @@
                         tingkat_id: tingkat_id
                     },
                     dataType: 'json',
-                    success: function (response) {
+                    success: function(response) {
                         $('#sanksi').val(response.sanksi);
                     },
-                    error: function () {
+                    error: function() {
                         alert("Error fetching sanksi data.");
                     }
                 });
             });
             // Kirimkan data menggunakan AJAX
-            $("#simpanLaporan").click(function () {
+            $("#simpanLaporan").click(function() {
                 var formData = new FormData();
 
                 // Ambil data dari form
@@ -568,13 +567,14 @@
                         alert(response.message);
                         $("#laporanBaruModal").modal("hide");
                     },
-                    error: function (xhr, status, error) {
+                    error: function(xhr, status, error) {
                         console.error("Error: ", xhr.responseText);
                         alert("Terjadi kesalahan saat mengirim data ke server.");
                     },
                 });
             });
-            $(document).on('click', '.btn-warning', function () {
+
+            $(document).on('click', '.btn-warning', function() {
                 var pelanggaran_id = $(this).data('pelaporan_id'); // Get the pelanggaran_id from the button
                 $('#modalEdit').data('pelaporan_id', pelanggaran_id); //menyimpan pelaporan_id
 
@@ -585,7 +585,7 @@
                         pelanggaran_id: pelanggaran_id
                     },
                     dataType: "json",
-                    success: function (data) {
+                    success: function(data) {
                         // Populate the modal fields with the retrieved data
                         $("#namaMahasiswa").val(data.nama);
                         $("#nimMahasiswa").val(data.nim);
@@ -597,12 +597,13 @@
                         $('#sanksiPelanggaran').val(data.sanksi);
                         $('.buktiFotoEdit').attr('src', data.bukti);
                     },
-                    error: function () {
+                    error: function() {
                         alert("Error fetching report data.");
                     }
                 });
             });
-            $("#pelanggaranEdit").change(function () {
+
+            $("#pelanggaranEdit").change(function() {
                 var tingkat_id = $("#pelanggaranEdit option:selected").data("tingkat_id");
 
                 $.ajax({
@@ -612,16 +613,17 @@
                         tingkat_id: tingkat_id
                     },
                     dataType: 'json',
-                    success: function (response) {
+                    success: function(response) {
                         $('#sanksiPelanggaran').val(response.sanksi);
                         $('#tingkatEdit').val(response.tingkat);
                     },
-                    error: function () {
+                    error: function() {
                         alert("Error fetching sanksi data.");
                     }
                 });
             });
-            $('.simpanEdit').click(function () {
+
+            $('.simpanEdit').click(function() {
                 var pelaporan_id = $('#modalEdit').data('pelaporan_id');
                 var pelanggaran = $("#pelanggaranEdit").val();
                 var tingkat = $("#tingkatEdit").val();
@@ -637,15 +639,40 @@
                         sanksi: sanksi
                     },
                     dataType: 'json',
-                    success: function (response) {
+                    success: function(response) {
                         alert(response.message);
-                        $("modalEdit").modal("hide");
+                        $("#modalEdit").modal("hide");
                     },
-                    error: function (xhr, status, error) {
+                    error: function(xhr, status, error) {
                         alert(xhr.responseText);
                     }
-                })
-            })
+                });
+            });
+
+            $(document).on('click', '.btn-batalkan', function() {
+                var pelaporan_id = $(this).data('pelaporan_id');
+                $('#modalBatal').data('pelaporan_id', pelaporan_id);
+            });
+
+            $("#batalkan").click(function() {
+                var pelaporan_id = $('#modalBatal').data('pelaporan_id');
+
+                $.ajax({
+                    url: "batalkan_report.php",
+                    method: "POST",
+                    data: {
+                        pelaporan_id: pelaporan_id
+                    },
+                    dataType: "json",
+                    success: function(response) {
+                        alert(response.message);
+                        $("#modalBatal").modal("hide");
+                    },
+                    error: function(xhr, status, error) {
+                        alert(xhr.responseText);
+                    }
+                });
+            });
         });
     </script>
 

@@ -192,7 +192,7 @@
                         if (sqlsrv_execute($stmt)) {
                             $no = 1;
                             while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-                                ?>
+                        ?>
                                 <tr>
                                     <td><?php echo $no++; ?></td>
                                     <td><?php echo $row["pelanggaran"] ?></td>
@@ -206,10 +206,12 @@
                                             echo "<span class='badge badge-success'>Selesai</span>";
                                         } else if ($row["status"] == "Diterima") {
                                             echo "<span class='badge badge-warning'>Dilakukan</span>";
+                                        } else if ($row["status"] == "Dibatalkan") {
+                                            echo "<span class='badge badge-secondary'>DiBatalkan</span>";
                                         } ?>
                                     </td>
                                 </tr>
-                                <?php
+                        <?php
                             }
                         } ?>
                     </tbody>
@@ -218,7 +220,7 @@
         </div>
     </div>
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('#example').DataTable();
         })
     </script>

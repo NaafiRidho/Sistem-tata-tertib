@@ -119,7 +119,6 @@
         }
 
         .btn-upload-label {
-            margin-top: 30px;
             display: inline-block;
             background-color: #28a745;
             color: white;
@@ -138,6 +137,20 @@
         /* Hide the default file input */
         input[type="file"] {
             display: none;
+        }
+
+        .btn-cetak-surat,
+        .btn-upload-label,
+        .btn-success {
+            height: 50px;
+            width: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
     </style>
 </head>
@@ -172,12 +185,14 @@
     <!-- Content -->
     <div class="content">
         <h2>Punishment</h2>
+        <h4 class="mt-3">1.Cetak Surat Pernyataan</h4>
         <form action="suratPunishment.php">
             <button class="btn-cetak-surat btn btn-primary">
                 <i class="bi bi-printer"></i> Cetak Surat
             </button>
         </form>
         <!-- Form untuk mengunggah file -->
+        <h4 class="mt-5">2.Upload Surat Pernyataan Yang Sudah Di isi</h4>
         <form action="uploadFile.php" method="POST" enctype="multipart/form-data">
             <div class="form-group mb-3 ">
                 <label for="fileUpload" class="btn-upload-label">

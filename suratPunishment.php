@@ -17,7 +17,7 @@ include "koneksi.php";
 // Ambil data dari cookie atau session
 $user_id = $_COOKIE['user_id'];
 
-$query = "SELECT d.nama AS dosen, k.nama_kelas, k.prodi, m.nama AS mahasiswa, m.nim, p.pelanggaran 
+$query = "SELECT TOP 1 d.nama AS dosen, k.nama_kelas, k.prodi, m.nama AS mahasiswa, m.nim, p.pelanggaran 
           FROM riwayat_pelaporan AS rp
           INNER JOIN mahasiswa AS m ON m.mahasiswa_id = rp.mahasiswa_id
           INNER JOIN kelas AS k ON k.kelas_id = m.kelas_id
