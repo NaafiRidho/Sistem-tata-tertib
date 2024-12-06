@@ -229,7 +229,7 @@
                 }
                 ?>
                 <div class="alert-message" <?php if ($hasData)
-                    echo 'style="display: none;"'; ?>>
+                                                echo 'style="display: none;"'; ?>>
                     Maaf, data pelaporan saat ini belum ada.
                 </div>
                 <div class="alert-button">
@@ -271,7 +271,7 @@
                     if (sqlsrv_execute($stmt)) {
                         $no = 1;
                         while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-                            ?>
+                    ?>
                             <tr>
                                 <td><?php echo $no++ ?></td>
                                 <td><?php echo $row['nama'] ?></td>
@@ -283,13 +283,13 @@
                                 <td><button class="btn btn-warning" id="button-edit" style="width: 100px; height: 38px;"
                                         data-bs-toggle="modal" data-bs-target="#modalEdit"
                                         data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>">Ubah</button>
-                                    <button class="btn btn-secondary btn mt-2" style="width: 100px; height: 38px;"
-                                        data-bs-toggle="modal" data-bs-target="#batalkan">batalkan</button>
+                                    <button class="btn btn-secondary btn mt-2 btn-batalkan" style="width: 100px; height: 38px;"
+                                        data-bs-toggle="modal" data-bs-target="#modalBatal" data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>">Batalkan</button>
                                 </td>
                             </tr><?php
-                        }
-                    }
-                    ?>
+                                }
+                            }
+                                    ?>
                 </tbody>
             </table>
         </div>
@@ -327,10 +327,10 @@
                                 <option value="" disabled selected>Pilih Program Studi</option>
                                 <?php
                                 include 'koneksi.php'; // File koneksi ke SQL Server
-                                
+
                                 $query = "SELECT DISTINCT prodi FROM kelas ORDER BY prodi"; // Query SQL
                                 $result = sqlsrv_query($conn, $query); // Eksekusi query dengan sqlsrv_query
-                                
+
                                 if ($result === false) {
                                     die(print_r(sqlsrv_errors(), true)); // Menampilkan error jika query gagal
                                 }
@@ -482,7 +482,7 @@
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             const hasData = <?php echo json_encode($hasData); ?>;
             if (hasData) {
                 $('#example').DataTable({
@@ -491,7 +491,7 @@
             } else {
                 $('#example').hide(); // Sembunyikan tabel jika tidak ada data
             }
-            $('#prodi').change(function () {
+            $('#prodi').change(function() {
                 const prodi = $(this).val(); // Ambil nilai dari dropdown prodi
                 const kelasDropdown = $('#kelas'); // Dropdown kelas
 
@@ -506,20 +506,20 @@
                         prodi: prodi
                     },
                     dataType: 'json',
-                    success: function (data) {
+                    success: function(data) {
                         // Bersihkan dropdown kelas dan tambahkan opsi baru
                         kelasDropdown.empty().append('<option value="" disabled selected>Pilih Kelas</option>');
-                        $.each(data, function (index, kelas) {
+                        $.each(data, function(index, kelas) {
                             kelasDropdown.append('<option value="' + kelas.nama_kelas + '">' + kelas.nama_kelas + '</option>');
                         });
                     },
-                    error: function () {
+                    error: function() {
                         // Tampilkan pesan error jika terjadi kesalahan
                         kelasDropdown.empty().append('<option value="" disabled selected>Error memuat kelas</option>');
                     }
                 });
             });
-            $("#pelanggaran").change(function () {
+            $("#pelanggaran").change(function() {
                 var tingkat_id = $("#pelanggaran option:selected").data("tingkat_id");
 
                 $.ajax({
@@ -529,16 +529,16 @@
                         tingkat_id: tingkat_id
                     },
                     dataType: 'json',
-                    success: function (response) {
+                    success: function(response) {
                         $('#sanksi').val(response.sanksi);
                     },
-                    error: function () {
+                    error: function() {
                         alert("Error fetching sanksi data.");
                     }
                 });
             });
             // Kirimkan data menggunakan AJAX
-            $("#simpanLaporan").click(function () {
+            $("#simpanLaporan").click(function() {
                 var formData = new FormData();
 
                 // Ambil data dari form
@@ -568,7 +568,7 @@
                         alert(response.message);
                         $("#laporanBaruModal").modal("hide");
                     },
-                    error: function (xhr, status, error) {
+                    error: function(xhr, status, error) {
                         console.error("Error: ", xhr.responseText);
                         alert("Terjadi kesalahan saat mengirim data ke server.");
                     },
@@ -650,7 +650,7 @@
                 });
             });
 
-            $(document).on('click', '#button-batalkan', function() {
+            $(document).on('click', '.btn-batalkan', function() {
                 var pelaporan_id = $(this).data('pelaporan_id');
                 $('#modalBatal').data('pelaporan_id', pelaporan_id);
             });
