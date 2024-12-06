@@ -63,6 +63,11 @@
       transition: all 0.3s;
     }
 
+    .menu a.active {
+      background-color: #0056b3;
+      border-left: 5px solid #ffcc00;
+    }
+
     .menu a:hover {
       background-color: #0056b3;
       border-left: 5px solid #ffcc00;
@@ -166,25 +171,33 @@
       overflow-wrap: break-word;
       height: auto;
     }
-
   </style>
 </head>
 
 <body>
 
-<button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+  <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
 
 
   <div class="sidebar">
     <div class="menu">
       <h2>Si Tertib</h2>
-      <a href="dashboardMhs.php"><i class="bbi bi-columns-gap"></i> Dashboard</a>
-      <a href="laporanMhs.php"><i class="bi bi-file-text"></i> Laporan</a>
-      <a href="punishmentMhs.php"><i class="bi bi-exclamation-circle"></i> Punishment</a>
-      <a href="history_pelanggaran.php"><i class="bi bi-clock-history"></i> History Pelanggaran</a>
+      <a href="dashboardMhs.php">
+        <i class="bi bi-columns-gap"></i> <span>Dashboard</span>
+      </a>
+      <a href="laporanMhs.php" class="active">
+        <i class="bi bi-file-text"></i> <span>Laporan</span>
+      </a>
+      <a href="punishmentMhs.php">
+        <i class="bi bi-exclamation-circle"></i> <span>Punishment</span>
+      </a>
+      <a href="history_pelanggaran.php">
+        <i class="bi bi-clock-history"></i> <span>History Pelanggaran</span>
+      </a>
     </div>
     <div class="logout">
-      <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
+      <a href="login.php"><i class="bi bi-box-arrow-right"></i> <span>Logout</span>
+      </a>
     </div>
   </div>
 
@@ -431,7 +444,7 @@
       document.querySelector('.sidebar').classList.toggle('close');
       document.querySelector('.content').classList.toggle('shift');
     }
-</script>
+  </script>
 
 </body>
 
