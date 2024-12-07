@@ -34,6 +34,11 @@ if (sqlsrv_execute($stmt)) {
     
             header("Location: dashboardDosen.php");
             exit();
+        }else if ($role == "Admin"){
+            setcookie("user_id",$user_id);
+    
+            header("Location: dashboardAdmin.php");
+            exit();
         }
     }else{
         echo "<script>alert('Tidak Dapat Login')
