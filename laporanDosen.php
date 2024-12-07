@@ -185,6 +185,11 @@
         .dataTables_filter {
             display: none;
         }
+
+        button:disabled {
+            cursor: not-allowed;
+            border-color: #aaa;
+        }
     </style>
 </head>
 
@@ -261,7 +266,7 @@
                   INNER JOIN tingkat AS t ON t.tingkat_id = rp.tingkat_id
                   INNER JOIN dosen AS d ON d.dosen_id = rp.dosen_id
                   INNER JOIN mahasiswa AS m ON m.mahasiswa_id = rp.mahasiswa_id
-                  WHERE d.user_id = ?";
+                  WHERE d.user_id = ? AND rp.status NOT IN('Selesai')";
 
                     $params = array($user_id);
                     $stmt = sqlsrv_prepare($conn, $query, $params);
@@ -280,11 +285,19 @@
                                 <td><?php echo $row['tingkat'] ?></td>
                                 <td><?php echo $row['sanksi'] ?></td>
                                 <td><?php echo $row['status'] ?></td>
-                                <td><button class="btn btn-warning" id="button-edit" style="width: 100px; height: 38px;"
-                                        data-bs-toggle="modal" data-bs-target="#modalEdit"
-                                        data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>">Ubah</button>
-                                    <button class="btn btn-secondary btn mt-2 btn-batalkan" style="width: 100px; height: 38px;"
-                                        data-bs-toggle="modal" data-bs-target="#modalBatal" data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>">Batalkan</button>
+                                <td>
+                                    <?php
+                                    if ($row['status'] == "Diterima") {
+                                    ?> <button class="btn btn-warning" style="width: 100px; height: 38px;" disabled>Ubah</button>
+                                        <button class="btn btn-secondary btn mt-2" style="width: 100px; height: 38px;" disabled>Batalkan</button>
+                                    <?php } else { ?>
+                                        <button class="btn btn-warning" id="button-edit" style="width: 100px; height: 38px;"
+                                            data-bs-toggle="modal" data-bs-target="#modalEdit"
+                                            data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>">Ubah</button>
+                                        <button class="btn btn-secondary btn mt-2 btn-batalkan" style="width: 100px; height: 38px;"
+                                            data-bs-toggle="modal" data-bs-target="#modalBatal" data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>">Batalkan</button>
+                                    <?php }
+                                    ?>
                                 </td>
                             </tr><?php
                                 }
@@ -563,7 +576,7 @@
                     data: formData,
                     contentType: false,
                     processData: false,
-                    success: function (response) {
+                    success: function(response) {
                         alert(response.message);
                         $("#laporanBaruModal").modal("hide");
                     },
