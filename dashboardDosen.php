@@ -148,11 +148,11 @@
   include "koneksi.php";
 
   $user_id = $_COOKIE['user_id'];
-  $query = "SELECT COUNT(rp.pelaporan_id) AS jumlahPelaporan, COUNT(ab.banding_id) AS jumlahBanding FROM dosen AS d
+  $query = "SELECT COUNT(ab.banding_id) AS jumlahBanding FROM dosen AS d
             INNER JOIN riwayat_pelaporan AS rp ON rp.dosen_id = d.dosen_id
             INNER JOIN aju_banding AS ab ON ab.pelaporan_Id = rp.pelaporan_id
             INNER JOIN [user] AS u ON u.user_id = d.user_id
-            WHERE u.user_id = 7 AND rp.status NOT IN ('Selesai','Dibatal') AND ab.status NOT IN ('Diterima','Ditolak')";
+            WHERE u.user_id = 7 AND ab.status NOT IN ('Diterima','Ditolak')";
   $params = array($user_id);
   $stmt = sqlsrv_prepare($conn, $query, $params);
   if ($stmt === false) {
@@ -187,12 +187,28 @@
         <div class="card text-center shadow-sm">
           <div class="card-body">
             <h5 class="card-title">Pelaporan Aju Banding</h5>
-            <p class="card-text display-5"><?php echo $row['jumlahBanding']; ?></p>
+            <p class="card-text display-5"><?php echo $row['jumlahBanding'] ?></p>
             <a href="ajuBandingDosen.php" class="btn btn-primary">
               <i class="bi bi-arrow-repeat"></i> Info Terbaru</a>
           </div>
         </div>
       </div>
+      <?php
+      include "koneksi.php";
+
+      $user_id = $_COOKIE['user_id'];
+      $query = "SELECT COUNT(rp.pelaporan_id) AS jumlahPelaporan FROM dosen AS d
+            INNER JOIN riwayat_pelaporan AS rp ON rp.dosen_id = d.dosen_id
+            INNER JOIN [user] AS u ON u.user_id = d.user_id
+            WHERE u.user_id = 7 AND rp.status NOT IN ('Selesai','Dibatal')";
+      $params = array($user_id);
+      $stmt = sqlsrv_prepare($conn, $query, $params);
+      if ($stmt === false) {
+        die(print_r(sqlsrv_errors(), true));
+      }
+      sqlsrv_execute($stmt);
+      $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+      ?>
       <div class="col-md-6">
         <div class="card text-center shadow-sm">
           <div class="card-body">
@@ -205,8 +221,8 @@
         </div>
       </div>
     </div>
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
