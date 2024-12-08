@@ -99,7 +99,19 @@
       margin: 20px auto; 
       border-radius: 30%; 
     }
-    
+
+    .sidebar h2 {
+      text-align: center;
+      margin: 20px 0;
+      font-size: 2rem;
+      font-family: 'Fugaz One', sans-serif;
+      font-weight: 600;
+      color: #E38E49;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 4);
+    }
+
     .status-dropdown:hover {
       text-decoration: underline;
     }
