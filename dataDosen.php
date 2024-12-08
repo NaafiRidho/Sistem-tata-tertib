@@ -159,8 +159,20 @@
       background-color: #f2f2f2;
     }
 
+    .table-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+
+    .entries-info {
+      color: #666;
+    }
+
     .pagination {
-      justify-content: center;
+      margin: 0;
     }
   </style>
 </head>
@@ -201,8 +213,18 @@
         </thead>
         <tbody>
           <tr>
-            <td>2341760182</td>
-            <td>Abhinaya Nuzuluzzhudi</td>
+            <td>000000</td>
+            <td>Muhammad Unggul Pamenang</td>
+            <td>D4-Sistem Informasi Bisnis</td>
+            <td>Pemprograman Web</td>
+            <td>
+              <button class="btn-edit">Edit</button>
+              <button class="btn-delete">Hapus</button>
+            </td>
+          </tr>
+          <tr>
+            <td>11111</td>
+            <td>Annisa Tufika Firdausi</td>
             <td>D4-Sistem Informasi Bisnis</td>
             <td>Basdat Lanjut</td>
             <td>
@@ -211,10 +233,10 @@
             </td>
           </tr>
           <tr>
-            <td>2341760182</td>
-            <td>Abhinaya Nuzuluzzhudi</td>
+            <td>2222</td>
+            <td>Vit Zuraida</td>
             <td>D4-Sistem Informasi Bisnis</td>
-            <td>Basdat Lanjut</td>
+            <td>Pemprograman Berbais Obejek</td>
             <td>
               <button class="btn-edit">Edit</button>
               <button class="btn-delete">Hapus</button>
@@ -223,14 +245,18 @@
         </tbody>
       </table>
 
-      <nav aria-label="Page navigation">
-        <ul class="pagination">
-          <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-          <li class="page-item"><a class="page-link" href="#">1</a></li>
-          <li class="page-item"><a class="page-link" href="#">2</a></li>
-          <li class="page-item"><a class="page-link" href="#">Next</a></li>
-        </ul>
-      </nav>
+      <div class="table-footer">
+        <div class="entries-info">
+          Showing 1 to 2 of 2 entries
+        </div>
+        <nav aria-label="Page navigation">
+          <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+          </ul>
+        </nav>
+      </div>
     </div>
   </div>
 
