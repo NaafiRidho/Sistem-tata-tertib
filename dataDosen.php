@@ -148,8 +148,7 @@
       border-collapse: collapse;
     }
 
-    th,
-    td {
+    th, td {
       text-align: center;
       padding: 10px;
       border: 1px solid #ddd;
@@ -157,6 +156,24 @@
 
     th {
       background-color: #f2f2f2;
+    }
+
+    .sidebar img {
+      display: block;
+      margin: 20px auto; 
+      border-radius: 30%; 
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      margin: 20px 0;
+      font-size: 2rem;
+      font-family: 'Fugaz One', sans-serif;
+      font-weight: 600;
+      color: #E38E49;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 4);
     }
 
     .table-footer {
@@ -181,6 +198,7 @@
 
   <div class="sidebar">
     <div class="menu">
+    <img src="logo.png" style="width: 120px; height: 120px;">
       <h2>Si Tertib</h2>
       <a href="#dashboard"><i class="bi bi-columns-gap"></i> Dashboard</a>
       <a href="#listTatib"><i class="bi bi-list-check"></i> List Tata Tertib</a>
