@@ -31,8 +31,8 @@
 
     .sidebar img {
       display: block;
-      margin: 20px auto; /* Jarak atas-bawah */
-      border-radius: 30%; /* Membuat gambar bulat, opsional */
+      margin: 20px auto; 
+      border-radius: 30%; 
     }
 
     .sidebar h2 {
