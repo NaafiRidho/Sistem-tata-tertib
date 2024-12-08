@@ -29,10 +29,22 @@
       justify-content: space-between;
     }
 
+    .sidebar img {
+      display: block;
+      margin: 20px auto; /* Jarak atas-bawah */
+      border-radius: 30%; /* Membuat gambar bulat, opsional */
+    }
+
     .sidebar h2 {
       text-align: center;
       margin: 20px 0;
-      font-size: 1.5rem;
+      font-size: 2rem;
+      font-family: 'Fugaz One', sans-serif;
+      font-weight: 600;
+      color: #E38E49;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 4);
     }
 
     .menu {
@@ -98,66 +110,6 @@
       background-color: #ccc;
       margin: 10px 0;
     }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-
-    th, td {
-      text-align: center;
-      padding: 10px;
-      border: 1px solid #ddd;
-    }
-
-    th {
-      background-color: #f2f2f2;
-    }
-
-    .btn-edit {
-      background-color: #ffc107;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    .btn-edit:hover {
-      background-color: #e0a800;
-    }
-
-    .btn-delete {
-      background-color: #dc3545;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    .btn-delete:hover {
-      background-color: #c82333;
-    }
-
-    .btn-add {
-      background-color: #28a745;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-bottom: 15px;
-      transition: background-color 0.3s;
-    }
-
-    .btn-add:hover {
-      background-color: #218838;
-    }
   </style>
 </head>
 
@@ -165,6 +117,7 @@
 
   <div class="sidebar">
     <div class="menu">
+      <img src="logo.png" style="width: 120px; height: 120px;">
       <h2>Si Tertib</h2>
       <a href="#dashboard"><i class="bi bi-columns-gap"></i> Dashboard</a>
       <a href="#listTatib"><i class="bi bi-list-check"></i> List Tata Tertib</a>
