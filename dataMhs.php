@@ -190,7 +190,7 @@
           include "koneksi.php";
 
           $options = array("Scrollable" => SQLSRV_CURSOR_STATIC);
-          $query = "SELECT m.nim, m.nama, k.prodi, k.nama_kelas FROM mahasiswa AS m
+          $query = "SELECT m.nim, m.nama, k.prodi, k.nama_kelas, m.mahasiswa_id FROM mahasiswa AS m
                     INNER JOIN kelas AS k ON k.kelas_id = m.kelas_id";
           $result = sqlsrv_query($conn, $query, array(), $options);
 
@@ -204,8 +204,8 @@
                 <td><?php echo $row['prodi'] ?></td>
                 <td><?php echo $row['nama_kelas'] ?></td>
                 <td>
-                  <button class="btn btn-edit">Edit</button>
-                  <button class="btn btn-delete">Hapus</button>
+                  <button class="btn btn-edit" data-bs-toggle="modal" data-bs-target="#modalEdit" data-mahasiswa_id="<?php echo $row['mahasiswa_id'] ?>">Edit</button>
+                  <button class="btn btn-delete" data-bs-toggle="modal" data-bs-target="#modalHapus" data-mahasiswa_id="<?php echo $row['mahasiswa_id'] ?>">Hapus</button>
                 </td>
               </tr><?php
                   }
@@ -220,7 +220,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="modalFormLabel">Tambah/Edit Data Mahasiswa</h5>
+          <h5 class="modal-title" id="modalFormLabel">Tambah Data Mahasiswa</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -243,7 +243,7 @@
             </div>
             <div class="form-group">
               <label for="prodi" class="required">Program Studi</label>
-              <select id="prodi" class="form-control" required>
+              <select class="form-control prodi" required>
                 <option value="" disabled selected>Pilih Program Studi</option>
                 <?php
                 include 'koneksi.php'; // File koneksi ke SQL Server
@@ -278,7 +278,60 @@
     </div>
   </div>
 
+  <!-- Modal Edit Data -->
+  <div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="modalFormEdit" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalFormLabel">Edit Data Mahasiswa</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="">
+            <div class="form-group">
+              <label for="nama" class="form-label">Nama Mahasiswa</label>
+              <input type="text" id="namaMhs" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="nim" class="form-label">NIM Mahasiswa</label>
+              <input type="text" id="nimMhs" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="prodi" class="required">Program Studi</label>
+              <select id="prodiMhs" class="form-control prodi" required>
+                <option value="" disabled selected>Pilih Program Studi</option>
+                <?php
+                include 'koneksi.php'; // File koneksi ke SQL Server
 
+                $query = "SELECT DISTINCT prodi FROM kelas ORDER BY prodi"; // Query SQL
+                $result = sqlsrv_query($conn, $query); // Eksekusi query dengan sqlsrv_query
+
+                if ($result === false) {
+                  die(print_r(sqlsrv_errors(), true)); // Menampilkan error jika query gagal
+                }
+
+                // Menampilkan setiap prodi sebagai elemen <option>
+                while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+                  echo '<option value="' . htmlspecialchars($row['prodi']) . '">' . htmlspecialchars($row['prodi']) . '</option>';
+                }
+                ?>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="kelas" class="required">Kelas</label>
+              <select id="kelasMhs" class="form-control" required>
+                <option value="" disabled selected>Pilih Kelas</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="button" class="btn btn-primary" id="saveEdit">Simpan</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -289,9 +342,66 @@
     $(document).ready(function() {
       $('#example').DataTable();
 
-      $('#prodi').change(function() {
+      // Event untuk dropdown prodi di modal tambah
+      $(document).on('change', '.prodi', function() {
         const prodi = $(this).val(); // Ambil nilai dari dropdown prodi
         const kelasDropdown = $('#kelas'); // Dropdown kelas
+
+        // Bersihkan dropdown kelas dan tampilkan opsi placeholder
+        kelasDropdown.empty().append('<option value="" disabled selected>Memuat Kelas...</option>');
+
+        // AJAX request untuk memuat kelas berdasarkan prodi
+        $.ajax({
+          url: 'get_kelas.php',
+          method: 'GET',
+          data: {
+            prodi: prodi
+          },
+          dataType: 'json',
+          success: function(data) {
+            console.log(data); // Debugging
+            kelasDropdown.empty().append('<option value="" disabled selected>Pilih Kelas</option>');
+            $.each(data, function(index, kelas) {
+              kelasDropdown.append('<option value="' + kelas.nama_kelas + '">' + kelas.nama_kelas + '</option>');
+            });
+          },
+          error: function() {
+            kelasDropdown.empty().append('<option value="" disabled selected>Error memuat kelas</option>');
+          }
+        });
+      });
+
+      $(document).on('click', '.btn-edit', function() {
+        var mahasiswa_id = $(this).data('mahasiswa_id'); // Ambil ID mahasiswa dari data attribute
+        $("#modalEdit").data('mahasiswa_id', mahasiswa_id);
+
+        $.ajax({
+          url: "getMhs.php", // Pastikan URL ini benar
+          method: "GET",
+          data: {
+            mahasiswa_id: mahasiswa_id
+          },
+          dataType: "JSON",
+          success: function(data) {
+            // Isi form di modal edit dengan data yang diterima
+            $('#namaMhs').val(data.nama);
+            $("#nimMhs").val(data.nim);
+            $("#prodiMhs").val(data.prodi).trigger('change');
+            $('#kelasMhs').val(data.nama_kelas);
+            setTimeout(function() {
+              $('#kelasMhs').val(data.nama_kelas);
+            }, 500);
+          },
+          error: function(xhr, status, error) {
+            console.error("Error: ", xhr.responseText);
+            alert("Terjadi kesalahan saat mengambil data mahasiswa.");
+          }
+        });
+      });
+      // Event untuk dropdown prodi di modal edit
+      $(document).on('change', '#modalEdit .prodi', function() {
+        const prodi = $(this).val(); // Ambil nilai dari dropdown prodi
+        const kelasDropdown = $('#modalEdit #kelasMhs'); // Dropdown kelas di modal edit
 
         // Bersihkan dropdown kelas dan tampilkan opsi placeholder
         kelasDropdown.empty().append('<option value="" disabled selected>Memuat Kelas...</option>');
@@ -344,7 +454,7 @@
             if (response.status === "success") {
               alert(response.message);
               $("#modalForm").modal("hide");
-              // Refresh the table or perform other actions
+              location.reload();
             } else {
               alert("Error: " + response.message);
             }
@@ -355,6 +465,49 @@
           }
         });
       });
+      $(document).on('click', '#saveEdit', function() {
+        // Ambil data dari modal edit
+        var nim = $("#nimMhs").val();
+        var nama = $("#namaMhs").val();
+        var prodi = $("#prodiMhs").val();
+        var kelas = $("#kelasMhs").val();
+        var mahasiswa_id = $("#modalEdit").data('mahasiswa_id');
+
+        // Validasi data sebelum dikirim
+        if (!nim || !nama || !prodi || !kelas) {
+          alert("Harap lengkapi semua data sebelum menyimpan!");
+          return;
+        }
+
+        $.ajax({
+          url: "editMhs.php",
+          method: "POST",
+          data: {
+            mahasiswa_id: mahasiswa_id,
+            nim: nim,
+            nama: nama,
+            prodi: prodi,
+            kelas: kelas
+          },
+          dataType: "JSON",
+          success: function(response) {
+            // Cek respon dari server
+            if (response.status === "success") {
+              alert(response.message); 
+              $("#modalEdit").modal("hide"); 
+              location.reload();
+            } else {
+              alert("Error: " + response.message); 
+            }
+          },
+          error: function(xhr, status, error) {
+            // Tampilkan pesan error jika AJAX gagal
+            console.error("Error: ", xhr.responseText);
+            alert("Terjadi kesalahan saat mengirim data ke server.");
+          }
+        });
+      });
+
     });
   </script>
 </body>
