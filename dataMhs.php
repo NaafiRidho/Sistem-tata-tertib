@@ -200,7 +200,7 @@
           if (sqlsrv_num_rows($result) > 0) {
             $no = 1;
             while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
-              ?>
+          ?>
               <tr>
                 <td><?php echo $no++ ?></td>
                 <td><?php echo $row['nim'] ?></td>
@@ -214,9 +214,9 @@
                     data-mahasiswa_id="<?php echo $row['mahasiswa_id'] ?>">Hapus</button>
                 </td>
               </tr><?php
-            }
-          }
-          ?>
+                  }
+                }
+                    ?>
         </tbody>
       </table>
     </div>
@@ -256,10 +256,10 @@
                 <option value="" disabled selected>Pilih Program Studi</option>
                 <?php
                 include 'koneksi.php'; // File koneksi ke SQL Server
-                
+
                 $query = "SELECT DISTINCT prodi FROM kelas ORDER BY prodi"; // Query SQL
                 $result = sqlsrv_query($conn, $query); // Eksekusi query dengan sqlsrv_query
-                
+
                 if ($result === false) {
                   die(print_r(sqlsrv_errors(), true)); // Menampilkan error jika query gagal
                 }
@@ -311,10 +311,10 @@
                 <option value="" disabled selected>Pilih Program Studi</option>
                 <?php
                 include 'koneksi.php'; // File koneksi ke SQL Server
-                
+
                 $query = "SELECT DISTINCT prodi FROM kelas ORDER BY prodi"; // Query SQL
                 $result = sqlsrv_query($conn, $query); // Eksekusi query dengan sqlsrv_query
-                
+
                 if ($result === false) {
                   die(print_r(sqlsrv_errors(), true)); // Menampilkan error jika query gagal
                 }
@@ -368,11 +368,11 @@
   <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
   <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
       $('#example').DataTable();
 
       // Event untuk dropdown prodi di modal tambah
-      $(document).on('change', '.prodi', function () {
+      $(document).on('change', '.prodi', function() {
         const prodi = $(this).val(); // Ambil nilai dari dropdown prodi
         const kelasDropdown = $('#kelas'); // Dropdown kelas
 
@@ -387,20 +387,20 @@
             prodi: prodi
           },
           dataType: 'json',
-          success: function (data) {
+          success: function(data) {
             console.log(data); // Debugging
             kelasDropdown.empty().append('<option value="" disabled selected>Pilih Kelas</option>');
-            $.each(data, function (index, kelas) {
+            $.each(data, function(index, kelas) {
               kelasDropdown.append('<option value="' + kelas.nama_kelas + '">' + kelas.nama_kelas + '</option>');
             });
           },
-          error: function () {
+          error: function() {
             kelasDropdown.empty().append('<option value="" disabled selected>Error memuat kelas</option>');
           }
         });
       });
 
-      $(document).on('click', '.btn-edit', function () {
+      $(document).on('click', '.btn-edit', function() {
         var mahasiswa_id = $(this).data('mahasiswa_id'); // Ambil ID mahasiswa dari data attribute
         $("#modalEdit").data('mahasiswa_id', mahasiswa_id);
 
@@ -411,24 +411,24 @@
             mahasiswa_id: mahasiswa_id
           },
           dataType: "JSON",
-          success: function (data) {
+          success: function(data) {
             // Isi form di modal edit dengan data yang diterima
             $('#namaMhs').val(data.nama);
             $("#nimMhs").val(data.nim);
             $("#prodiMhs").val(data.prodi).trigger('change');
             $('#kelasMhs').val(data.nama_kelas);
-            setTimeout(function () {
+            setTimeout(function() {
               $('#kelasMhs').val(data.nama_kelas);
             }, 500);
           },
-          error: function (xhr, status, error) {
+          error: function(xhr, status, error) {
             console.error("Error: ", xhr.responseText);
             alert("Terjadi kesalahan saat mengambil data mahasiswa.");
           }
         });
       });
       // Event untuk dropdown prodi di modal edit
-      $(document).on('change', '#modalEdit .prodi', function () {
+      $(document).on('change', '#modalEdit .prodi', function() {
         const prodi = $(this).val(); // Ambil nilai dari dropdown prodi
         const kelasDropdown = $('#modalEdit #kelasMhs'); // Dropdown kelas di modal edit
 
@@ -443,25 +443,25 @@
             prodi: prodi
           },
           dataType: 'json',
-          success: function (data) {
+          success: function(data) {
             console.log(data); // Debugging
             kelasDropdown.empty().append('<option value="" disabled selected>Pilih Kelas</option>');
-            $.each(data, function (index, kelas) {
+            $.each(data, function(index, kelas) {
               kelasDropdown.append('<option value="' + kelas.nama_kelas + '">' + kelas.nama_kelas + '</option>');
             });
           },
-          error: function () {
+          error: function() {
             kelasDropdown.empty().append('<option value="" disabled selected>Error memuat kelas</option>');
           }
         });
       });
 
-      $("#saveData").click(function () {
+      $("#saveData").click(function() {
         var username = $("#username").val();
         var password = $("#password").val();
         var nim = $("#nim").val();
         var nama = $("#nama").val();
-        var prodi = $("#prodi").val();
+        var prodi = $(".prodi").val();
         var kelas = $("#kelas").val();
 
         console.log("AJAX request sent"); // Debugging
@@ -478,7 +478,7 @@
             prodi: prodi,
             kelas: kelas
           },
-          success: function (response) {
+          success: function(response) {
             console.log(response); // Debugging
             if (response.status === "success") {
               alert(response.message);
@@ -488,13 +488,13 @@
               alert("Error: " + response.message);
             }
           },
-          error: function (xhr, status, error) {
+          error: function(xhr, status, error) {
             console.error("Error: ", xhr.responseText);
             alert("Terjadi kesalahan saat mengirim data ke server.");
           }
         });
       });
-      $(document).on('click', '#saveEdit', function () {
+      $(document).on('click', '#saveEdit', function() {
         // Ambil data dari modal edit
         var nim = $("#nimMhs").val();
         var nama = $("#namaMhs").val();
@@ -519,7 +519,7 @@
             kelas: kelas
           },
           dataType: "JSON",
-          success: function (response) {
+          success: function(response) {
             // Cek respon dari server
             if (response.status === "success") {
               alert(response.message);
@@ -529,7 +529,7 @@
               alert("Error: " + response.message);
             }
           },
-          error: function (xhr, status, error) {
+          error: function(xhr, status, error) {
             // Tampilkan pesan error jika AJAX gagal
             console.error("Error: ", xhr.responseText);
             alert("Terjadi kesalahan saat mengirim data ke server.");
