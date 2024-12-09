@@ -132,10 +132,10 @@
     <div class="menu">
       <img src="logo.png" style="width: 120px; height: 120px;">
       <h2>Si Tertib</h2>
-      <a href="#dashboard"><i class="bi bi-columns-gap"></i> Dashboard</a>
-      <a href="#listTatib"><i class="bi bi-list-check"></i> List Tata Tertib</a>
-      <a href="#dataMahasiswa"><i class="bi bi-person"></i> Data Mahasiswa</a>
-      <a href="#dataDosen"><i class="bi bi-person-badge"></i> Data Dosen</a>
+      <a href="dashboardAdmin.php"><i class="bi bi-columns-gap"></i> Dashboard</a>
+      <a href="listTataTertibAdmin.php"><i class="bi bi-list-check"></i> List Tata Tertib</a>
+      <a href="dataMhs.php"><i class="bi bi-person"></i> Data Mahasiswa</a>
+      <a href="dataDosen.php"><i class="bi bi-person-badge"></i> Data Dosen</a>
       <a href="#pelanggaranMahasiswa"><i class="bi bi-exclamation-circle"></i> Pelanggaran Mahasiswa</a>
     </div>
     <div class="logout">
