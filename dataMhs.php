@@ -341,6 +341,26 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal Edit Data -->
+  <div class="modal fade" id="modalHapus" tabindex="-1" aria-labelledby="modalFormEdit" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalFormLabel">Hapus Data Mahasiswa</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Apakah Ingin Menghapus Mahasiswa</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="button" class="btn btn-danger" id="saveHapus">Hapus</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -517,6 +537,36 @@
         });
       });
 
+      $(document).on("click", ".btn-delete", function() {
+        var mahasiswa_id = $(this).data('mahasiswa_id');
+        $("#modalHapus").data('mahasiswa_id', mahasiswa_id);
+      });
+
+      $(document).on("click", "#saveHapus", function() {
+        var mahasiswa_id = $("#modalHapus").data('mahasiswa_id');
+        $.ajax({
+          url: "hapusMhs.php",
+          method: "POST",
+          data: {
+            mahasiswa_id: mahasiswa_id
+          },
+          dataType: "JSON",
+          success: function(response) {
+            if (response.status === "success") {
+              alert(response.message);
+              $("#modalHapus").modal("hide");
+              location.reload();
+            } else {
+              alert("Error: " + response.message);
+            }
+          },
+          error: function(xhr, status, error) {
+            // Tampilkan pesan error jika AJAX gagal
+            console.error("Error: ", xhr.responseText);
+            alert("Terjadi kesalahan saat mengirim data ke server.");
+          }
+        });
+      });
     });
   </script>
 </body>
