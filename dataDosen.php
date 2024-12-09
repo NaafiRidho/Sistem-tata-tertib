@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +13,8 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- DataTables CSS -->
   <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -42,7 +45,7 @@
       font-size: 2rem;
       font-family: 'Fugaz One', sans-serif;
       font-weight: 600;
-      color: #E38E49;
+      color: white;
       text-transform: uppercase;
       letter-spacing: 1px;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 4);
@@ -57,14 +60,14 @@
       align-items: center;
       gap: 10px;
       color: white;
-      padding: 15px 20px;
+      padding: 15px;
       text-decoration: none;
-      font-size: 1rem;
       border-left: 5px solid transparent;
       transition: all 0.3s;
     }
 
-    .menu a:hover {
+    .menu a:hover,
+    .menu a.active {
       background-color: #0056b3;
       border-left: 5px solid #ffcc00;
     }
@@ -161,7 +164,8 @@
       border-collapse: collapse;
     }
 
-    th, td {
+    th,
+    td {
       text-align: center;
       padding: 10px;
       border: 1px solid #ddd;
@@ -170,7 +174,6 @@
     th {
       background-color: #f2f2f2;
     }
-
   </style>
 </head>
 
@@ -183,7 +186,7 @@
       <a href="dashboardAdmin.php"><i class="bi bi-columns-gap"></i> Dashboard</a>
       <a href="listTataTertibAdmin.php"><i class="bi bi-list-check"></i> List Tata Tertib</a>
       <a href="dataMhs.php"><i class="bi bi-person"></i> Data Mahasiswa</a>
-      <a href="dataDosen.php"><i class="bi bi-person-badge"></i> Data Dosen</a>
+      <a href="dataDosen.php" class="active"><i class="bi bi-person-badge"></i> Data Dosen</a>
       <a href="#pelanggaranMahasiswa"><i class="bi bi-exclamation-circle"></i> Pelanggaran Mahasiswa</a>
     </div>
     <div class="logout">
@@ -232,22 +235,22 @@
               <input type="text" class="form-control" id="namaDosen" placeholder="Masukkan nama dosen" required>
             </div>
             <div class="mb-3">
-            <label for="prodi" class="form-label">Prodi</label>
-            <select class="form-select" id="prodi" required>
-              <option value="">Pilih Prodi</option>
-              <option value="SIB">D4 - Sistem Informasi Bisnis</option>
-              <option value="TI">D4 - Teknik Informatika</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="matkul" class="form-label">Mata Kuliah</label>
-            <select class="form-select" id="matkul" required>
-              <option value="">Pilih Mata Kuliah</option>
-              <option value="Pemprograman Web">Pemprograman Web</option>
-              <option value="Basis Data Lanjut">Basis Data Lanjut</option>
-              <option value="Pemprograman Berbais Objek">Pemprograman Berbasis Objek</option>
-            </select>
-          </div>
+              <label for="prodi" class="form-label">Prodi</label>
+              <select class="form-select" id="prodi" required>
+                <option value="">Pilih Prodi</option>
+                <option value="SIB">D4 - Sistem Informasi Bisnis</option>
+                <option value="TI">D4 - Teknik Informatika</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="matkul" class="form-label">Mata Kuliah</label>
+              <select class="form-select" id="matkul" required>
+                <option value="">Pilih Mata Kuliah</option>
+                <option value="Pemprograman Web">Pemprograman Web</option>
+                <option value="Basis Data Lanjut">Basis Data Lanjut</option>
+                <option value="Pemprograman Berbais Objek">Pemprograman Berbasis Objek</option>
+              </select>
+            </div>
             <button type="submit" class="btn btn-primary">Simpan</button>
           </form>
         </div>
@@ -263,16 +266,16 @@
   <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 
   <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
       $('#example').DataTable();
 
-      $('#addDataForm').submit(function(event) {
-      event.preventDefault();
-      var nidn = $('#nidn').val();
-      var namaDosen = $('#namaDosen').val();
-      var prodi = $('#prodi').val();
-      var matkul = $('#matkul').val();
-      var rowData = `
+      $('#addDataForm').submit(function (event) {
+        event.preventDefault();
+        var nidn = $('#nidn').val();
+        var namaDosen = $('#namaDosen').val();
+        var prodi = $('#prodi').val();
+        var matkul = $('#matkul').val();
+        var rowData = `
         <tr>
           <td>${nidn}</td>
           <td>${namaDosen}</td>
@@ -284,11 +287,12 @@
           </td>
         </tr>
       `;
-      $('#example tbody').append(rowData);
-      $('#addDataModal').modal('hide');
-      $('#addDataForm')[0].reset();
-    });
+        $('#example tbody').append(rowData);
+        $('#addDataModal').modal('hide');
+        $('#addDataForm')[0].reset();
+      });
     });
   </script>
 </body>
+
 </html>
