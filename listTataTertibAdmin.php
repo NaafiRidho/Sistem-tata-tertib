@@ -33,6 +33,8 @@ $query = "
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.css">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
@@ -48,13 +50,24 @@ $query = "
             color: white;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+        }
+
+        .sidebar img {
+            display: block;
+            margin: 20px auto;
+            border-radius: 30%;
         }
 
         .sidebar h2 {
             text-align: center;
             margin: 20px 0;
-            font-size: 1.5rem;
+            font-size: 2rem;
+            font-family: 'Fugaz One', sans-serif;
+            font-weight: 600;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 4);
         }
 
         .menu {
@@ -66,9 +79,8 @@ $query = "
             align-items: center;
             gap: 10px;
             color: white;
-            padding: 15px 20px;
+            padding: 15px;
             text-decoration: none;
-            font-size: 1rem;
             border-left: 5px solid transparent;
             transition: all 0.3s;
         }
@@ -113,9 +125,7 @@ $query = "
 
         .btn-action {
             width: 80px;
-            /* Tentukan ukuran tombol yang sama */
             text-align: center;
-            /* Pastikan teks rata tengah */
         }
 
         .pagination .page-item .page-link {
@@ -149,216 +159,220 @@ $query = "
             background-color: #007bff;
             color: white;
             border-color: #007bff;
-            /* Border biru */
         }
     </style>
 </head>
 
 <body>
-    <div class="sidebar">
-        <div class="menu">
-            <h2>Si Tertib</h2>
-            <a href="dashboardAdmin.php"><i class="bi bi-columns-gap"></i> Dashboard</a>
-            <a href="listTataTertibAdmin.php" class="active"><i class="bi bi-list-check"></i> List Tata Tertib</a>
-            <a href="#dataMahasiswa"><i class="bi bi-person"></i> Data Mahasiswa</a>
-            <a href="#dataDosen"><i class="bi bi-person-badge"></i> Data Dosen</a>
-            <a href="#pelanggaranMahasiswa"><i class="bi bi-exclamation-circle"></i> Pelanggaran Mahasiswa</a>
+
+    <body>
+        <div class="sidebar">
+            <div class="menu">
+                <img src="logo.png" style="width: 120px; height: 120px;">
+                <h2>Si Tertib</h2>
+                <a href="dashboardAdmin.php"><i class="bi bi-columns-gap"></i> Dashboard</a>
+                <a href="listTataTertibAdmin.php" class="active"><i class="bi bi-list-check"></i> List Tata Tertib</a>
+                <a href="dataMhs.php"><i class="bi bi-person"></i> Data Mahasiswa</a>
+                <a href="dataDosen.php"><i class="bi bi-person-badge"></i> Data Dosen</a>
+                <a href="#pelanggaranMahasiswa"><i class="bi bi-exclamation-circle"></i> Pelanggaran Mahasiswa</a>
+            </div>
+            <div class="logout">
+                <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
+            </div>
         </div>
-        <div class="logout">
-            <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
-        </div>
-    </div>
 
-    <div class="content">
-        <h2>List Tata Tertib</h2>
-        <div class="card">
-            <div class="card-header">List Peraturan dan Tata Tertib Jurusan Teknologi Informasi</div>
-            <div class="card-body mt-3">
-                <!-- Search Box and Add Rule Button -->
-                <div class="search-box d-flex justify-content-between align-items-center mb-3">
-                    <button class="btn btn-success btn-tambah" data-bs-toggle="modal" data-bs-target="#modalAddRule">
-                        <i class="bi bi-plus-circle"></i> Peraturan Baru
-                    </button>
+        <div class="content">
+            <h2>List Tata Tertib</h2>
+            <div class="card">
+                <div class="card-header">List Peraturan dan Tata Tertib Jurusan Teknologi Informasi</div>
+                <div class="card-body mt-3">
+                    <!-- Search Box and Add Rule Button -->
+                    <div class="search-box d-flex justify-content-between align-items-center mb-3">
+                        <button class="btn btn-success btn-tambah" data-bs-toggle="modal"
+                            data-bs-target="#modalAddRule">
+                            <i class="bi bi-plus-circle"></i> Peraturan Baru
+                        </button>
 
-                    <form method="GET" action="listTataTertibAdmin.php" class="d-flex">
-                        <div class="input-group">
-                            <input type="text" class="form-control" name="search" placeholder="Search Keyword"
-                                value="<?php echo htmlspecialchars($searchKeyword); ?>">
-                            <button class="btn btn-primary" type="submit">
-                                <i class="bi bi-search"></i>
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                        <form method="GET" action="listTataTertibAdmin.php" class="d-flex">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="search" placeholder="Search Keyword"
+                                    value="<?php echo htmlspecialchars($searchKeyword); ?>">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
 
-                <!-- Table to Display Data -->
-                <table id="dataTable" class="table table-bordered table-hover table-striped">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <?php foreach ($columns as $col => $label): ?>
-                                <th><?php echo htmlspecialchars($label); ?></th>
-                            <?php endforeach; ?>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        include "koneksi.php";
-                        $stmt = sqlsrv_query($conn, $query);
-                        if ($stmt === false) {
-                            die(print_r(sqlsrv_errors(), true));
-                        }
-                        $no = 1;
-                        while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-                            ?>
+                    <!-- Table to Display Data -->
+                    <table id="dataTable" class="table table-bordered table-hover table-striped">
+                        <thead>
                             <tr>
-                                <td><?php echo $no++; ?></td>
+                                <th>No</th>
                                 <?php foreach ($columns as $col => $label): ?>
-                                    <td><?php echo htmlspecialchars($row[$col]); ?></td>
+                                    <th><?php echo htmlspecialchars($label); ?></th>
                                 <?php endforeach; ?>
-                                <td>
-                                    <button class="btn btn-warning btn-sm btn-action mb-2" data-bs-toggle="modal"
-                                        data-bs-target="#modalEdit"
-                                        data-pelanggaran_id="<?php echo $row['pelanggaran_id']; ?>">Edit</button>
-                                    <button class="btn btn-danger btn-sm btn-action" data-bs-toggle="modal"
-                                        data-bs-target="#modalHapus"
-                                        data-pelanggaran_id="<?php echo $row['pelanggaran_id']; ?>">Hapus</button>
-                                </td>
+                                <th>Aksi</th>
                             </tr>
+                        </thead>
+                        <tbody>
                             <?php
-                        }
-                        ?>
-                    </tbody>
-                </table>
-                <!-- Button prev and next -->
-                <div id="pagination-info" class="mx-3">Showing 1 to 3 of 3 entries</div>
-                <div class="pagination-container">
-                    <nav>
-                        <ul class="pagination mb-0">
-                            <li class="page-item">
-                                <button class="page-link" id="previousBtn">Previous</button>
-                            </li>
-                            <li class="page-item">
-                                <button class="page-link" id="currentPage" disabled>1</button>
-                            </li>
-                            <li class="page-item">
-                                <button class="page-link" id="nextBtn">Next</button>
-                            </li>
-                        </ul>
-                    </nav>
+                            include "koneksi.php";
+                            $stmt = sqlsrv_query($conn, $query);
+                            if ($stmt === false) {
+                                die(print_r(sqlsrv_errors(), true));
+                            }
+                            $no = 1;
+                            while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+                                ?>
+                                <tr>
+                                    <td><?php echo $no++; ?></td>
+                                    <?php foreach ($columns as $col => $label): ?>
+                                        <td><?php echo htmlspecialchars($row[$col]); ?></td>
+                                    <?php endforeach; ?>
+                                    <td>
+                                        <button class="btn btn-warning btn-sm btn-action mb-2" data-bs-toggle="modal"
+                                            data-bs-target="#modalEdit"
+                                            data-pelanggaran_id="<?php echo $row['pelanggaran_id']; ?>">Edit</button>
+                                        <button class="btn btn-danger btn-sm btn-action" data-bs-toggle="modal"
+                                            data-bs-target="#modalHapus"
+                                            data-pelanggaran_id="<?php echo $row['pelanggaran_id']; ?>">Hapus</button>
+                                    </td>
+                                </tr>
+                                <?php
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                    <!-- Button prev and next -->
+                    <div id="pagination-info" class="mx-3">Showing 1 to 3 of 3 entries</div>
+                    <div class="pagination-container">
+                        <nav>
+                            <ul class="pagination mb-0">
+                                <li class="page-item">
+                                    <button class="page-link" id="previousBtn">Previous</button>
+                                </li>
+                                <li class="page-item">
+                                    <button class="page-link" id="currentPage" disabled>1</button>
+                                </li>
+                                <li class="page-item">
+                                    <button class="page-link" id="nextBtn">Next</button>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Modal for Adding New Rule -->
-    <div class="modal fade" id="modalAddRule" tabindex="-1" aria-labelledby="modalAddRuleLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalAddRuleLabel">Tambah Peraturan Baru</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="add_rule.php" method="POST">
-                        <div class="mb-3">
-                            <label for="pelanggaran" class="form-label">Nama Pelanggaran</label>
-                            <input type="text" class="form-control" id="pelanggaran" name="pelanggaran" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="tingkat" class="form-label">Tingkat</label>
-                            <input type="text" class="form-control" id="tingkat" name="tingkat" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="sanksi" class="form-label">Sanksi</label>
-                            <input type="text" class="form-control" id="sanksi" name="sanksi" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Tambah</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal for Editing Rule -->
-    <div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="modalEditLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalEditLabel">Edit Peraturan</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="edit_rule.php" method="POST">
-                        <input type="hidden" name="pelanggaran_id" id="editPelanggaranId">
-                        <div class="mb-3">
-                            <label for="editPelanggaran" class="form-label">Nama Pelanggaran</label>
-                            <input type="text" class="form-control" id="editPelanggaran" name="pelanggaran" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editTingkat" class="form-label">Tingkat</label>
-                            <input type="text" class="form-control" id="editTingkat" name="tingkat" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editSanksi" class="form-label">Sanksi</label>
-                            <input type="text" class="form-control" id="editSanksi" name="sanksi" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                    </form>
+        <!-- Modal for Adding New Rule -->
+        <div class="modal fade" id="modalAddRule" tabindex="-1" aria-labelledby="modalAddRuleLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalAddRuleLabel">Tambah Peraturan Baru</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="add_rule.php" method="POST">
+                            <div class="mb-3">
+                                <label for="pelanggaran" class="form-label">Nama Pelanggaran</label>
+                                <input type="text" class="form-control" id="pelanggaran" name="pelanggaran" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="tingkat" class="form-label">Tingkat</label>
+                                <input type="text" class="form-control" id="tingkat" name="tingkat" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="sanksi" class="form-label">Sanksi</label>
+                                <input type="text" class="form-control" id="sanksi" name="sanksi" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Tambah</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Modal for Deleting Rule -->
-    <div class="modal fade" id="modalHapus" tabindex="-1" aria-labelledby="modalHapusLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalHapusLabel">Hapus Peraturan</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="delete_rule.php" method="POST">
-                        <input type="hidden" name="pelanggaran_id" id="hapusPelanggaranId">
-                        <p>Apakah Anda yakin ingin menghapus peraturan ini?</p>
-                        <button type="submit" class="btn btn-danger">Hapus</button>
-                    </form>
+        <!-- Modal for Editing Rule -->
+        <div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="modalEditLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalEditLabel">Edit Peraturan</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="edit_rule.php" method="POST">
+                            <input type="hidden" name="pelanggaran_id" id="editPelanggaranId">
+                            <div class="mb-3">
+                                <label for="editPelanggaran" class="form-label">Nama Pelanggaran</label>
+                                <input type="text" class="form-control" id="editPelanggaran" name="pelanggaran"
+                                    required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editTingkat" class="form-label">Tingkat</label>
+                                <input type="text" class="form-control" id="editTingkat" name="tingkat" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editSanksi" class="form-label">Sanksi</label>
+                                <input type="text" class="form-control" id="editSanksi" name="sanksi" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.js"></script>
+        <!-- Modal for Deleting Rule -->
+        <div class="modal fade" id="modalHapus" tabindex="-1" aria-labelledby="modalHapusLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalHapusLabel">Hapus Peraturan</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="delete_rule.php" method="POST">
+                            <input type="hidden" name="pelanggaran_id" id="hapusPelanggaranId">
+                            <p>Apakah Anda yakin ingin menghapus peraturan ini?</p>
+                            <button type="submit" class="btn btn-danger">Hapus</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <script>
-        $(document).ready(function () {
-            // Set values in modal edit
-            $('#modalEdit').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget);
-                var pelanggaran_id = button.data('pelanggaran_id');
-                var pelanggaran = button.closest('tr').find('td:eq(1)').text();
-                var tingkat = button.closest('tr').find('td:eq(2)').text();
-                var sanksi = button.closest('tr').find('td:eq(3)').text();
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.js"></script>
 
-                $('#editPelanggaranId').val(pelanggaran_id);
-                $('#editPelanggaran').val(pelanggaran);
-                $('#editTingkat').val(tingkat);
-                $('#editSanksi').val(sanksi);
+        <script>
+            $(document).ready(function () {
+                // Set values in modal edit
+                $('#modalEdit').on('show.bs.modal', function (event) {
+                    var button = $(event.relatedTarget);
+                    var pelanggaran_id = button.data('pelanggaran_id');
+                    var pelanggaran = button.closest('tr').find('td:eq(1)').text();
+                    var tingkat = button.closest('tr').find('td:eq(2)').text();
+                    var sanksi = button.closest('tr').find('td:eq(3)').text();
+
+                    $('#editPelanggaranId').val(pelanggaran_id);
+                    $('#editPelanggaran').val(pelanggaran);
+                    $('#editTingkat').val(tingkat);
+                    $('#editSanksi').val(sanksi);
+                });
+
+                // Set values in modal hapus
+                $('#modalHapus').on('show.bs.modal', function (event) {
+                    var button = $(event.relatedTarget);
+                    var pelanggaran_id = button.data('pelanggaran_id');
+                    $('#hapusPelanggaranId').val(pelanggaran_id);
+                });
             });
-
-            // Set values in modal hapus
-            $('#modalHapus').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget);
-                var pelanggaran_id = button.data('pelanggaran_id');
-                $('#hapusPelanggaranId').val(pelanggaran_id);
-            });
-        });
-    </script>
-</body>
+        </script>
+    </body>
 
 </html>
