@@ -7,11 +7,10 @@
   <meta name="description" content="Si Tertib - Data Mahasiswa">
   <meta name="keywords" content="Data Mahasiswa, Teknologi Informasi">
   <title>Data Mahasiswa - Teknologi Informasi</title>
-   <!-- Bootstrap CSS -->
-   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-   <!-- Bootstrap Icons -->
-   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -27,6 +26,24 @@
       color: white;
       display: flex;
       flex-direction: column;
+    }
+
+    .sidebar img {
+      display: block;
+      margin: 20px auto;
+      border-radius: 30%;
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      margin: 20px 0;
+      font-size: 2rem;
+      font-family: 'Fugaz One', sans-serif;
+      font-weight: 600;
+      color: #E38E49;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 4);
     }
 
     .menu a {
@@ -79,24 +96,6 @@
       border-collapse: collapse;
     }
 
-    .sidebar img {
-      display: block;
-      margin: 20px auto; 
-      border-radius: 30%; 
-    }
-
-    .sidebar h2 {
-      text-align: center;
-      margin: 20px 0;
-      font-size: 2rem;
-      font-family: 'Fugaz One', sans-serif;
-      font-weight: 600;
-      color: #E38E49;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 4);
-    }
-
     th, td {
       text-align: center;
       padding: 10px;
@@ -108,22 +107,41 @@
     }
 
     .btn-edit {
-      background-color: #007bff;
+      background-color: #ffc107;
       color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
     }
 
     .btn-edit:hover {
-      background-color: #0056b3;
+      background-color: #e0a800;
     }
 
     .btn-delete {
-      background-color: #d9534f;
+      background-color: #dc3545;
       color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
     }
 
     .btn-delete:hover {
-      background-color: #c9302c;
+      background-color: #c82333;
     }
+
+    .dataTables_paginate {
+      float: right !important;
+    }
+
+    .dataTables_filter {
+      float: right !important;
+    }
+
   </style>
 </head>
 
@@ -147,10 +165,9 @@
     <h1 class="header-title">Data Mahasiswa</h1>
     <div class="table-container">
       <div class="d-flex justify-content-between mb-3">
-        <button class="btn btn-success"><i class="bi bi-plus-lg"></i> Tambah Data Baru</button>
-        <input type="text" class="form-control w-25" placeholder="Search">
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addDataModal"><i class="bi bi-plus-lg"></i> Tambah Data Baru</button>
       </div>
-      <table id="example" class= "table table-bordered table-hover table-striped">
+      <table id="example" class="table table-bordered table-hover table-striped">
         <thead>
           <tr>
             <th>NIM</th>
@@ -167,8 +184,8 @@
             <td>D4 - Sistem Informasi Bisnis</td>
             <td>2-E</td>
             <td>
-            <button class="btn btn-edit">Edit</button>
-            <button class="btn btn-delete">Hapus</button>
+              <button class="btn btn-edit">Edit</button>
+              <button class="btn btn-delete">Hapus</button>
             </td>
           </tr>
         </tbody>
@@ -176,17 +193,101 @@
     </div>
   </div>
 
+  <!-- Modal Tambah Data -->
+  <div class="modal fade" id="addDataModal" tabindex="-1" aria-labelledby="addDataModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addDataModalLabel">Tambah Data Mahasiswa</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="addDataForm">
+            <div class="mb-3">
+              <label for="namaMahasiswa" class="form-label">Nama Mahasiswa</label>
+              <input type="text" class="form-control" id="namaMahasiswa" placeholder="Masukkan nama mahasiswa" required>
+            </div>
+            <div class="mb-3">
+              <label for="nim" class="form-label">NIM</label>
+              <input type="text" class="form-control" id="nim" placeholder="Masukkan NIM" required>
+            </div>
+            <div class="mb-3">
+              <label for="prodi" class="form-label">Prodi</label>
+              <select class="form-select" id="prodi" required>
+                <option value="">Pilih Program Studi</option>
+                <option value="SIB">D4 - Sistem Informasi Bisnis</option>
+                <option value="TI">D4 - Teknik Informatika</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="kelas" class="form-label">Kelas</label>
+              <select class="form-select" id="kelas" required>
+                <option value="">Pilih Kelas</option>
+                <option value="A">SIB 2-A</option>
+                <option value="B">SIB 2-C</option>
+                <option value="C">TI 2-C</option>
+                <option value="D">SIB 2-D</option>
+                <option value="E">SIB 2-E</option>
+                <option value="F">SIB 2-F</option>
+                <option value="A">TI 2-A</option>
+                <option value="B">TI 2-B</option>
+                <option value="C">TI 2-C</option>
+                <option value="D">TI 2-D</option>
+                <option value="E">TI 2-E</option>
+                <option value="F">TI 2-F</option>
+                <option value="G">TI 2-G</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="button" class="btn btn-primary" id="saveDataBtn">Simpan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
-    <script>
-      $(document).ready(function(){
-        $("#example").datatable();
-      })
-    </script>
+   <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+
+  <script>
+    $(document).ready(function () {
+      $('#example').DataTable();
+
+      $('#saveDataBtn').click(function () {
+        var namaMahasiswa = $('#namaMahasiswa').val();
+        var nim = $('#nim').val();
+        var prodi = $('#prodi').val();
+        var kelas = $('#kelas').val();
+
+        var newRow = `<tr>
+                        <td>${nim}</td>
+                        <td>${namaMahasiswa}</td>
+                        <td>${prodi}</td>
+                        <td>${kelas}</td>
+                        <td>
+                          <button class="btn btn-edit">Edit</button>
+                          <button class="btn btn-delete">Hapus</button>
+                        </td>
+                      </tr>`;
+        $('#example tbody').append(newRow);
+
+        $('#addDataForm')[0].reset();
+        $('#addDataModal').modal('hide');
+      });
+
+      $(document).on('click', '.btn-delete', function () {
+        if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+          $(this).closest('tr').remove();
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>

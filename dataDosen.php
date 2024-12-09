@@ -11,7 +11,8 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- DataTables CSS -->
+  <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -30,10 +31,22 @@
       justify-content: space-between;
     }
 
+    .sidebar img {
+      display: block;
+      margin: 20px auto;
+      border-radius: 30%;
+    }
+
     .sidebar h2 {
       text-align: center;
       margin: 20px 0;
-      font-size: 1.5rem;
+      font-size: 2rem;
+      font-family: 'Fugaz One', sans-serif;
+      font-weight: 600;
+      color: #E38E49;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 4);
     }
 
     .menu {
@@ -159,48 +172,6 @@
       background-color: #f2f2f2;
     }
 
-    .sidebar img {
-      display: block;
-      margin: 20px auto; 
-      border-radius: 30%; 
-    }
-
-    .sidebar h2 {
-      text-align: center;
-      margin: 20px 0;
-      font-size: 2rem;
-      font-family: 'Fugaz One', sans-serif;
-      font-weight: 600;
-      color: #E38E49;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 4);
-    }
-
-    .table-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 10px;
-      font-size: 0.9rem;
-    }
-
-    .entries-info {
-      color: #666;
-    }
-
-    .pagination {
-      margin: 0;
-    }
-
-    .dataTables_paginate {
-      float: right !important;
-    }
-
-    .dataTables_filter {
-      float: right !important;
-    }
-
   </style>
 </head>
 
@@ -208,7 +179,7 @@
 
   <div class="sidebar">
     <div class="menu">
-    <img src="logo.png" style="width: 120px; height: 120px;">
+      <img src="logo.png" style="width: 120px; height: 120px;">
       <h2>Si Tertib</h2>
       <a href="#dashboard"><i class="bi bi-columns-gap"></i> Dashboard</a>
       <a href="#listTatib"><i class="bi bi-list-check"></i> List Tata Tertib</a>
@@ -225,9 +196,9 @@
     <h1>Data Dosen</h1>
     <div class="table-container">
       <div class="search-bar">
-        <button class="btn-add">+ Tambah Data Baru</button>
+        <button class="btn-add" data-bs-toggle="modal" data-bs-target="#addDataModal">+ Tambah Data Baru</button>
       </div>
-      <table id="example" class= "table table-bordered table-hover table-striped">
+      <table id="example" class="table table-bordered table-hover table-striped">
         <thead>
           <tr>
             <th>NIDN</th>
@@ -238,50 +209,89 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>000000</td>
-            <td>Muhammad Unggul Pamenang</td>
-            <td>D4-Sistem Informasi Bisnis</td>
-            <td>Pemprograman Web</td>
-            <td>
-              <button class="btn-edit">Edit</button>
-              <button class="btn-delete">Hapus</button>
-            </td>
-          </tr>
-          <tr>
-            <td>11111</td>
-            <td>Annisa Tufika Firdausi</td>
-            <td>D4-Sistem Informasi Bisnis</td>
-            <td>Basdat Lanjut</td>
-            <td>
-              <button class="btn-edit">Edit</button>
-              <button class="btn-delete">Hapus</button>
-            </td>
-          </tr>
-          <tr>
-            <td>2222</td>
-            <td>Vit Zuraida</td>
-            <td>D4-Sistem Informasi Bisnis</td>
-            <td>Pemprograman Berbais Obejek</td>
-            <td>
-              <button class="btn-edit">Edit</button>
-              <button class="btn-delete">Hapus</button>
-            </td>
-          </tr>
         </tbody>
       </table>
+    </div>
+  </div>
+
+  <!-- Modal tambah Data -->
+  <div class="modal fade" id="addDataModal" tabindex="-1" aria-labelledby="addDataModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addDataModalLabel">Tambah Data Dosen</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="addDataForm">
+            <div class="mb-3">
+              <label for="nidn" class="form-label">NIDN</label>
+              <input type="text" class="form-control" id="nidn" placeholder="Masukkan nidn" required>
+            </div>
+            <div class="mb-3">
+              <label for="namaDosen" class="form-label">Nama Dosen</label>
+              <input type="text" class="form-control" id="namaDosen" placeholder="Masukkan nama dosen" required>
+            </div>
+            <div class="mb-3">
+            <label for="prodi" class="form-label">Prodi</label>
+            <select class="form-select" id="prodi" required>
+              <option value="">Pilih Prodi</option>
+              <option value="SIB">D4 - Sistem Informasi Bisnis</option>
+              <option value="TI">D4 - Teknik Informatika</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="matkul" class="form-label">Mata Kuliah</label>
+            <select class="form-select" id="matkul" required>
+              <option value="">Pilih Mata Kuliah</option>
+              <option value="Pemprograman Web">Pemprograman Web</option>
+              <option value="Basis Data Lanjut">Basis Data Lanjut</option>
+              <option value="Pemprograman Berbais Objek">Pemprograman Berbasis Objek</option>
+            </select>
+          </div>
+            <button type="submit" class="btn btn-primary">Simpan</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
-    <script>
-      $(document).ready(function(){
-        $('#example').DataTable();
-      })
-    </script>
+  <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+
+  <script>
+    $(document).ready(function() {
+      $('#example').DataTable();
+
+      $('#addDataForm').submit(function(event) {
+      event.preventDefault();
+      var nidn = $('#nidn').val();
+      var namaDosen = $('#namaDosen').val();
+      var prodi = $('#prodi').val();
+      var matkul = $('#matkul').val();
+      var rowData = `
+        <tr>
+          <td>${nidn}</td>
+          <td>${namaDosen}</td>
+          <td>${prodi}</td>
+          <td>${matkul}</td>
+          <td>
+            <button class="btn-edit">Edit</button>
+            <button class="btn-delete">Delete</button>
+          </td>
+        </tr>
+      `;
+      $('#example tbody').append(rowData);
+      $('#addDataModal').modal('hide');
+      $('#addDataForm')[0].reset();
+    });
+    });
+  </script>
+
 </body>
 
 </html>
