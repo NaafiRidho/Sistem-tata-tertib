@@ -7,11 +7,11 @@
   <meta name="description" content="Si Tertib - Data Mahasiswa">
   <meta name="keywords" content="Data Mahasiswa, Teknologi Informasi">
   <title>Data Mahasiswa - Teknologi Informasi</title>
-   <!-- Bootstrap CSS -->
-   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-   <!-- Bootstrap Icons -->
-   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -81,8 +81,8 @@
 
     .sidebar img {
       display: block;
-      margin: 20px auto; 
-      border-radius: 30%; 
+      margin: 20px auto;
+      border-radius: 30%;
     }
 
     .sidebar h2 {
@@ -97,7 +97,8 @@
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 4);
     }
 
-    th, td {
+    th,
+    td {
       text-align: center;
       padding: 10px;
       border: 1px solid #ddd;
@@ -121,8 +122,32 @@
       color: white;
     }
 
+    .btn-add {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-bottom: 15px;
+      transition: background-color 0.3s;
+    }
+
+    .btn-add:hover {
+      background-color: #218838;
+    }
+
     .btn-delete:hover {
       background-color: #c9302c;
+    }
+
+    .dataTables_paginate {
+      float: right !important;
+    }
+
+    .dataTables_filter {
+      float: right !important;
     }
   </style>
 </head>
@@ -146,13 +171,13 @@
   <div class="content">
     <h1 class="header-title">Data Mahasiswa</h1>
     <div class="table-container">
-      <div class="d-flex justify-content-between mb-3">
-        <button class="btn btn-success"><i class="bi bi-plus-lg"></i> Tambah Data Baru</button>
-        <input type="text" class="form-control w-25" placeholder="Search">
+      <div class="search-bar">
+        <button class="btn-add" data-bs-toggle="modal" data-bs-target="#modalForm">+ Tambah Data Baru</button>
       </div>
-      <table id="example" class= "table table-bordered table-hover table-striped">
+      <table id="example" class="table table-bordered table-hover table-striped">
         <thead>
           <tr>
+            <th>No</th>
             <th>NIM</th>
             <th>Nama Mahasiswa</th>
             <th>Prodi</th>
@@ -161,32 +186,177 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>2341760182</td>
-            <td>Abhinaya Nuzuluzzuhdi</td>
-            <td>D4 - Sistem Informasi Bisnis</td>
-            <td>2-E</td>
-            <td>
-            <button class="btn btn-edit">Edit</button>
-            <button class="btn btn-delete">Hapus</button>
-            </td>
-          </tr>
+          <?php
+          include "koneksi.php";
+
+          $options = array("Scrollable" => SQLSRV_CURSOR_STATIC);
+          $query = "SELECT m.nim, m.nama, k.prodi, k.nama_kelas FROM mahasiswa AS m
+                    INNER JOIN kelas AS k ON k.kelas_id = m.kelas_id";
+          $result = sqlsrv_query($conn, $query, array(), $options);
+
+          if (sqlsrv_num_rows($result) > 0) {
+            $no = 1;
+            while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+          ?> <tr>
+                <td><?php echo $no++ ?></td>
+                <td><?php echo $row['nim'] ?></td>
+                <td><?php echo $row['nama'] ?></td>
+                <td><?php echo $row['prodi'] ?></td>
+                <td><?php echo $row['nama_kelas'] ?></td>
+                <td>
+                  <button class="btn btn-edit">Edit</button>
+                  <button class="btn btn-delete">Hapus</button>
+                </td>
+              </tr><?php
+                  }
+                }
+                    ?>
         </tbody>
       </table>
     </div>
   </div>
+  <!-- Modal Tambah/Edit Data -->
+  <div class="modal fade" id="modalForm" tabindex="-1" aria-labelledby="modalFormLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalFormLabel">Tambah/Edit Data Mahasiswa</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="formMahasiswa">
+            <div class="mb-3">
+              <label for="nim" class="form-label">Username</label>
+              <input type="text" class="form-control" id="username" name="username" placeholder="Masukkan User Name Untuk Mahasiswa" required>
+            </div>
+            <div class="mb-3">
+              <label for="nim" class="form-label">Password</label>
+              <input type="text" class="form-control" id="password" name="password" placeholder="Masukkan Password Untuk Mahasiswa" required>
+            </div>
+            <div class="mb-3">
+              <label for="nim" class="form-label">NIM</label>
+              <input type="text" class="form-control" id="nim" name="nim" placeholder="Masukkan NIM" required>
+            </div>
+            <div class="mb-3">
+              <label for="nama" class="form-label">Nama Mahasiswa</label>
+              <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan Nama Mahasiswa" required>
+            </div>
+            <div class="form-group">
+              <label for="prodi" class="required">Program Studi</label>
+              <select id="prodi" class="form-control" required>
+                <option value="" disabled selected>Pilih Program Studi</option>
+                <?php
+                include 'koneksi.php'; // File koneksi ke SQL Server
+
+                $query = "SELECT DISTINCT prodi FROM kelas ORDER BY prodi"; // Query SQL
+                $result = sqlsrv_query($conn, $query); // Eksekusi query dengan sqlsrv_query
+
+                if ($result === false) {
+                  die(print_r(sqlsrv_errors(), true)); // Menampilkan error jika query gagal
+                }
+
+                // Menampilkan setiap prodi sebagai elemen <option>
+                while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+                  echo '<option value="' . htmlspecialchars($row['prodi']) . '">' . htmlspecialchars($row['prodi']) . '</option>';
+                }
+                ?>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="kelas" class="required">Kelas</label>
+              <select id="kelas" class="form-control" required>
+                <option value="" disabled selected>Pilih Kelas</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="button" class="btn btn-primary" id="saveData">Simpan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
-    <script>
-      $(document).ready(function(){
-        $("#example").datatable();
-      })
-    </script>
+  <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#example').DataTable();
+
+      $('#prodi').change(function() {
+        const prodi = $(this).val(); // Ambil nilai dari dropdown prodi
+        const kelasDropdown = $('#kelas'); // Dropdown kelas
+
+        // Bersihkan dropdown kelas dan tampilkan opsi placeholder
+        kelasDropdown.empty().append('<option value="" disabled selected>Memuat Kelas...</option>');
+
+        // AJAX request untuk memuat kelas berdasarkan prodi
+        $.ajax({
+          url: 'get_kelas.php',
+          method: 'GET',
+          data: {
+            prodi: prodi
+          },
+          dataType: 'json',
+          success: function(data) {
+            console.log(data); // Debugging
+            kelasDropdown.empty().append('<option value="" disabled selected>Pilih Kelas</option>');
+            $.each(data, function(index, kelas) {
+              kelasDropdown.append('<option value="' + kelas.nama_kelas + '">' + kelas.nama_kelas + '</option>');
+            });
+          },
+          error: function() {
+            kelasDropdown.empty().append('<option value="" disabled selected>Error memuat kelas</option>');
+          }
+        });
+      });
+
+      $("#saveData").click(function() {
+        var username = $("#username").val();
+        var password = $("#password").val();
+        var nim = $("#nim").val();
+        var nama = $("#nama").val();
+        var prodi = $("#prodi").val();
+        var kelas = $("#kelas").val();
+
+        console.log("AJAX request sent"); // Debugging
+
+        $.ajax({
+          url: "tambahMhs.php",
+          method: "POST",
+          dataType: "JSON",
+          data: {
+            username: username,
+            password: password,
+            nim: nim,
+            nama: nama,
+            prodi: prodi,
+            kelas: kelas
+          },
+          success: function(response) {
+            console.log(response); // Debugging
+            if (response.status === "success") {
+              alert(response.message);
+              $("#modalForm").modal("hide");
+              // Refresh the table or perform other actions
+            } else {
+              alert("Error: " + response.message);
+            }
+          },
+          error: function(xhr, status, error) {
+            console.error("Error: ", xhr.responseText);
+            alert("Terjadi kesalahan saat mengirim data ke server.");
+          }
+        });
+      });
+    });
+  </script>
 </body>
 
 </html>
