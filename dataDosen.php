@@ -7,9 +7,10 @@
   <meta name="description" content="Si Tertib - Data Dosen">
   <meta name="keywords" content="Data Dosen, Si Tertib">
   <title>Data Dosen</title>
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
   <style>
     body {
@@ -191,6 +192,15 @@
     .pagination {
       margin: 0;
     }
+
+    .dataTables_paginate {
+      float: right !important;
+    }
+
+    .dataTables_filter {
+      float: right !important;
+    }
+
   </style>
 </head>
 
@@ -216,10 +226,8 @@
     <div class="table-container">
       <div class="search-bar">
         <button class="btn-add">+ Tambah Data Baru</button>
-        <input type="text" placeholder="Search">
       </div>
-
-      <table>
+      <table id="example" class= "table table-bordered table-hover table-striped">
         <thead>
           <tr>
             <th>NIDN</th>
@@ -263,23 +271,17 @@
         </tbody>
       </table>
 
-      <div class="table-footer">
-        <div class="entries-info">
-          Showing 1 to 2 of 2 entries
-        </div>
-        <nav aria-label="Page navigation">
-          <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-          </ul>
-        </nav>
-      </div>
-    </div>
-  </div>
-
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+      $(document).ready(function(){
+        $('#example').DataTable();
+      })
+    </script>
 </body>
 
 </html>

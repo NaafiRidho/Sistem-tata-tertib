@@ -182,10 +182,6 @@
             color: red;
         }
 
-        .dataTables_filter {
-            display: none;
-        }
-
         button:disabled {
             cursor: not-allowed;
             border-color: #aaa;
@@ -499,7 +495,7 @@
             const hasData = <?php echo json_encode($hasData); ?>;
             if (hasData) {
                 $('#example').DataTable({
-                    lengthChange: false // Menghilangkan dropdown "Show entries"
+                    // Menghilangkan dropdown "Show entries"
                 });
             } else {
                 $('#example').hide(); // Sembunyikan tabel jika tidak ada data
