@@ -26,13 +26,12 @@
       color: white;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
     }
 
     .sidebar img {
       display: block;
-      margin: 20px auto; 
-      border-radius: 30%; 
+      margin: 20px auto;
+      border-radius: 30%;
     }
 
     .sidebar h2 {
@@ -56,9 +55,8 @@
       align-items: center;
       gap: 10px;
       color: white;
-      padding: 15px 20px;
+      padding: 15px;
       text-decoration: none;
-      font-size: 1rem;
       border-left: 5px solid transparent;
       transition: all 0.3s;
     }
@@ -115,32 +113,34 @@
 
 <body>
 
-  <div class="sidebar">
-    <div class="menu">
-      <img src="logo.png" style="width: 120px; height: 120px;">
-      <h2>Si Tertib</h2>
-      <a href="dashboardAdmin.php"><i class="bi bi-columns-gap"></i> Dashboard</a>
-      <a href="listTataTertibAdmin.php"><i class="bi bi-list-check"></i> List Tata Tertib</a>
-      <a href="dataMhs.php"><i class="bi bi-person"></i> Data Mahasiswa</a>
-      <a href="dataDosen.php"><i class="bi bi-person-badge"></i> Data Dosen</a>
-      <a href="#pelanggaranMahasiswa"><i class="bi bi-exclamation-circle"></i> Pelanggaran Mahasiswa</a>
+  <body>
+    <div class="sidebar">
+      <div class="menu">
+        <img src="logo.png" style="width: 120px; height: 120px;">
+        <h2>Si Tertib</h2>
+        <a href="dashboardAdmin.php"><i class="bi bi-columns-gap"></i> Dashboard</a>
+        <a href="listTataTertibAdmin.php"><i class="bi bi-list-check"></i> List Tata Tertib</a>
+        <a href="dataMhs.php"><i class="bi bi-person"></i> Data Mahasiswa</a>
+        <a href="dataDosen.php"><i class="bi bi-person-badge"></i> Data Dosen</a>
+        <a href="#pelanggaranMahasiswa"><i class="bi bi-exclamation-circle"></i> Pelanggaran Mahasiswa</a>
+      </div>
+      <div class="logout">
+        <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
+      </div>
     </div>
-    <div class="logout">
-      <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
-    </div>
-  </div>
 
-  <div class="content">
-    <h1>Dashboard</h1>
-    <div class="welcome-container">
-      <p>Selamat Datang Admin</p>
-      <div class="divider"></div>
-      <p>Sistem Tata Tertib</p>
-    </div>
-  </div>
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+    <div class="content">
+      <h1>Dashboard</h1>
+      <div class="welcome-container">
+        <p>Selamat Datang Admin</p>
+        <div class="divider"></div>
+        <p>Sistem Tata Tertib</p>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
 
 </html>
