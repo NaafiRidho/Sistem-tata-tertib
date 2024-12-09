@@ -15,7 +15,7 @@
   <style>
     body {
       margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: Arial, sans-serif;
       background-color: #f9f9f9;
     }
 
@@ -27,7 +27,56 @@
       color: white;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+    }
+
+    .menu a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: white;
+      padding: 15px;
+      text-decoration: none;
+      border-left: 5px solid transparent;
+      transition: all 0.3s;
+    }
+
+    .menu a:hover {
+      background-color: #0056b3;
+      border-left: 5px solid #ffcc00;
+    }
+
+    .logout {
+      margin-top: auto;
+    }
+
+    .logout a {
+      display: block;
+      text-align: center;
+      padding: 10px;
+      background-color: #d9534f;
+      color: white;
+      text-decoration: none;
+    }
+
+    .logout a:hover {
+      background-color: #c9302c;
+    }
+
+    .content {
+      margin-left: 240px;
+      padding: 20px;
+    }
+
+    .table-container {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
     }
 
     .sidebar img {
@@ -48,54 +97,29 @@
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 4);
     }
 
-    .menu {
-      flex-grow: 1;
-    }
-
-    .menu a {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: white;
-      padding: 15px 20px;
-      text-decoration: none;
-      font-size: 1rem;
-      border-left: 5px solid transparent;
-      transition: all 0.3s;
-    }
-
-    .menu a:hover {
-      background-color: #0056b3;
-      border-left: 5px solid #ffcc00;
-    }
-
-    .logout a {
-      display: block;
+    th,
+    td {
       text-align: center;
-      color: white;
       padding: 10px;
-      font-size: 1rem;
-      text-decoration: none;
+      border: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .btn-edit {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .btn-edit:hover {
+      background-color: #0056b3;
+    }
+
+    .btn-delete {
       background-color: #d9534f;
-      transition: background-color 0.3s;
-    }
-
-    .logout a:hover {
-      background-color: #c9302c;
-    }
-
-    .content {
-      margin-left: 240px;
-      padding: 20px;
-    }
-
-    .table-container {
-      margin: 20px auto;
-      padding: 20px;
-      width: 100%;
-      background-color: white;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      color: white;
     }
 
     .btn-add {
@@ -114,63 +138,17 @@
       background-color: #218838;
     }
 
-    .btn-edit {
-      background-color: #ffc107;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    .btn-edit:hover {
-      background-color: #e0a800;
-    }
-
-    .btn-delete {
-      background-color: #dc3545;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
     .btn-delete:hover {
-      background-color: #c82333;
+      background-color: #c9302c;
     }
 
-    .search-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
+    .dataTables_paginate {
+      float: right !important;
     }
 
-    .search-bar input {
-      width: 250px;
-      padding: 5px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
+    .dataTables_filter {
+      float: right !important;
     }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      text-align: center;
-      padding: 10px;
-      border: 1px solid #ddd;
-    }
-
-    th {
-      background-color: #f2f2f2;
-    }
-
   </style>
 </head>
 
@@ -200,10 +178,9 @@
       <table id="example" class="table table-bordered table-hover table-striped">
         <thead>
           <tr>
+            <th>No</th>
             <th>NIDN</th>
             <th>Nama Dosen</th>
-            <th>Prodi</th>
-            <th>Matkul</th>
             <th>AKSI</th>
           </tr>
         </thead>
@@ -231,23 +208,6 @@
               <label for="namaDosen" class="form-label">Nama Dosen</label>
               <input type="text" class="form-control" id="namaDosen" placeholder="Masukkan nama dosen" required>
             </div>
-            <div class="mb-3">
-            <label for="prodi" class="form-label">Prodi</label>
-            <select class="form-select" id="prodi" required>
-              <option value="">Pilih Prodi</option>
-              <option value="SIB">D4 - Sistem Informasi Bisnis</option>
-              <option value="TI">D4 - Teknik Informatika</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="matkul" class="form-label">Mata Kuliah</label>
-            <select class="form-select" id="matkul" required>
-              <option value="">Pilih Mata Kuliah</option>
-              <option value="Pemprograman Web">Pemprograman Web</option>
-              <option value="Basis Data Lanjut">Basis Data Lanjut</option>
-              <option value="Pemprograman Berbais Objek">Pemprograman Berbasis Objek</option>
-            </select>
-          </div>
             <button type="submit" class="btn btn-primary">Simpan</button>
           </form>
         </div>
@@ -268,16 +228,14 @@
 
       $('#addDataForm').submit(function(event) {
       event.preventDefault();
+      var no = $('#no').val();
       var nidn = $('#nidn').val();
       var namaDosen = $('#namaDosen').val();
-      var prodi = $('#prodi').val();
-      var matkul = $('#matkul').val();
       var rowData = `
         <tr>
+          <td>${no}</td>
           <td>${nidn}</td>
           <td>${namaDosen}</td>
-          <td>${prodi}</td>
-          <td>${matkul}</td>
           <td>
             <button class="btn-edit">Edit</button>
             <button class="btn-delete">Delete</button>
