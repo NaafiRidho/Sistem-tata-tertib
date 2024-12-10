@@ -227,7 +227,7 @@
         <h1>List Tata Tertib</h1>
         <div class="table-container">
             <div class="search-bar">
-                <button class="btn-add" data-bs-toggle="modal" data-bs-target="#modalAddRule">+ Peraturan Baru</button>
+                <button class="btn-add" data-bs-toggle="modal" data-bs-target="#modalAddRule">+ Buat Peraturan Baru</button>
 
             </div>
             <table id="example" class="table table-bordered table-hover table-striped">
@@ -288,35 +288,36 @@
             </table>
 
             <!-- Modal for Adding New Rule -->
-            <div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="modalEditLabel" aria-hidden="true">
+            <div class="modal fade" id="modalAddRule" tabindex="-1" aria-labelledby="modalAddRuleLabel"
+                aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="modalEditLabel">Edit Peraturan</h5>
+                            <h5 class="modal-title" id="modalAddRuleLabel">Tambah Peraturan Baru</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form action="edit_rule.php" method="POST">
-                                <input type="hidden" name="pelanggaran_id" id="editPelanggaranId">
+                            <form action="add_rule.php" method="POST">
                                 <div class="mb-3">
-                                    <label for="editPelanggaran" class="form-label">Nama Pelanggaran</label>
-                                    <input type="text" class="form-control" id="editPelanggaran" name="pelanggaran"
+                                    <label for="newPelanggaran" class="form-label">Nama Pelanggaran</label>
+                                    <input type="text" class="form-control" id="newPelanggaran" name="pelanggaran"
                                         required>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="editTingkat" class="form-label">Tingkat</label>
-                                    <input type="text" class="form-control" id="editTingkat" name="tingkat" required>
+                                    <label for="newTingkat" class="form-label">Tingkat</label>
+                                    <input type="text" class="form-control" id="newTingkat" name="tingkat" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="editSanksi" class="form-label">Sanksi</label>
-                                    <input type="text" class="form-control" id="editSanksi" name="sanksi" required>
+                                    <label for="newSanksi" class="form-label">Sanksi</label>
+                                    <input type="text" class="form-control" id="newSanksi" name="sanksi" required>
                                 </div>
-                                <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                                <button type="submit" class="btn btn-primary">Simpan</button>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
+
 
 
             <!-- Modal for Editing Rule -->
