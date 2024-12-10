@@ -201,7 +201,7 @@
 
 <body>
 
-<div class="sidebar">
+  <div class="sidebar">
     <div class="menu">
       <img src="logo.png" style="width: 120px; height: 120px;">
       <h2>Si Tertib</h2>
@@ -220,7 +220,7 @@
     <h1>Data Dosen</h1>
     <div class="table-container">
       <div class="search-bar">
-        <button class="btn-add">+ Tambah Data Baru</button>
+        <button class="btn-add" data-bs-toggle="modal" data-bs-target="#modalForm">+ Tambah Data Baru</button>
       </div>
       <table id="example" class="table table-bordered table-hover table-striped">
         <thead>
@@ -232,35 +232,63 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>000000</td>
-            <td>Muhammad Unggul Pamenang</td>
-            <td>
-              <button class="btn-edit">Edit</button>
-              <button class="btn-delete">Hapus</button>
-            </td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>11111</td>
-            <td>Annisa Tufika Firdausi</td>
-            <td>
-              <button class="btn-edit">Edit</button>
-              <button class="btn-delete">Hapus</button>
-            </td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>2222</td>
-            <td>Vit Zuraida</td>
-            <td>
-              <button class="btn-edit">Edit</button>
-              <button class="btn-delete">Hapus</button>
-            </td>
-          </tr>
+          <?php
+          include "koneksi.php";
+          require_once 'Database.php';
+
+          $db = new Database($conn);
+          $query = "SELECT d.nama, d.nidn FROM dosen AS d
+                    INNER JOIN [user] AS u ON u.user_id = d.user_id";
+          $stmt = $db->executeQuery($query);
+          $no = 1;
+          while ($row = $db->fetchAssoc($stmt)) { ?>
+            <tr>
+              <td><?php echo $no++ ?></td>
+              <td><?php echo $row['nidn'] ?></td>
+              <td><?php echo $row['nama'] ?></td>
+              <td>
+                <button class='btn-edit'>Edit</button>
+                <button class='btn-delete'>Hapus</button>
+              </td>
+            </tr><?php
+                }
+                  ?>
         </tbody>
       </table>
+      <div class="modal fade" id="modalForm" tabindex="-1" aria-labelledby="modalFormLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalFormLabel">Tambah Data Dosen</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form action="">
+                <div class="form-group">
+                  <label for="nama" class="form-label">Username Dosen</label>
+                  <input type="text" id="username" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label for="nama" class="form-label">Password Dosen</label>
+                  <input type="text" id="password" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label for="nama" class="form-label">Nama Dosen</label>
+                  <input type="text" id="nama" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label for="nama" class="form-label">NIDN Dosen</label>
+                  <input type="text" id="nidn" class="form-control" required>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+              <button type="button" class="btn btn-primary" id="save">Simpan</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- Bootstrap JS -->
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
@@ -269,9 +297,41 @@
       <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
       <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
       <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
           $('#example').DataTable();
-        })
+
+          $(document).on('click', '#save', function() {
+            var username = $("#username").val();
+            var password = $("#password").val();
+            var nama = $("#nama").val();
+            var nidn = $("#nidn").val();
+
+            $.ajax({
+              url: "tambahDosen.php",
+              method: "POST",
+              dataType: "JSON",
+              data: {
+                username: username,
+                password: password,
+                nama: nama,
+                nidn: nidn
+              },
+              success: function(response) {
+                if (response.status === "success") {
+                  alert(response.message);
+                  $("#modalForm").modal("hide");
+                  location.reload();
+                } else {
+                  alert("Error: " + response.message);
+                }
+              },
+              error: function(xhr, status, error) {
+                console.error("Error: ", xhr.responseText);
+                alert("Terjadi kesalahan saat mengirim data ke server.");
+              }
+            });
+          });
+        });
       </script>
 </body>
 
