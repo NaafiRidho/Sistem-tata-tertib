@@ -164,7 +164,7 @@
       <a href="listTataTertibAdmin.php"><i class="bi bi-list-check"></i> List Tata Tertib</a>
       <a href="dataMhs.php" class="active"><i class="bi bi-person"></i> Data Mahasiswa</a>
       <a href="dataDosen.php"><i class="bi bi-person-badge"></i> Data Dosen</a>
-      <a href="#pelanggaranMahasiswa"><i class="bi bi-exclamation-circle"></i> Pelanggaran Mahasiswa</a>
+      <a href="laporanAdmin.php"><i class="bi bi-exclamation-circle"></i> Pelanggaran Mahasiswa</a>
     </div>
     <div class="logout">
       <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
