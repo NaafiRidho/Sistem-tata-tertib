@@ -9,7 +9,7 @@ $nidn = $_POST['nidn'];
 
 $db = new Database($conn);
 $query = "INSERT INTO [user] VALUES (?,?,?)";
-$params = array($username, $password, "Mahasiswa");
+$params = array($username, $password, "Dosen");
 $stmt = $db->executeQuery($query, $params);
 if (!$stmt) {
     echo json_encode(["status" => "error", "message" => sqlsrv_errors()]);
