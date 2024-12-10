@@ -237,7 +237,7 @@
           require_once 'Database.php';
 
           $db = new Database($conn);
-          $query = "SELECT d.nama, d.nidn FROM dosen AS d
+          $query = "SELECT d.nama, d.nidn, d.dosen_id FROM dosen AS d
                     INNER JOIN [user] AS u ON u.user_id = d.user_id";
           $stmt = $db->executeQuery($query);
           $no = 1;
@@ -247,14 +247,16 @@
               <td><?php echo $row['nidn'] ?></td>
               <td><?php echo $row['nama'] ?></td>
               <td>
-                <button class='btn-edit'>Edit</button>
-                <button class='btn-delete'>Hapus</button>
+                <button class='btn-edit' data-bs-toggle="modal" data-bs-target="#modalEdit" data-dosen_id="<?php echo $row['dosen_id'] ?>">Edit</button>
+                <button class='btn-delete' data-bs-toggle="modal" data-bs-target="#modalHapus" data-dosen_id="<?php echo $row['dosen_id'] ?>">Hapus</button>
               </td>
             </tr><?php
                 }
                   ?>
         </tbody>
       </table>
+
+      <!--Modal Tambah Dosen-->
       <div class="modal fade" id="modalForm" tabindex="-1" aria-labelledby="modalFormLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -290,6 +292,33 @@
         </div>
       </div>
 
+      <!--Modal Edit Dosen-->
+      <div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="modalFormLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalFormLabel">Tambah Data Dosen</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form action="">
+                <div class="form-group">
+                  <label for="nama" class="form-label">Nama Dosen</label>
+                  <input type="text" id="namaEdit" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label for="nama" class="form-label">NIDN Dosen</label>
+                  <input type="text" id="nidnEdit" class="form-control" required>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+              <button type="button" class="btn btn-primary" id="saveEdit">Simpan</button>
+            </div>
+          </div>
+        </div>
+      </div>
       <!-- Bootstrap JS -->
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
       <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -326,6 +355,56 @@
                 }
               },
               error: function(xhr, status, error) {
+                console.error("Error: ", xhr.responseText);
+                alert("Terjadi kesalahan saat mengirim data ke server.");
+              }
+            });
+          });
+
+          $(document).on('click', '.btn-edit', function(){
+            var dosen_id = $(this).data('dosen_id');
+            $("#modalEdit").data('dosen_id', dosen_id);
+
+            $.ajax({
+              url: "getDosen.php",
+              method: "GET",
+              dataType: "JSON",
+              data: {
+                dosen_id: dosen_id
+              },
+              success: function(data){
+                $("#namaEdit").val(data.nama);
+                $("#nidnEdit").val(data.nidn);
+              },
+              error: function(xhr, status, error){
+                console.error("Error: ", xhr.responseText);
+                alert("Terjadi kesalahan saat mengirim data ke server.");
+              }
+            });
+          });
+
+          $(document).on('click','#saveEdit', function(){
+            var nama = $("#namaEdit").val();
+            var nidn = $("#nidnEdit").val();
+            var dosen_id = $("#modalEdit").data('dosen_id')
+
+            $.ajax({
+              url: "editDosen.php",
+              method: "POST",
+              dataType: "JSON",
+              data: {
+                nama: nama,
+                nidn: nidn,
+                dosen_id
+              },
+              success: function(response){
+                if (response.status === "success") {
+                  alert(response.message);
+                  $("#modalEdit").modal("hide");
+                  location.reload();
+                }
+              },
+              error: function(xhr, status, error){
                 console.error("Error: ", xhr.responseText);
                 alert("Terjadi kesalahan saat mengirim data ke server.");
               }
