@@ -15,7 +15,7 @@
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap" rel="stylesheet">
   <style>
-    body {
+    body { 
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
       background-color: #f9f9f9;
