@@ -319,6 +319,26 @@
           </div>
         </div>
       </div>
+
+      <!-- Modal Hapus Data -->
+      <div class="modal fade" id="modalHapus" tabindex="-1" aria-labelledby="modalFormEdit" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalFormLabel">Hapus Data Dosen</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>Apakah Ingin Menghapus Dosen</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+              <button type="button" class="btn btn-danger" id="saveHapus">Hapus</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Bootstrap JS -->
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
       <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -361,7 +381,7 @@
             });
           });
 
-          $(document).on('click', '.btn-edit', function(){
+          $(document).on('click', '.btn-edit', function() {
             var dosen_id = $(this).data('dosen_id');
             $("#modalEdit").data('dosen_id', dosen_id);
 
@@ -372,18 +392,18 @@
               data: {
                 dosen_id: dosen_id
               },
-              success: function(data){
+              success: function(data) {
                 $("#namaEdit").val(data.nama);
                 $("#nidnEdit").val(data.nidn);
               },
-              error: function(xhr, status, error){
+              error: function(xhr, status, error) {
                 console.error("Error: ", xhr.responseText);
                 alert("Terjadi kesalahan saat mengirim data ke server.");
               }
             });
           });
 
-          $(document).on('click','#saveEdit', function(){
+          $(document).on('click', '#saveEdit', function() {
             var nama = $("#namaEdit").val();
             var nidn = $("#nidnEdit").val();
             var dosen_id = $("#modalEdit").data('dosen_id')
@@ -397,18 +417,46 @@
                 nidn: nidn,
                 dosen_id
               },
-              success: function(response){
+              success: function(response) {
                 if (response.status === "success") {
                   alert(response.message);
                   $("#modalEdit").modal("hide");
                   location.reload();
                 }
               },
-              error: function(xhr, status, error){
+              error: function(xhr, status, error) {
                 console.error("Error: ", xhr.responseText);
                 alert("Terjadi kesalahan saat mengirim data ke server.");
               }
             });
+          });
+
+          $(document).on('click', '.btn-delete', function() {
+            var dosen_id = $(this).data('dosen_id');
+            $("#modalHapus").data('dosen_id', dosen_id);
+          });
+          
+
+          $(document).on('click', '#saveHapus', function() {
+            var dosen_id = $('#modalHapus').data('dosen_id');
+
+            $.ajax({
+              url: "hapusDosen.php",
+              method: "POST",
+              dataType: "JSON",
+              data: {
+                dosen_id: dosen_id
+              },
+              success: function(response) {
+                alert(response.message);
+                location.reload();
+              },
+              error: function(xhr, status, error) {
+                console.error("Error: ", xhr.responseText);
+                alert("Terjadi kesalahan saat mengirim data ke server.");
+              }
+            });
+
           });
         });
       </script>
