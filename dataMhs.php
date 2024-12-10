@@ -552,6 +552,7 @@
           },
           dataType: "JSON",
           success: function(response) {
+          console.log(response);
             if (response.status === "success") {
               alert(response.message);
               $("#modalHapus").modal("hide");
