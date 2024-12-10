@@ -12,6 +12,8 @@
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -40,7 +42,8 @@
       transition: all 0.3s;
     }
 
-    .menu a:hover {
+    .menu a:hover,
+    .menu a.active {
       background-color: #0056b3;
       border-left: 5px solid #ffcc00;
     }
@@ -91,7 +94,7 @@
       font-size: 2rem;
       font-family: 'Fugaz One', sans-serif;
       font-weight: 600;
-      color: #E38E49;
+      color: white;
       text-transform: uppercase;
       letter-spacing: 1px;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 4);
@@ -159,7 +162,7 @@
       <h2>Si Tertib</h2>
       <a href="dashboardAdmin.php"><i class="bi bi-columns-gap"></i> Dashboard</a>
       <a href="listTataTertibAdmin.php"><i class="bi bi-list-check"></i> List Tata Tertib</a>
-      <a href="dataMhs.php"><i class="bi bi-person"></i> Data Mahasiswa</a>
+      <a href="dataMhs.php" class="active"><i class="bi bi-person"></i> Data Mahasiswa</a>
       <a href="dataDosen.php"><i class="bi bi-person-badge"></i> Data Dosen</a>
       <a href="#pelanggaranMahasiswa"><i class="bi bi-exclamation-circle"></i> Pelanggaran Mahasiswa</a>
     </div>
@@ -197,15 +200,18 @@
           if (sqlsrv_num_rows($result) > 0) {
             $no = 1;
             while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
-          ?> <tr>
+          ?>
+              <tr>
                 <td><?php echo $no++ ?></td>
                 <td><?php echo $row['nim'] ?></td>
                 <td><?php echo $row['nama'] ?></td>
                 <td><?php echo $row['prodi'] ?></td>
                 <td><?php echo $row['nama_kelas'] ?></td>
                 <td>
-                  <button class="btn btn-edit" data-bs-toggle="modal" data-bs-target="#modalEdit" data-mahasiswa_id="<?php echo $row['mahasiswa_id'] ?>">Edit</button>
-                  <button class="btn btn-delete" data-bs-toggle="modal" data-bs-target="#modalHapus" data-mahasiswa_id="<?php echo $row['mahasiswa_id'] ?>">Hapus</button>
+                  <button class="btn btn-edit" data-bs-toggle="modal" data-bs-target="#modalEdit"
+                    data-mahasiswa_id="<?php echo $row['mahasiswa_id'] ?>">Edit</button>
+                  <button class="btn btn-delete" data-bs-toggle="modal" data-bs-target="#modalHapus"
+                    data-mahasiswa_id="<?php echo $row['mahasiswa_id'] ?>">Hapus</button>
                 </td>
               </tr><?php
                   }
@@ -227,11 +233,13 @@
           <form id="formMahasiswa">
             <div class="mb-3">
               <label for="nim" class="form-label">Username</label>
-              <input type="text" class="form-control" id="username" name="username" placeholder="Masukkan User Name Untuk Mahasiswa" required>
+              <input type="text" class="form-control" id="username" name="username"
+                placeholder="Masukkan User Name Untuk Mahasiswa" required>
             </div>
             <div class="mb-3">
               <label for="nim" class="form-label">Password</label>
-              <input type="text" class="form-control" id="password" name="password" placeholder="Masukkan Password Untuk Mahasiswa" required>
+              <input type="text" class="form-control" id="password" name="password"
+                placeholder="Masukkan Password Untuk Mahasiswa" required>
             </div>
             <div class="mb-3">
               <label for="nim" class="form-label">NIM</label>
@@ -239,7 +247,8 @@
             </div>
             <div class="mb-3">
               <label for="nama" class="form-label">Nama Mahasiswa</label>
-              <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan Nama Mahasiswa" required>
+              <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan Nama Mahasiswa"
+                required>
             </div>
             <div class="form-group">
               <label for="prodi" class="required">Program Studi</label>
@@ -332,6 +341,26 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal Edit Data -->
+  <div class="modal fade" id="modalHapus" tabindex="-1" aria-labelledby="modalFormEdit" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalFormLabel">Hapus Data Mahasiswa</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Apakah Ingin Menghapus Mahasiswa</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="button" class="btn btn-danger" id="saveHapus">Hapus</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -432,7 +461,7 @@
         var password = $("#password").val();
         var nim = $("#nim").val();
         var nama = $("#nama").val();
-        var prodi = $("#prodi").val();
+        var prodi = $(".prodi").val();
         var kelas = $("#kelas").val();
 
         console.log("AJAX request sent"); // Debugging
@@ -493,11 +522,11 @@
           success: function(response) {
             // Cek respon dari server
             if (response.status === "success") {
-              alert(response.message); 
-              $("#modalEdit").modal("hide"); 
+              alert(response.message);
+              $("#modalEdit").modal("hide");
               location.reload();
             } else {
-              alert("Error: " + response.message); 
+              alert("Error: " + response.message);
             }
           },
           error: function(xhr, status, error) {
@@ -508,6 +537,36 @@
         });
       });
 
+      $(document).on("click", ".btn-delete", function() {
+        var mahasiswa_id = $(this).data('mahasiswa_id');
+        $("#modalHapus").data('mahasiswa_id', mahasiswa_id);
+      });
+
+      $(document).on("click", "#saveHapus", function() {
+        var mahasiswa_id = $("#modalHapus").data('mahasiswa_id');
+        $.ajax({
+          url: "hapusMhs.php",
+          method: "POST",
+          data: {
+            mahasiswa_id: mahasiswa_id
+          },
+          dataType: "JSON",
+          success: function(response) {
+            if (response.status === "success") {
+              alert(response.message);
+              $("#modalHapus").modal("hide");
+              location.reload();
+            } else {
+              alert("Error: " + response.message);
+            }
+          },
+          error: function(xhr, status, error) {
+            // Tampilkan pesan error jika AJAX gagal
+            console.error("Error: ", xhr.responseText);
+            alert("Terjadi kesalahan saat mengirim data ke server.");
+          }
+        });
+      });
     });
   </script>
 </body>

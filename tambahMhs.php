@@ -14,14 +14,11 @@ error_log("Data received: " . json_encode($_POST));
 $query = "INSERT INTO [user] VALUES (?,?,?)";
 $params = array($username, $password, "Mahasiswa");
 $stmt = sqlsrv_query($conn, $query, $params);
-if ($stmt) {
-    // Hanya satu respons JSON
-    echo json_encode(["status" => "success", "message" => "Data Mahasiswa berhasil disimpan."]);
-    exit; // Pastikan untuk keluar setelah mengirim respons
-} else {
+if (!$stmt) {
     echo json_encode(["status" => "error", "message" => sqlsrv_errors()]);
     exit; // Pastikan untuk keluar setelah mengirim respons error
 }
+
 
 // Lanjutkan dengan sisa kode...
 $query = "SELECT user_id FROM [user] WHERE username = ?";
@@ -52,4 +49,3 @@ if ($stmt) {
 } else {
     echo json_encode(["status" => "error", "message" => sqlsrv_errors()]);
 }
-?>

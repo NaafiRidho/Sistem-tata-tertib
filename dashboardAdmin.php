@@ -11,6 +11,8 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -40,7 +42,7 @@
       font-size: 2rem;
       font-family: 'Fugaz One', sans-serif;
       font-weight: 600;
-      color: #E38E49;
+      color: white;
       text-transform: uppercase;
       letter-spacing: 1px;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 4);
@@ -61,7 +63,8 @@
       transition: all 0.3s;
     }
 
-    .menu a:hover {
+    .menu a:hover,
+    .menu a.active {
       background-color: #0056b3;
       border-left: 5px solid #ffcc00;
     }
@@ -118,7 +121,7 @@
       <div class="menu">
         <img src="logo.png" style="width: 120px; height: 120px;">
         <h2>Si Tertib</h2>
-        <a href="dashboardAdmin.php"><i class="bi bi-columns-gap"></i> Dashboard</a>
+        <a href="dashboardAdmin.php" class="active"><i class="bi bi-columns-gap"></i> Dashboard</a>
         <a href="listTataTertibAdmin.php"><i class="bi bi-list-check"></i> List Tata Tertib</a>
         <a href="dataMhs.php"><i class="bi bi-person"></i> Data Mahasiswa</a>
         <a href="dataDosen.php"><i class="bi bi-person-badge"></i> Data Dosen</a>
