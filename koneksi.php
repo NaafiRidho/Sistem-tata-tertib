@@ -1,5 +1,5 @@
 <?php
-$serverName = "DESKTOP-UE88R94"; // Atau IP server SQL Server
+$serverName = "localhost, 1433"; // Atau IP server SQL Server
 $connectionOptions = array(
     "Database" => "sistem-tata-tertib", // Ganti dengan nama database Anda
     "Uid" => "",   // Ganti dengan username SQL Server Anda

@@ -15,7 +15,7 @@
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap" rel="stylesheet">
   <style>
-    body {
+    body { 
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
       background-color: #f9f9f9;
@@ -209,7 +209,7 @@
       <a href="listTataTertibAdmin.php"><i class="bi bi-list-check"></i> List Tata Tertib</a>
       <a href="dataMhs.php"><i class="bi bi-person"></i> Data Mahasiswa</a>
       <a href="dataDosen.php" class="active"><i class="bi bi-person-badge"></i> Data Dosen</a>
-      <a href="#pelanggaranMahasiswa"><i class="bi bi-exclamation-circle"></i> Pelanggaran Mahasiswa</a>
+      <a href="laporanAdmin.php"><i class="bi bi-exclamation-circle"></i> Pelanggaran Mahasiswa</a>
     </div>
     <div class="logout">
       <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
