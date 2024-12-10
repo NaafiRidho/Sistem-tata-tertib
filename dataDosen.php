@@ -12,6 +12,8 @@
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -27,13 +29,18 @@
       color: white;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
     }
 
     .sidebar h2 {
       text-align: center;
+      color: white;
       margin: 20px 0;
-      font-size: 1.5rem;
+      font-size: 2rem;
+      font-family: 'Fugaz One', sans-serif;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 4);
     }
 
     .menu {
@@ -45,14 +52,14 @@
       align-items: center;
       gap: 10px;
       color: white;
-      padding: 15px 20px;
+      padding: 15px;
       text-decoration: none;
-      font-size: 1rem;
       border-left: 5px solid transparent;
       transition: all 0.3s;
     }
 
-    .menu a:hover {
+    .menu a:hover,
+    .menu a.active {
       background-color: #0056b3;
       border-left: 5px solid #ffcc00;
     }
@@ -149,7 +156,8 @@
       border-collapse: collapse;
     }
 
-    th, td {
+    th,
+    td {
       text-align: center;
       padding: 10px;
       border: 1px solid #ddd;
@@ -161,20 +169,8 @@
 
     .sidebar img {
       display: block;
-      margin: 20px auto; 
-      border-radius: 30%; 
-    }
-
-    .sidebar h2 {
-      text-align: center;
-      margin: 20px 0;
-      font-size: 2rem;
-      font-family: 'Fugaz One', sans-serif;
-      font-weight: 600;
-      color: #E38E49;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 4);
+      margin: 20px auto;
+      border-radius: 30%;
     }
 
     .table-footer {
@@ -200,20 +196,19 @@
     .dataTables_filter {
       float: right !important;
     }
-
   </style>
 </head>
 
 <body>
 
-  <div class="sidebar">
+<div class="sidebar">
     <div class="menu">
-    <img src="logo.png" style="width: 120px; height: 120px;">
+      <img src="logo.png" style="width: 120px; height: 120px;">
       <h2>Si Tertib</h2>
-      <a href="#dashboard"><i class="bi bi-columns-gap"></i> Dashboard</a>
-      <a href="#listTatib"><i class="bi bi-list-check"></i> List Tata Tertib</a>
-      <a href="#dataMahasiswa"><i class="bi bi-person"></i> Data Mahasiswa</a>
-      <a href="#dataDosen"><i class="bi bi-person-badge"></i> Data Dosen</a>
+      <a href="dashboardAdmin.php"><i class="bi bi-columns-gap"></i> Dashboard</a>
+      <a href="listTataTertibAdmin.php"><i class="bi bi-list-check"></i> List Tata Tertib</a>
+      <a href="dataMhs.php"><i class="bi bi-person"></i> Data Mahasiswa</a>
+      <a href="dataDosen.php" class="active"><i class="bi bi-person-badge"></i> Data Dosen</a>
       <a href="#pelanggaranMahasiswa"><i class="bi bi-exclamation-circle"></i> Pelanggaran Mahasiswa</a>
     </div>
     <div class="logout">
@@ -228,56 +223,56 @@
         <button class="btn-add">+ Tambah Data Baru</button>
       </div>
       <table id="example" class="table table-bordered table-hover table-striped">
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>NIDN</th>
-              <th>Nama Dosen</th>
-              <th>AKSI</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>000000</td>
-              <td>Muhammad Unggul Pamenang</td>
-              <td>
-                <button class="btn-edit">Edit</button>
-                <button class="btn-delete">Hapus</button>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>11111</td>
-              <td>Annisa Tufika Firdausi</td>
-              <td>
-                <button class="btn-edit">Edit</button>
-                <button class="btn-delete">Hapus</button>
-              </td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>2222</td>
-              <td>Vit Zuraida</td>
-              <td>
-                <button class="btn-edit">Edit</button>
-                <button class="btn-delete">Hapus</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>NIDN</th>
+            <th>Nama Dosen</th>
+            <th>AKSI</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>000000</td>
+            <td>Muhammad Unggul Pamenang</td>
+            <td>
+              <button class="btn-edit">Edit</button>
+              <button class="btn-delete">Hapus</button>
+            </td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>11111</td>
+            <td>Annisa Tufika Firdausi</td>
+            <td>
+              <button class="btn-edit">Edit</button>
+              <button class="btn-delete">Hapus</button>
+            </td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>2222</td>
+            <td>Vit Zuraida</td>
+            <td>
+              <button class="btn-edit">Edit</button>
+              <button class="btn-delete">Hapus</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
       <!-- Bootstrap JS -->
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
       <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-        <!-- DataTables JS -->
-        <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-        <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
-        <script>
-          $(document).ready(function(){
-            $('#example').DataTable();
-          })
-        </script>
-    </body>
+      <!-- DataTables JS -->
+      <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+      <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+      <script>
+        $(document).ready(function () {
+          $('#example').DataTable();
+        })
+      </script>
+</body>
 
-    </html>
+</html>
