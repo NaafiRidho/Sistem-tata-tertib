@@ -243,47 +243,41 @@
                 <tbody>
                     <?php
                     include "koneksi.php";
+                    require_once "Database.php";
 
-                    $options = array("Scrollable" => SQLSRV_CURSOR_STATIC);
-                    $query = "SELECT pelanggaran.pelanggaran, tingkat.tingkat, tingkat.sanksi
-            FROM pelanggaran
-            JOIN tingkat ON pelanggaran.tingkat_id = tingkat.tingkat_id";
+                    $db = new Database($conn);
+                    $query = "SELECT pelanggaran.pelanggaran, tingkat.tingkat, tingkat.sanksi, tingkat.tingkat_id, pelanggaran.pelanggaran_id
+                              FROM pelanggaran
+                              INNER JOIN tingkat ON pelanggaran.tingkat_id = tingkat.tingkat_id";
 
                     // Execute the query
-                    $result = sqlsrv_query($conn, $query, array(), $options);
+                    $stmt = $db->executeQuery($query);
+                    $no = 1;
 
-                    // Check if the query was successful
-                    if ($result === false) {
-                        die(print_r(sqlsrv_errors(), true));  // Print SQL errors if the query failed
-                    }
-
-                    if (sqlsrv_num_rows($result) > 0) {
-                        $no = 1;
-                        while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+                    while ($row = $db->fetchAssoc($stmt)) {
                     ?>
-                            <tr>
-                                <td><?php echo $no++ ?></td>
-                                <td><?php echo $row['pelanggaran'] ?></td>
-                                <td><?php echo $row['tingkat'] ?></td>
-                                <td><?php echo $row['sanksi'] ?></td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <button class="btn btn-edit" data-bs-toggle="modal" data-bs-target="#modalEdit"
-                                            data-pelanggaran="<?php echo $row['pelanggaran']; ?>"
-                                            data-tingkat="<?php echo $row['tingkat']; ?>"
-                                            data-sanksi="<?php echo $row['sanksi']; ?>">
-                                            Edit
-                                        </button>
-                                        <button class="btn btn-delete" data-bs-toggle="modal" data-bs-target="#modalHapus"
-                                            data-mahasiswa_id="<?php echo $row['pelanggaran']; ?>">Hapus</button>
-                                    </div>
-                                </td>
-
-                            </tr><?php
-                                }
-                            }
-                                    ?>
-
+                        <tr>
+                            <td><?php echo $no++; ?></td>
+                            <td><?php echo $row['pelanggaran']; ?></td>
+                            <td><?php echo $row['tingkat']; ?></td>
+                            <td><?php echo $row['sanksi']; ?></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-edit" data-bs-toggle="modal" data-bs-target="#modalEdit"
+                                        data-pelanggaran="<?php echo $row['pelanggaran']; ?>"
+                                        data-tingkat_id="<?php echo $row['tingkat_id']; ?>"
+                                        data -sanksi="<?php echo $row['sanksi']; ?>"
+                                        data-pelanggaran_id="<?php echo $row['pelanggaran_id']; ?>">
+                                        Edit
+                                    </button>
+                                    <button class="btn btn-delete" data-bs-toggle="modal" data-bs-target="#modalHapus"
+                                        data-mahasiswa_id="<?php echo $row['pelanggaran']; ?>">Hapus</button>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php
+                    }
+                    ?>
                 </tbody>
             </table>
 
@@ -351,13 +345,26 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="editTingkat" class="form-label">Tingkat</label>
-                                    <input type="text" class="form-control" id="editTingkat" name="tingkat" required>
+                                    <select class="form-control" id="editTingkat" required>
+                                        <option value="" disabled selected>Pilih Tingkat Pelanggaran</option>
+                                        <?php
+                                        include "koneksi.php";
+                                        require_once 'Database.php';
+
+                                        $db = new Database($conn);
+                                        $query = "SELECT tingkat_id ,tingkat, sanksi FROM tingkat";
+                                        $stmt = $db->executeQuery($query);
+                                        while ($row = $db->fetchAssoc($stmt)) {
+                                            echo "<option value='" . $row['tingkat_id'] . "'>" . $row['tingkat'] . " " . $row['sanksi'] . "</option>";
+                                        }
+                                        ?>
+                                    </select>
                                 </div>
                                 <div class="mb-3">
                                     <label for="editSanksi" class="form-label">Sanksi</label>
-                                    <input type="text" class="form-control" id="editSanksi" name="sanksi" required>
+                                    <input type="text" class="form-control" id="editSanksi" name="sanksi" readonly>
                                 </div>
-                                <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                                <button type="submit" class="btn btn-primary" id="saveEdit">Simpan Perubahan</button>
                             </form>
                         </div>
                     </div>
@@ -392,18 +399,88 @@
             <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
             <script>
                 $(document).ready(function() {
-                    $('#example').DataTable();
+                    var table = $('#example').DataTable({
+                        "pageLength": 50
+                    });
+                    console.log("DataTables initialized:", table);
 
                     $('.btn-edit').on('click', function() {
-                        // Get data attributes from the clicked button
-                        const pelanggaran = $(this).data('pelanggaran');
-                        const tingkat = $(this).data('tingkat');
-                        const sanksi = $(this).data('sanksi');
+                        const pelanggaran_id = $(this).data('pelanggaran_id');
+                        console.log("Pelanggaran ID: ", pelanggaran_id); 
+                        $("#modalEdit").data('pelanggaran_id', pelanggaran_id);
 
-                        // Set values in the modal inputs
-                        $('#editPelanggaran').val(pelanggaran);
-                        $('#editTingkat').val(tingkat);
-                        $('#editSanksi').val(sanksi);
+                        $.ajax({
+                            url: "getPelanggaran.php",
+                            method: "GET",
+                            dataType: "JSON",
+                            data: {
+                                pelanggaran_id: pelanggaran_id
+                            },
+                            success: function(data) {
+                                console.log("Data dari server: ", data); // Debugging
+                                if (data && data.pelanggaran) {
+                                    $('#editPelanggaran').val(data.pelanggaran);
+                                    $('#editTingkat').val(data.tingkat_id);
+                                    $('#editSanksi').val(data.sanksi);
+                                } else {
+                                    alert("Data tidak ditemukan.");
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Error: ", xhr.responseText);
+                                alert("Terjadi kesalahan saat mengirim data ke server.");
+                            }
+                        });
+                    });
+
+                    //ketika tingkat diedit
+                    $("#editTingkat").on('change', function() {
+                        var tingkat_id = $(this).val();
+
+                        $.ajax({
+                            url: "getSanksi.php",
+                            method: "GET",
+                            dataType: "JSON",
+                            data: {
+                                tingkat_id: tingkat_id
+                            },
+                            success: function(data) {
+                                $("#editSanksi").val(data.sanksi);
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Error: ", xhr.responseText);
+                                alert("Terjadi kesalahan saat mengirim data ke server.");
+                            }
+                        });
+                    })
+
+                    //mengedit pelanggaran
+                    $("#saveEdit").on('click', function() {
+                        var pelanggaran_id = $("#modalEdit").data('pelanggaran_id');
+                        var pelanggaran = $('#editPelanggaran').val();
+                        var tingkat_id = $('#editTingkat').val();
+
+                        $.ajax({
+                            url: "editPelanggaran.php",
+                            method: "POST",
+                            data: {
+                                pelanggaran_id: pelanggaran_id,
+                                pelanggaran: pelanggaran,
+                                tingkat_id: tingkat_id
+                            },
+                            dataType: "JSON",
+                            success: function(response) {
+                                if (response.status === "success") {
+                                    alert(response.message);
+                                    $("#modalEdit").modal("hide");
+                                    location.reload();
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Error: ", xhr.responseText);
+                                alert("Terjadi kesalahan saat mengirim data ke server.");
+                            }
+                        });
                     });
 
                     //untuk mengambil sanksi dari tingkat yang dipilih 
