@@ -400,11 +400,11 @@
             <script>
                 $(document).ready(function() {
                     var table = $('#example').DataTable({
-                        "pageLength": 50
+                        "pageLength": 10
                     });
                     console.log("DataTables initialized:", table);
 
-                    $('.btn-edit').on('click', function() {
+                    $(document).on('click','.btn-edit', function() {
                         const pelanggaran_id = $(this).data('pelanggaran_id');
                         console.log("Pelanggaran ID: ", pelanggaran_id); 
                         $("#modalEdit").data('pelanggaran_id', pelanggaran_id);
