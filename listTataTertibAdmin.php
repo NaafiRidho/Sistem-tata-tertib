@@ -260,7 +260,7 @@
                     if (sqlsrv_num_rows($result) > 0) {
                         $no = 1;
                         while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
-                            ?>
+                    ?>
                             <tr>
                                 <td><?php echo $no++ ?></td>
                                 <td><?php echo $row['pelanggaran'] ?></td>
@@ -280,9 +280,9 @@
                                 </td>
 
                             </tr><?php
-                        }
-                    }
-                    ?>
+                                }
+                            }
+                                    ?>
 
                 </tbody>
             </table>
@@ -305,13 +305,26 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="newTingkat" class="form-label">Tingkat</label>
-                                    <input type="text" class="form-control" id="newTingkat" name="tingkat" required>
+                                    <select class="form-control newTingkat" required>
+                                        <option value="" disabled selected>Pilih Tingkat Pelanggaran</option>
+                                        <?php
+                                        include "koneksi.php";
+                                        require_once 'Database.php';
+
+                                        $db = new Database($conn);
+                                        $query = "SELECT tingkat_id ,tingkat, sanksi FROM tingkat";
+                                        $stmt = $db->executeQuery($query);
+                                        while ($row = $db->fetchAssoc($stmt)) {
+                                            echo "<option value='" . $row['tingkat_id'] . "'>" . $row['tingkat'] . " " . $row['sanksi'] . "</option>";
+                                        }
+                                        ?>
+                                    </select>
                                 </div>
                                 <div class="mb-3">
                                     <label for="newSanksi" class="form-label">Sanksi</label>
-                                    <input type="text" class="form-control" id="newSanksi" name="sanksi" required>
+                                    <input type="text" class="form-control" id="newSanksi" name="sanksi" readonly>
                                 </div>
-                                <button type="submit" class="btn btn-primary">Simpan</button>
+                                <button type="submit" class="btn btn-primary" id="saveNewPelanggaran">Simpan</button>
                             </form>
                         </div>
                     </div>
@@ -378,21 +391,68 @@
             <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
             <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
             <script>
-                $(document).ready(function () {
+                $(document).ready(function() {
                     $('#example').DataTable();
-                })
-            </script>
-            <script>
-                $('.btn-edit').on('click', function () {
-                    // Get data attributes from the clicked button
-                    const pelanggaran = $(this).data('pelanggaran');
-                    const tingkat = $(this).data('tingkat');
-                    const sanksi = $(this).data('sanksi');
 
-                    // Set values in the modal inputs
-                    $('#editPelanggaran').val(pelanggaran);
-                    $('#editTingkat').val(tingkat);
-                    $('#editSanksi').val(sanksi);
+                    $('.btn-edit').on('click', function() {
+                        // Get data attributes from the clicked button
+                        const pelanggaran = $(this).data('pelanggaran');
+                        const tingkat = $(this).data('tingkat');
+                        const sanksi = $(this).data('sanksi');
+
+                        // Set values in the modal inputs
+                        $('#editPelanggaran').val(pelanggaran);
+                        $('#editTingkat').val(tingkat);
+                        $('#editSanksi').val(sanksi);
+                    });
+
+                    //untuk mengambil sanksi dari tingkat yang dipilih 
+                    $(".newTingkat").change(function() {
+                        var tingkat_id = $(this).val();
+
+                        $.ajax({
+                            url: "getSanksi.php",
+                            method: "GET",
+                            dataType: "JSON",
+                            data: {
+                                tingkat_id: tingkat_id
+                            },
+                            success: function(data) {
+                                $("#newSanksi").val(data.sanksi);
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Error: ", xhr.responseText);
+                                alert("Terjadi kesalahan saat mengirim data ke server.");
+                            }
+                        });
+                    });
+
+                    //menambahkan pelanggaran baru
+                    $("#saveNewPelanggaran").on('click', function() {
+                        var tingkat_id = $(".newTingkat").val();
+                        var pelanggaran = $("#newPelanggaran").val();
+
+                        $.ajax({
+                            url: "tambahPelanggaran.php",
+                            method: "POST",
+                            dataType: "JSON",
+                            data: {
+                                tingkat_id: tingkat_id,
+                                pelanggaran: pelanggaran
+                            },
+                            success: function(response) {
+                                if (response.status === "success") {
+                                    alert(response.message);
+                                    $("#modalAddRule").modal("hide");
+                                    location.reload();
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Error: ", xhr.responseText);
+                                alert("Terjadi kesalahan saat mengirim data ke server.");
+                            }
+                        });
+                    });
                 });
             </script>
 </body>
