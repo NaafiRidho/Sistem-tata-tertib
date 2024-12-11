@@ -271,7 +271,7 @@
                                         Edit
                                     </button>
                                     <button class="btn btn-delete" data-bs-toggle="modal" data-bs-target="#modalHapus"
-                                        data-mahasiswa_id="<?php echo $row['pelanggaran']; ?>">Hapus</button>
+                                        data-pelanggaran_id="<?php echo $row['pelanggaran_id']; ?>">Hapus</button>
                                 </div>
                             </td>
                         </tr>
@@ -383,7 +383,7 @@
                             <form action="delete_rule.php" method="POST">
                                 <input type="hidden" name="pelanggaran_id" id="hapusPelanggaranId">
                                 <p>Apakah Anda yakin ingin menghapus peraturan ini?</p>
-                                <button type="submit" class="btn btn-danger">Hapus</button>
+                                <button type="submit" class="btn btn-danger" id="btn-hapus">Hapus</button>
                             </form>
                         </div>
                     </div>
@@ -404,9 +404,9 @@
                     });
                     console.log("DataTables initialized:", table);
 
-                    $(document).on('click','.btn-edit', function() {
+                    $(document).on('click', '.btn-edit', function() {
                         const pelanggaran_id = $(this).data('pelanggaran_id');
-                        console.log("Pelanggaran ID: ", pelanggaran_id); 
+                        console.log("Pelanggaran ID: ", pelanggaran_id);
                         $("#modalEdit").data('pelanggaran_id', pelanggaran_id);
 
                         $.ajax({
@@ -530,6 +530,36 @@
                             }
                         });
                     });
+
+                    //menghapus pelanggaran
+                    $(document).on('click', '.btn-delete', function() {
+                        var pelanggaran_id = $(this).data('pelanggaran_id');
+                        $("#modalHapus").data('pelanggaran_id', pelanggaran_id);
+                    });
+
+                    $(document).on('click', '#btn-hapus', function() {
+                        var pelanggaran_id = $('#modalHapus').data('pelanggaran_id');
+
+                        $.ajax({
+                            url: "hapusPelanggaran.php",
+                            method: "POST",
+                            dataType: "JSON",
+                            data: {
+                                pelanggaran_id: pelanggaran_id
+                            },
+                            success: function(response) {
+                                if (response.status === "success") {
+                                    alert(response.message);
+                                    $("#modalHapus").modal("hide");
+                                    location.reload();
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Error: ", xhr.responseText);
+                                alert("Terjadi kesalahan saat mengirim data ke server.");
+                            }
+                        })
+                    })
                 });
             </script>
 </body>
