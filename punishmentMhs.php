@@ -298,7 +298,7 @@
                 <!-- Footer Modal -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-primary">Simpan</button>
+                    <button type="button" class="btn btn-primary" id="simpanSurat">Simpan</button>
                 </div>
             </div>
         </div>
@@ -333,6 +333,7 @@
                 const sanksi = $(this).data('sanksi');
                 $('#pelanggaran').val(pelanggaran);
                 $('#sanksi').val(sanksi);
+                $("#modalUpload").data('pelaporan_id', pelanggaran_id);
 
                 $.ajax({
                     type: 'GET',
@@ -354,9 +355,44 @@
                     error: function(xhr, status, error) {
                         console.log(xhr.responseText);
                     }
-                })
-            })
-        })
+                });
+            });
+            $(document).on('click', '#simpanSurat', function() {
+                var pelaporan_id = $("#modalUpload").data('pelaporan_id');
+                var fileSurat = $("#upload-surat")[0].files[0]; 
+
+                if (!fileSurat) {
+                    alert("Silakan pilih file sebelum menyimpan.");
+                    return;
+                }
+
+                var formData = new FormData();
+                formData.append("upload-surat", fileSurat);
+                formData.append("pelaporan_id", pelaporan_id);
+
+                $.ajax({
+                    url: "uploadSurat.php",
+                    method: "POST",
+                    dataType: "JSON",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        if (response.success) {
+                            alert(response.message);
+                            $("#modalUpload").modal("hide");
+                            location.reload();
+                        } else {
+                            alert(response.message || "Gagal mengunggah file.");
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error: ", xhr.responseText);
+                        alert("Terjadi kesalahan saat mengirim data ke server.");
+                    }
+                });
+            });
+        });
     </script>
 </body>
 
