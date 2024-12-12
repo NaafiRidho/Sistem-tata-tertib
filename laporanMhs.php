@@ -174,7 +174,7 @@
 
   <div class="sidebar">
     <div class="menu">
-    <img src="logo.png" style="width: 120px; height: 120px;">
+      <img src="logo.png" style="width: 120px; height: 120px;">
       <h2>Si Tertib</h2>
       <a href="dashboardMhs.php">
         <i class="bi bi-columns-gap"></i> <span>Dashboard</span>
@@ -223,7 +223,6 @@
 
             $user_id = $_COOKIE["user_id"];
 
-
             $query = "SELECT d.nama, pl.pelanggaran, t.tingkat, CONVERT(date, p.tanggal) AS tanggal,t.sanksi,
             p.[file],m.nim,m.nama as mahasiswa, p.pelaporan_id, k.prodi, p.status, ab.status AS statusBanding
             FROM dbo.riwayat_pelaporan AS p
@@ -236,7 +235,6 @@
             LEFT JOIN dbo.aju_banding ab ON p.pelaporan_id = ab.pelaporan_id
             WHERE u.user_id = ? AND p.status NOT IN('Dibatalkan','Selesai')";
 
-
             $params = array($user_id);
             $stmt = sqlsrv_prepare($conn, $query, $params);
 
@@ -244,10 +242,10 @@
               die(print_r(sqlsrv_errors(), true));
             }
 
-
             if (sqlsrv_execute($stmt)) {
               $no = 1;
               while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+                $status = isset($row['statusBanding']) ? $row['statusBanding'] : $row['status'];
                 ?>
                 <tr>
                   <td><?php echo $no++ ?></td>
@@ -285,7 +283,19 @@
                     }
                     ?>
                   </td>
-                  <td><?php echo $row['statusBanding'] ?></td>
+                  <td>
+                    <?php
+                    if ($status === 'Diterima') {
+                      echo "<span class='badge badge-success'>Diterima</span>";
+                    } elseif ($status === 'Ditolak') {
+                      echo "<span class='badge badge-danger'>Ditolak</span>";
+                    } elseif ($status === 'Ditinjau') {
+                      echo "<span class='badge badge-warning'>Ditinjau</span>";
+                    } else {
+                      echo "<span class='badge badge-secondary'>$status</span>";
+                    }
+                    ?>
+                  </td>
                 </tr>
                 <?php
               }
@@ -294,6 +304,8 @@
             }
             ?>
           </tbody>
+
+
         </table>
       </div>
     </div>
