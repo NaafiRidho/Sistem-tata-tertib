@@ -23,20 +23,18 @@
             background-color: #002a8a;
             position: fixed;
             height: 100%;
-            overflow: hidden;
             color: white;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
         }
 
         .sidebar h2 {
             text-align: center;
+            color: white;
             margin: 20px 0;
             font-size: 2rem;
             font-family: 'Fugaz One', sans-serif;
             font-weight: 600;
-            color: #E38E49;
             text-transform: uppercase;
             letter-spacing: 1px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 4);
@@ -73,6 +71,7 @@
             text-decoration: none;
             background-color: #d9534f;
             transition: background-color 0.3s;
+            margin-top: 430px; /* Menambah jarak dari atas */
         }
 
         .logout a:hover {
@@ -94,8 +93,9 @@
             background-color: #d3d3d3;
             color: black;
             text-align: center;
-        }
+            text-align: left;
 
+        }
 
         .alert-container {
             margin-top: 10px;
@@ -215,7 +215,7 @@
     <div class="content">
         <h1>Pelaporan</h1>
         <div class="card">
-            <div class="card-header">Pelaporan Peanggaran Mahasiswa</div>
+            <div class="card-header">Pelaporan Pelanggaran Mahasiswa</div>
             <div class="alert-container">
                 <?php
                 include "koneksi.php";
