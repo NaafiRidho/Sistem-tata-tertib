@@ -71,7 +71,7 @@
             text-decoration: none;
             background-color: #d9534f;
             transition: background-color 0.3s;
-            margin-top: 430px; /* Menambah jarak dari atas */
+            margin-top: 430px;
         }
 
         .logout a:hover {
