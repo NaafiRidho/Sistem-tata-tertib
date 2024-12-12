@@ -26,6 +26,7 @@
             color: white;
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
         }
 
         .sidebar h2 {
@@ -71,7 +72,7 @@
             text-decoration: none;
             background-color: #d9534f;
             transition: background-color 0.3s;
-            margin-top: 425px;
+            margin-top: auto;
         }
 
         .logout a:hover {
@@ -81,8 +82,10 @@
         .content {
             margin-left: 240px;
             padding: 20px;
+            box-sizing: border-box;
         }
 
+        
         .card-header {
             background-color: #d3d3d3;
             color: black;
@@ -170,7 +173,6 @@
             color: #999;
         }
 
-        /* Menambahkan style untuk bintang */
         .required:after {
             content: " *";
             color: red;
@@ -192,21 +194,22 @@
 </head>
 
 <body>
-    <div class="sidebar">
-        <div class="menu" style="text-align: center; padding-top: 20px;">
-            <img src="logo.png" style="width: 120px; height: 120px; ;">
-            <h2>Si Tertib</h2>
-            <a href="dashboardDosen.php"><i class="bi bi-columns-gap"></i> Dashboard</a>
-            <a href="laporanDosen.php" class="active"><i class="bi bi-file-earmark-text"></i> Laporan</a>
-            <a href="ajuBandingDosen.php"><i class="bi bi-envelope"></i> Aju Banding</a>
-        </div>
-        <div class="logout">
-            <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
-        </div>
+<div class="sidebar">
+    <div class="menu" style="text-align: center; padding-top: 20px;">
+        <img src="logo.png" style="width: 120px; height: 120px;">
+        <h2>Si Tertib</h2>
+        <a href="dashboardDosen.php"><i class="bi bi-columns-gap"></i> Dashboard</a>
+        <a href="laporanDosen.php" class="active"><i class="bi bi-file-earmark-text"></i> Laporan</a>
+        <a href="ajuBandingDosen.php"><i class="bi bi-envelope"></i> Aju Banding</a>
     </div>
+    <div class="logout">
+        <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    </div>
+</div>
 
 
-    <div class="content">
+
+    <div class="content" >
         <h1>Pelaporan</h1>
         <div class="card">
             <div class="card-header">Pelaporan Pelanggaran Mahasiswa</div>
