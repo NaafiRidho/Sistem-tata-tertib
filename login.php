@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap" rel="stylesheet">
     <!-- Font Awesome CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
@@ -18,8 +19,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(rgba(44, 73, 115, 0.6), rgba(173, 216, 230, 0.6)), 
-                        url('bg.png') no-repeat center center/cover;
+            background: linear-gradient(rgba(44, 73, 115, 0.6), rgba(173, 216, 230, 0.6)),
+                url('bg.png') no-repeat center center/cover;
             background-size: cover;
         }
 
@@ -96,17 +97,20 @@
         }
     </style>
 </head>
+
 <body>
     <div class="login-container">
         <img src="logo.png" alt="Logo Si Tertib">
-        <h1>Si Tertib</h1>
+        <h1>SI TERTIB</h1>
         <form action="proses_login.php" method="post">
             <div class="form-group">
-                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username"
+                    required>
             </div>
             <div class="form-group">
                 <div class="password-container">
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                    <input type="password" class="form-control" id="password" name="password"
+                        placeholder="Enter your password" required>
                     <span class="toggle-password" id="togglePassword">
                         <i class="fas fa-eye"></i>
                     </span>
@@ -134,4 +138,5 @@
         });
     </script>
 </body>
+
 </html>

@@ -42,8 +42,7 @@
       letter-spacing: 1px;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 4);
     }
-
-
+    
     .menu a {
       display: flex;
       align-items: center;

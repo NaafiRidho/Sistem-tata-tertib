@@ -16,6 +16,8 @@
   <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -36,14 +38,22 @@
       transition: transform 0.3s ease;
     }
 
-    .sidebar h2 {
-      text-align: center;
-      margin: 20px 0;
-      font-size: 1.5rem;
+    .sidebar img {
+      display: block;
+      margin: 20px auto;
+      border-radius: 30%;
     }
 
-    .sidebar.close {
-      transform: translateX(-100%);
+    .sidebar h2 {
+      text-align: center;
+      color: white;
+      margin: 20px 0;
+      font-size: 2rem;
+      font-family: 'Fugaz One', sans-serif;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 4);
     }
 
 
@@ -98,18 +108,6 @@
       margin-left: 40px;
     }
 
-    .toggle-btn {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      background-color: #002a8a;
-      color: white;
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      z-index: 100;
-    }
 
     .table img {
       width: 50px;
@@ -174,11 +172,9 @@
 
 <body>
 
-  <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
-
-
   <div class="sidebar">
     <div class="menu">
+      <img src="logo.png" style="width: 120px; height: 120px;">
       <h2>Si Tertib</h2>
       <a href="dashboardMhs.php">
         <i class="bi bi-columns-gap"></i> <span>Dashboard</span>
@@ -227,7 +223,6 @@
 
             $user_id = $_COOKIE["user_id"];
 
-
             $query = "SELECT d.nama, pl.pelanggaran, t.tingkat, CONVERT(date, p.tanggal) AS tanggal,t.sanksi,
             p.[file],m.nim,m.nama as mahasiswa, p.pelaporan_id, k.prodi, p.status, ab.status AS statusBanding
             FROM dbo.riwayat_pelaporan AS p
@@ -240,7 +235,6 @@
             LEFT JOIN dbo.aju_banding ab ON p.pelaporan_id = ab.pelaporan_id
             WHERE u.user_id = ? AND p.status NOT IN('Dibatalkan','Selesai')";
 
-
             $params = array($user_id);
             $stmt = sqlsrv_prepare($conn, $query, $params);
 
@@ -248,11 +242,11 @@
               die(print_r(sqlsrv_errors(), true));
             }
 
-
             if (sqlsrv_execute($stmt)) {
               $no = 1;
               while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-            ?>
+                $status = isset($row['statusBanding']) ? $row['statusBanding'] : $row['status'];
+                ?>
                 <tr>
                   <td><?php echo $no++ ?></td>
                   <td><?php echo $row["nama"] ?></td>
@@ -267,15 +261,15 @@
                   <td>
                     <?php
                     if ($row['status'] !== 'Diterima') {
-                    ?><button class="btn-success" data-bs-toggle="modal" data-bs-target="#modalTerima"
+                      ?><button class="btn-success" data-bs-toggle="modal" data-bs-target="#modalTerima"
                         data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>">
                         Terima</button><?php
-                                      } else {
-                                        ?><button class="btn-success" disabled>
+                    } else {
+                      ?><button class="btn-success" disabled>
                         Diterima
                       </button><?php
-                                      }
-                                ?>
+                    }
+                    ?>
                     <?php
                     if (!isset($row['statusBanding'])) { ?>
                       <button class="btn-detail" data-bs-toggle="modal" data-bs-target="#modalUlasan"
@@ -284,20 +278,34 @@
                         data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>" data-prodi="<?php echo $row['prodi']; ?>">
                         Banding
                       </button><?php
-                              } else {
-                                ?><button class="btn-detail" disabled>Banding</button><?php
-                                                                                    }
-                                                                                      ?>
+                    } else {
+                      ?><button class="btn-detail" disabled>Banding</button><?php
+                    }
+                    ?>
                   </td>
-                  <td><?php echo $row['statusBanding'] ?></td>
+                  <td>
+                    <?php
+                    if ($status === 'Diterima') {
+                      echo "<span class='badge badge-success'>Diterima</span>";
+                    } elseif ($status === 'Ditolak') {
+                      echo "<span class='badge badge-danger'>Ditolak</span>";
+                    } elseif ($status === 'Ditinjau') {
+                      echo "<span class='badge badge-warning'>Ditinjau</span>";
+                    } else {
+                      echo "<span class='badge badge-secondary'>$status</span>";
+                    }
+                    ?>
+                  </td>
                 </tr>
-            <?php
+                <?php
               }
             } else {
               die(print_r(sqlsrv_errors(), true));
             }
             ?>
           </tbody>
+
+
         </table>
       </div>
     </div>
@@ -369,21 +377,21 @@
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    document.getElementById('btnKirim').addEventListener('click', function() {
+    document.getElementById('btnKirim').addEventListener('click', function () {
       alert('Ulasan berhasil dikirim');
     });
   </script>
   <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
       // Inisialisasi DataTable
       $('#example').DataTable();
 
-      $('.btn-success').click(function() {
+      $('.btn-success').click(function () {
         var pelaporan_id = $(this).data('pelaporan_id');
         $("#modalTerima").data('pelaporan_id', pelaporan_id);
       });
 
-      $('#btnTerima').click(function() {
+      $('#btnTerima').click(function () {
         var pelaporan_id = $("#modalTerima").data('pelaporan_id');
         if (confirm("Apakah Anda yakin ingin menerima laporan ini?")) {
           $.ajax({
@@ -392,11 +400,11 @@
             data: {
               pelaporan_id: pelaporan_id
             },
-            success: function(response) {
+            success: function (response) {
               alert('Laporan berhasil diterima!');
               $('#modalTerima').modal('hide');
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
               alert('Terjadi kesalahan: ' + error);
             }
           });
@@ -404,7 +412,7 @@
       });
 
       // Ketika tombol 'Lihat Detail' diklik
-      $('.btn-detail').click(function() {
+      $('.btn-detail').click(function () {
         // Ambil data yang disimpan dalam atribut data-*
         var pelanggaran = $(this).data('pelanggaran');
         var nama = $(this).data('nama');
@@ -422,7 +430,7 @@
         $('#modalUlasan').data('prodi', prodi); //menyimpan prodi
       });
 
-      $('#btnKirim').click(function() {
+      $('#btnKirim').click(function () {
         var pelaporanId = $('#modalUlasan').data('pelaporan_id'); // Ambil pelaporan_id dari modal
         var alasanBanding = $('#ajubanding').val(); // Ambil alasan banding
         var prodi = $('#modalUlasan').data('prodi'); // Ambil prodi
@@ -435,11 +443,11 @@
             alasan_banding: alasanBanding,
             prodi: prodi
           },
-          success: function(response) {
+          success: function (response) {
             alert('Alasan Banding berhasil dikirim');
             $('#modalUlasan').modal('hide');
           },
-          error: function(xhr, status, error) {
+          error: function (xhr, status, error) {
             alert('Error: ' + error);
           }
         })
