@@ -93,6 +93,14 @@
             transition: background-color 0.3s;
         }
 
+        .card-header {
+            background-color: #d3d3d3;
+            color: black;
+            text-align: center;
+            text-align: left;
+
+        }
+
         .logout a:hover {
             background-color: #c9302c;
         }

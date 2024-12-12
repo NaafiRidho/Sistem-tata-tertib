@@ -130,6 +130,15 @@
             width: 100px;
             text-align: center;
         }
+
+        .card-header {
+            background-color: #d3d3d3;
+            color: black;
+            text-align: center;
+            text-align: left;
+
+        }
+        
     </style>
 </head>
 

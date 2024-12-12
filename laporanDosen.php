@@ -71,7 +71,7 @@
             text-decoration: none;
             background-color: #d9534f;
             transition: background-color 0.3s;
-            margin-top: 430px;
+            margin-top: 425px;
         }
 
         .logout a:hover {
@@ -80,12 +80,6 @@
 
         .content {
             margin-left: 240px;
-            padding: 20px;
-        }
-
-        .card {
-            background-color: white;
-            border-radius: 8px;
             padding: 20px;
         }
 

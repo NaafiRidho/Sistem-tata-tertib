@@ -108,6 +108,13 @@
       margin-left: 40px;
     }
 
+    .card-header {
+      background-color: #d3d3d3;
+      color: black;
+      text-align: center;
+      text-align: left;
+
+    }
 
     .table img {
       width: 50px;

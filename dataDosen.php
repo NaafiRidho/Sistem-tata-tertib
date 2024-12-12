@@ -110,7 +110,7 @@
     }
 
     .btn-edit {
-      background-color: #ffc107;
+      background-color: #007bff;
       color: white;
       border: none;
       padding: 5px 10px;
@@ -120,7 +120,7 @@
     }
 
     .btn-edit:hover {
-      background-color: #e0a800;
+      background-color: #0056b3;
     }
 
     .btn-delete {
