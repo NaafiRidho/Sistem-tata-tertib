@@ -111,39 +111,111 @@
       background-color: #ccc;
       margin: 10px 0;
     }
+
+    .btn-primary {
+      border-radius: 20px;
+      padding: 8px 20px;
+      width: 100%;
+    }
+
+    .card {
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card .card-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
   </style>
 </head>
 
 <body>
+  <div class="sidebar">
+    <div class="menu">
+      <img src="logo.png" style="width: 120px; height: 120px;">
+      <h2>Si Tertib</h2>
+      <a href="dashboardAdmin.php" class="active"><i class="bi bi-columns-gap"></i> Dashboard</a>
+      <a href="listTataTertibAdmin.php"><i class="bi bi-list-check"></i> List Tata Tertib</a>
+      <a href="dataMhs.php"><i class="bi bi-person"></i> Data Mahasiswa</a>
+      <a href="dataDosen.php"><i class="bi bi-person-badge"></i> Data Dosen</a>
+      <a href="laporanAdmin.php"><i class="bi bi-exclamation-circle"></i> Pelanggaran Mahasiswa</a>
+    </div>
+    <div class="logout">
+      <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    </div>
+  </div>
 
-  <body>
-    <div class="sidebar">
-      <div class="menu">
-        <img src="logo.png" style="width: 120px; height: 120px;">
-        <h2>Si Tertib</h2>
-        <a href="dashboardAdmin.php" class="active"><i class="bi bi-columns-gap"></i> Dashboard</a>
-        <a href="listTataTertibAdmin.php"><i class="bi bi-list-check"></i> List Tata Tertib</a>
-        <a href="dataMhs.php"><i class="bi bi-person"></i> Data Mahasiswa</a>
-        <a href="dataDosen.php"><i class="bi bi-person-badge"></i> Data Dosen</a>
-        <a href="laporanAdmin.php"><i class="bi bi-exclamation-circle"></i> Pelanggaran Mahasiswa</a>
-      </div>
-      <div class="logout">
-        <a href="login.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
-      </div>
+  <div class="content">
+    <h1>Dashboard</h1>
+    <div class="welcome-container">
+      <p>Selamat Datang Admin</p>
+      <div class="divider"></div>
+      <p>Sistem Tata Tertib</p>
     </div>
 
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      <!-- Card 1 -->
+      <div class="col">
+        <div class="card text-center shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Jumlah Penyelesaian Pelanggaran</h5>
+            <?php
+            include "koneksi.php";
+            require_once "Database.php";
 
-    <div class="content">
-      <h1>Dashboard</h1>
-      <div class="welcome-container">
-        <p>Selamat Datang Admin</p>
-        <div class="divider"></div>
-        <p>Sistem Tata Tertib</p>
+            $db = new Database($conn);
+            $query = "SELECT COUNT(*) AS jumlahPenyelesaian FROM document AS d
+                    INNER JOIN riwayat_pelaporan AS rp ON rp.pelaporan_id = d.pelaporan_id";
+            $stmt = $db->executeQuery($query);
+            $row = $db->fetchAssoc($stmt);
+            ?>
+            <p class="card-text display-5"><?php echo $row['jumlahPenyelesaian'] ?></p>
+            <a href="laporanAdmin.php" class="btn btn-primary">
+              <i class="bi bi-arrow-repeat"></i> Info Terbaru</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="col">
+        <div class="card text-center shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Jumlah Dosen</h5>
+            <?php
+            $query = "SELECT COUNT(*) AS jumlahDosen FROM dosen";
+            $stmt = $db->executeQuery($query);
+            $row = $db->fetchAssoc($stmt);
+            ?>
+            <p class="card-text display-5"><?php echo $row['jumlahDosen'] ?></p>
+            <a href="dataDosen.php" class="btn btn-primary">
+              <i class="bi bi-arrow-repeat"></i> Info Terbaru</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="col">
+        <div class="card text-center shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Jumlah Mahasiswa</h5>
+            <?php
+            $query = "SELECT COUNT(*) AS jumlahMahasiswa FROM mahasiswa";
+            $stmt = $db->executeQuery($query);
+            $row = $db->fetchAssoc($stmt);
+            ?>
+            <p class="card-text display-5"><?php echo $row['jumlahMahasiswa'] ?></p>
+            <a href="dataMhs.php" class="btn btn-primary">
+              <i class="bi bi-arrow-repeat"></i> Info Terbaru</a>
+          </div>
+        </div>
       </div>
     </div>
+  </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-  </body>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 
 </html>
