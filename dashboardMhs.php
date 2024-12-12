@@ -9,6 +9,8 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -31,12 +33,20 @@
 
     .sidebar h2 {
       text-align: center;
+      color: white;
       margin: 20px 0;
-      font-size: 1.5rem;
+      font-size: 2rem;
+      font-family: 'Fugaz One', sans-serif;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 4);
     }
 
-    .sidebar.close {
-      transform: translateX(-100%);
+    .sidebar img {
+      display: block;
+      margin: 20px auto;
+      border-radius: 30%;
     }
 
     .menu {
@@ -81,35 +91,19 @@
     }
 
     .alert-success {
-      /*max-width: 800px;*/
       margin: 0 auto;
       text-align: center;
       padding: 15px;
       border-radius: 5px;
     }
 
-
     .content {
       margin-left: 240px;
       padding: 20px;
-      transition: margin-left 0.3s ease;
     }
 
     .content.shift {
       margin-left: 40px;
-    }
-
-    .toggle-btn {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      background-color: #002a8a;
-      color: white;
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      z-index: 100;
     }
 
     .dashboard-card {
@@ -158,12 +152,8 @@
       margin-top: 30 px;
     }
 
-
-
-    /* Ukuran font untuk Selamat Datang */
     .greeting-text {
       font-size: 1.3 rem;
-      /* Ukuran font lebih besar */
       font-weight: bold;
       text-align: center;
       margin-bottom: 5px;
@@ -174,7 +164,6 @@
       margin: 10px 0;
     }
 
-    /* Ukuran font untuk Sistem Tata Tertib */
     .system-text {
       font-size: 1.2 rem;
       color: gray;
@@ -184,7 +173,6 @@
     @media (min-width: 768px) {
       .greeting-text {
         font-size: 2rem;
-        /* Lebih besar di layar besar */
       }
     }
   </style>
@@ -192,10 +180,9 @@
 
 <body>
 
-  <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
-
   <div class="sidebar">
     <div class="menu">
+      <img src="logo.png" style="width: 120px; height: 120px;">
       <h2>Si Tertib</h2>
       <a href="dashboardMhs.php" class="active">
         <i class="bi bi-columns-gap"></i> <span>Dashboard</span>
