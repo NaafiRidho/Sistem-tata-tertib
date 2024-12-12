@@ -177,7 +177,7 @@
 
                         $db = new Database($conn);
                         $query = "SELECT m.nama AS namaMhs, d.nama AS namaDosen, p.pelanggaran, t.tingkat, 
-                          rp.tanggal, t.sanksi, rp.[file] AS buktiPelanggaran, dc.[file] AS doc, rp.pelaporan_id, dc.document_id, rp.status 
+                          rp.tanggal, t.sanksi, rp.[file] AS buktiPelanggaran, dc.[file] AS doc, rp.pelaporan_id, dc.document_id, dc.status 
                           FROM riwayat_pelaporan AS rp
                           INNER JOIN mahasiswa AS m ON m.mahasiswa_id = rp.mahasiswa_id
                           INNER JOIN dosen AS d ON d.dosen_id = rp.dosen_id
@@ -206,7 +206,7 @@
                                     </button>
                                 </td>
                                 <td class="text-center align-middle">
-                                    <?php if ($row['status'] == "Selesai") { ?>
+                                    <?php if ($row['status'] == "Selesai" || $row['status'] == "Ditolak") { ?>
                                         <div class="text-center align-middle">
                                             <button class="btn btn-success btn-sm" id="btn-selesai" disabled>
                                                 <i class="bi bi-check-circle"></i> Selesai
@@ -220,7 +220,7 @@
                                             <button class="btn btn-success btn-sm" id="btn-selesai" data-bs-toggle="modal" data-bs-target="#modalSelesai" data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>" data-document_id="<?php echo $row['document_id']; ?>">
                                                 <i class="bi bi-check-circle"></i> Selesai
                                             </button>
-                                            <button class="btn btn-danger btn-sm mt-2" id="btn-tolak" data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>" data-bs-toggle="modal" data-bs-target="#modalTolak">
+                                            <button class="btn btn-danger btn-sm mt-2" id="btn-tolak" data-document_id="<?php echo $row['document_id']; ?>" data-bs-toggle="modal" data-bs-target="#modalTolak">
                                                 <i class="bi bi-x-circle"></i> Tolak
                                             </button>
                                         </div>
@@ -260,14 +260,14 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Tolak Pelanggaran</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Tolak Phunisment Pelanggaran</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Apakah Anda Yakin Ingin Menolak Pelanggaran Ini?
+                    Apakah Anda Ingin Tolak Phunisment Pelanggaran Ini?
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                     <button type="button" class="btn btn-danger" id="tolak">Iya</button>
                 </div>
             </div>
@@ -321,19 +321,19 @@
             });
 
             $(document).on('click', '#btn-tolak', function() {
-                var pelaporan_id = $(this).data('pelaporan_id');
-                $('#modalTolak').data('pelaporan_id', pelaporan_id);
+                var document_id = $(this).data('document_id');
+                $("#modalTolak").data('document_id', document_id);
             });
 
             $(document).on('click', '#tolak', function() {
-                var pelaporan_id = $('#modalTolak').data('pelaporan_id');
+                var document_id = $("#modalTolak").data('document_id');
 
                 $.ajax({
                     url: "tolakPelaporan.php",
                     method: "POST",
                     dataType: "JSON",
                     data: {
-                        "pelaporan_id": pelaporan_id
+                        document_id: document_id
                     },
                     success: function(response) {
                         alert(response.message);
@@ -344,7 +344,7 @@
                         console.error("Error: ", xhr.responseText);
                         alert("Terjadi kesalahan saat mengirim data ke server.");
                     }
-                })
+                });
             });
         });
     </script>
