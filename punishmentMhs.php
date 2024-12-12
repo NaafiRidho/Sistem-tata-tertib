@@ -9,6 +9,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
@@ -31,14 +33,21 @@
 
         .sidebar h2 {
             text-align: center;
+            color: white;
             margin: 20px 0;
-            font-size: 1.5rem;
+            font-size: 2rem;
+            font-family: 'Fugaz One', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 4);
         }
 
-        .sidebar.close {
-            transform: translateX(-100%);
+        .sidebar img {
+            display: block;
+            margin: 20px auto;
+            border-radius: 30%;
         }
-
 
         .menu {
             flex-grow: 1;
@@ -92,19 +101,6 @@
             transition: margin-left 0.3s ease;
         }
 
-        .toggle-btn {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background-color: #002a8a;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 100;
-        }
-
         .btn-cetak-surat {
             background-color: #28a745;
             color: white;
@@ -134,7 +130,6 @@
             background-color: #218838;
         }
 
-        /* Hide the default file input */
         input[type="file"] {
             display: none;
         }
@@ -159,11 +154,10 @@
 
 <body>
 
-    <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
-
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="menu">
+        <img src="logo.png" style="width: 120px; height: 120px;">
             <h2>Si Tertib</h2>
             <a href="dashboardMhs.php">
                 <i class="bi bi-columns-gap"></i> <span>Dashboard</span>
@@ -218,26 +212,32 @@
                 if (sqlsrv_execute($stmt)) {
                     $no = 1;
                     while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-                ?><tr>
+                        ?>
+                        <tr>
                             <td><?php echo $no++ ?></td>
                             <td><?php echo $row['pelaporan_id'] ?></td>
                             <td><?php echo $row['pelanggaran'] ?></td>
                             <td><?php echo $row['sanksi'] ?></td>
                             <td><?php echo $row['tingkat'] ?></td>
                             <td>
-                                <button class="btn-cetak-surat btn btn-primary" data-pelanggaran_id="<?php echo htmlspecialchars($row['pelaporan_id']); ?>">
+                                <button class="btn-cetak-surat btn btn-primary"
+                                    data-pelanggaran_id="<?php echo htmlspecialchars($row['pelaporan_id']); ?>">
                                     <i class="bi bi-printer"></i> Cetak Surat
                                 </button>
-                                <button class="btn-upload-surat btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#modalUpload" data-pelanggaran_id="<?php echo htmlspecialchars($row['pelaporan_id']); ?>"
-                                    data-mahasiswa_id="<?php echo htmlspecialchars($row['mahasiswa_id']); ?>" data-kelas_id="<?php echo htmlspecialchars($row['kelas_id']); ?>"
-                                    data-pelanggaran="<?php echo htmlspecialchars($row['pelanggaran']); ?>" data-sanksi="<?php echo htmlspecialchars($row['sanksi']); ?>">
+                                <button class="btn-upload-surat btn btn-success mt-3" data-bs-toggle="modal"
+                                    data-bs-target="#modalUpload"
+                                    data-pelanggaran_id="<?php echo htmlspecialchars($row['pelaporan_id']); ?>"
+                                    data-mahasiswa_id="<?php echo htmlspecialchars($row['mahasiswa_id']); ?>"
+                                    data-kelas_id="<?php echo htmlspecialchars($row['kelas_id']); ?>"
+                                    data-pelanggaran="<?php echo htmlspecialchars($row['pelanggaran']); ?>"
+                                    data-sanksi="<?php echo htmlspecialchars($row['sanksi']); ?>">
                                     <i class="bi bi-cloud-arrow-up"></i> Unggah
                                 </button>
                             </td>
                         </tr><?php
-                            }
-                        }
-                                ?>
+                    }
+                }
+                ?>
             </tbody>
         </table>
     </div>
@@ -316,16 +316,16 @@
             document.querySelector('.sidebar').classList.toggle('close');
             document.querySelector('.content').classList.toggle('shift');
         }
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#example').DataTable();
 
-            $(document).on('click', '.btn-cetak-surat', function() {
+            $(document).on('click', '.btn-cetak-surat', function () {
                 const pelanggaran_id = $(this).data('pelanggaran_id');
 
                 window.location.href = `suratPunishment.php?pelanggaran_id=${pelanggaran_id}`;
             });
 
-            $(document).on('click', '.btn-upload-surat', function() {
+            $(document).on('click', '.btn-upload-surat', function () {
                 const pelanggaran_id = $(this).data('pelanggaran_id');
                 const mahasiswa_id = $(this).data('mahasiswa_id');
                 const kelas_id = $(this).data('kelas_id');
@@ -344,7 +344,7 @@
                         pelanggaran_id: pelanggaran_id
                     },
                     dataType: 'json',
-                    success: function(data) {
+                    success: function (data) {
                         $('#nama').val(data.namamhs);
                         $('#kelas').val(data.nama_kelas);
                         $('#nim').val(data.nim);
@@ -352,14 +352,14 @@
                         $('#tanggal').val(data.tanggal);
                         $('#gambar').attr('src', data.file);
                     },
-                    error: function(xhr, status, error) {
+                    error: function (xhr, status, error) {
                         console.log(xhr.responseText);
                     }
                 });
             });
-            $(document).on('click', '#simpanSurat', function() {
+            $(document).on('click', '#simpanSurat', function () {
                 var pelaporan_id = $("#modalUpload").data('pelaporan_id');
-                var fileSurat = $("#upload-surat")[0].files[0]; 
+                var fileSurat = $("#upload-surat")[0].files[0];
 
                 if (!fileSurat) {
                     alert("Silakan pilih file sebelum menyimpan.");
@@ -377,7 +377,7 @@
                     data: formData,
                     processData: false,
                     contentType: false,
-                    success: function(response) {
+                    success: function (response) {
                         if (response.success) {
                             alert(response.message);
                             $("#modalUpload").modal("hide");
@@ -386,7 +386,7 @@
                             alert(response.message || "Gagal mengunggah file.");
                         }
                     },
-                    error: function(xhr, status, error) {
+                    error: function (xhr, status, error) {
                         console.error("Error: ", xhr.responseText);
                         alert("Terjadi kesalahan saat mengirim data ke server.");
                     }
