@@ -186,6 +186,14 @@
             cursor: not-allowed;
             border-color: #aaa;
         }
+
+        .dataTables_paginate {
+            float: right !important;
+    }
+
+        .dataTables_filter {
+            float: right !important;
+    }
     </style>
 </head>
 
