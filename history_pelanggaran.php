@@ -38,14 +38,21 @@
 
         .sidebar h2 {
             text-align: center;
+            color: white;
             margin: 20px 0;
-            font-size: 1.5rem;
+            font-size: 2rem;
+            font-family: 'Fugaz One', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 4);
         }
 
-        .sidebar.close {
-            transform: translateX(-100%);
+        .sidebar img {
+            display: block;
+            margin: 20px auto;
+            border-radius: 30%;
         }
-
 
         .menu {
             flex-grow: 1;
@@ -99,19 +106,6 @@
             transition: margin-left 0.3s ease;
         }
 
-        .toggle-btn {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background-color: #002a8a;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 100;
-        }
-
         .dataTables_paginate {
             float: right !important;
         }
@@ -123,9 +117,9 @@
 </head>
 
 <body>
-    <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
     <div class="sidebar">
         <div class="menu">
+        <img src="logo.png" style="width: 120px; height: 120px;">
             <h2>Si Tertib</h2>
             <a href="dashboardMhs.php">
                 <i class="bi bi-columns-gap"></i> <span>Dashboard</span>
@@ -192,7 +186,7 @@
                         if (sqlsrv_execute($stmt)) {
                             $no = 1;
                             while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-                        ?>
+                                ?>
                                 <tr>
                                     <td><?php echo $no++; ?></td>
                                     <td><?php echo $row["pelanggaran"] ?></td>
@@ -211,7 +205,7 @@
                                         } ?>
                                     </td>
                                 </tr>
-                        <?php
+                                <?php
                             }
                         } ?>
                     </tbody>
@@ -220,7 +214,7 @@
         </div>
     </div>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#example').DataTable();
         })
     </script>
