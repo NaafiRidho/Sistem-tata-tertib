@@ -124,9 +124,18 @@
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
-    .card .card-title {
-      font-size: 1.25rem;
-      font-weight: bold;
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .card .display-4 {
+      font-size: 3rem;
+    }
+
+    .card .btn-primary {
+      border-radius: 20px;
+      padding: 8px 20px;
     }
   </style>
 </head>
@@ -158,8 +167,9 @@
     <div class="row row-cols-1 row-cols-md-3 g-4">
       <!-- Card 1 -->
       <div class="col">
-        <div class="card text-center shadow-sm">
+        <div class="card text-center shadow-sm h-100">
           <div class="card-body">
+            <i class="bi bi-check-circle display-4 text-primary mb-3"></i>
             <h5 class="card-title">Jumlah Penyelesaian Pelanggaran</h5>
             <?php
             include "koneksi.php";
@@ -167,7 +177,7 @@
 
             $db = new Database($conn);
             $query = "SELECT COUNT(*) AS jumlahPenyelesaian FROM document AS d
-                    INNER JOIN riwayat_pelaporan AS rp ON rp.pelaporan_id = d.pelaporan_id";
+                  INNER JOIN riwayat_pelaporan AS rp ON rp.pelaporan_id = d.pelaporan_id";
             $stmt = $db->executeQuery($query);
             $row = $db->fetchAssoc($stmt);
             ?>
@@ -180,8 +190,9 @@
 
       <!-- Card 2 -->
       <div class="col">
-        <div class="card text-center shadow-sm">
+        <div class="card text-center shadow-sm h-100">
           <div class="card-body">
+            <i class="bi bi-person-circle display-4 text-warning mb-3"></i>
             <h5 class="card-title">Jumlah Dosen</h5>
             <?php
             $query = "SELECT COUNT(*) AS jumlahDosen FROM dosen";
@@ -197,8 +208,9 @@
 
       <!-- Card 3 -->
       <div class="col">
-        <div class="card text-center shadow-sm">
+        <div class="card text-center shadow-sm h-100">
           <div class="card-body">
+            <i class="bi bi-people-fill display-4 text-success mb-3"></i>
             <h5 class="card-title">Jumlah Mahasiswa</h5>
             <?php
             $query = "SELECT COUNT(*) AS jumlahMahasiswa FROM mahasiswa";
@@ -212,10 +224,10 @@
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
