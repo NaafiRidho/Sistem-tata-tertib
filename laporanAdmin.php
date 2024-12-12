@@ -177,7 +177,7 @@
 
                         $db = new Database($conn);
                         $query = "SELECT m.nama AS namaMhs, d.nama AS namaDosen, p.pelanggaran, t.tingkat, 
-                          rp.tanggal, t.sanksi, rp.[file] AS buktiPelanggaran, dc.[file] AS doc 
+                          rp.tanggal, t.sanksi, rp.[file] AS buktiPelanggaran, dc.[file] AS doc, rp.pelaporan_id, dc.document_id, rp.status 
                           FROM riwayat_pelaporan AS rp
                           INNER JOIN mahasiswa AS m ON m.mahasiswa_id = rp.mahasiswa_id
                           INNER JOIN dosen AS d ON d.dosen_id = rp.dosen_id
@@ -206,12 +206,25 @@
                                     </button>
                                 </td>
                                 <td class="text-center align-middle">
-                                    <button class="btn btn-success btn-sm">
-                                        <i class="bi bi-check-circle"></i> Selesai
-                                    </button>
-                                    <button class="btn btn-danger btn-sm">
-                                        <i class="bi bi-x-circle"></i> Tolak
-                                    </button>
+                                    <?php if ($row['status'] == "Selesai") { ?>
+                                        <div class="text-center align-middle">
+                                            <button class="btn btn-success btn-sm" id="btn-selesai" disabled>
+                                                <i class="bi bi-check-circle"></i> Selesai
+                                            </button>
+                                            <button class="btn btn-danger btn-sm mt-2" disabled>
+                                                <i class="bi bi-x-circle"></i> Tolak
+                                            </button>
+                                        </div>
+                                    <?php } else { ?>
+                                        <div class="text-center align-middle">
+                                            <button class="btn btn-success btn-sm" id="btn-selesai" data-bs-toggle="modal" data-bs-target="#modalSelesai" data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>" data-document_id="<?php echo $row['document_id']; ?>">
+                                                <i class="bi bi-check-circle"></i> Selesai
+                                            </button>
+                                            <button class="btn btn-danger btn-sm mt-2" id="btn-tolak" data-pelaporan_id="<?php echo $row['pelaporan_id']; ?>" data-bs-toggle="modal" data-bs-target="#modalTolak">
+                                                <i class="bi bi-x-circle"></i> Tolak
+                                            </button>
+                                        </div>
+                                    <?php } ?>
                                 </td>
                             </tr>
                         <?php
@@ -219,6 +232,44 @@
                         ?>
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Selesai -->
+    <div class="modal fade" id="modalSelesai" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Selesaikan Phunisment Pelanggaran</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Apakah Anda Ingin Selesaikan Phunisment Pelanggaran Ini
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-primary" id="selesai">Iya</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Tolak -->
+    <div class="modal fade" id="modalTolak" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Tolak Pelanggaran</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Apakah Anda Yakin Ingin Menolak Pelanggaran Ini?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-danger" id="tolak">Iya</button>
+                </div>
             </div>
         </div>
     </div>
@@ -235,7 +286,65 @@
 
             $(document).on("click", "#lihatDoc", function() {
                 var docUrl = $(this).data('doc');
-                window.open(docUrl, '_blank'); 
+                window.open(docUrl, '_blank');
+            });
+
+            $(document).on('click', '#btn-selesai', function() {
+                var pelaporan_id = $(this).data('pelaporan_id');
+                var document_id = $(this).data('document_id');
+                $('#modalSelesai').data('pelaporan_id', pelaporan_id);
+                $('#modalSelesai').data('document_id', document_id);
+            });
+
+            $(document).on('click', '#selesai', function() {
+                var pelaporan_id = $('#modalSelesai').data('pelaporan_id');
+                var document_id = $('#modalSelesai').data('document_id');
+
+                $.ajax({
+                    url: "selesaiPelaporan.php",
+                    method: "POST",
+                    dataType: "JSON",
+                    data: {
+                        "pelaporan_id": pelaporan_id,
+                        "document_id": document_id
+                    },
+                    success: function(response) {
+                        alert(response.message);
+                        $("#modalSelesai").modal("hide");
+                        location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error: ", xhr.responseText);
+                        alert("Terjadi kesalahan saat mengirim data ke server.");
+                    }
+                })
+            });
+
+            $(document).on('click', '#btn-tolak', function() {
+                var pelaporan_id = $(this).data('pelaporan_id');
+                $('#modalTolak').data('pelaporan_id', pelaporan_id);
+            });
+
+            $(document).on('click', '#tolak', function() {
+                var pelaporan_id = $('#modalTolak').data('pelaporan_id');
+
+                $.ajax({
+                    url: "tolakPelaporan.php",
+                    method: "POST",
+                    dataType: "JSON",
+                    data: {
+                        "pelaporan_id": pelaporan_id
+                    },
+                    success: function(response) {
+                        alert(response.message);
+                        $("#modalTolak").modal("hide");
+                        location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error: ", xhr.responseText);
+                        alert("Terjadi kesalahan saat mengirim data ke server.");
+                    }
+                })
             });
         });
     </script>
