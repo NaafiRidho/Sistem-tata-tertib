@@ -23,18 +23,20 @@
       background-color: #002a8a;
       position: fixed;
       height: 100%;
+      overflow: hidden;
       color: white;
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
     }
 
     .sidebar h2 {
       text-align: center;
-      color: white;
       margin: 20px 0;
       font-size: 2rem;
       font-family: 'Fugaz One', sans-serif;
       font-weight: 600;
+      color: white;
       text-transform: uppercase;
       letter-spacing: 1px;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 4);
