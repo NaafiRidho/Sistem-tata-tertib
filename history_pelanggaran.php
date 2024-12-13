@@ -206,7 +206,7 @@
                                     <td>
                                         <?php if ($row["status"] == "Dilaporkan") {
                                             echo "<span class='badge badge-danger'>Dilaporkan</span>";
-                                        } else if ($row["status"] == "Selesai") {
+                                        } else if ($row["status"] == "Diterima") {
                                             echo "<span class='badge badge-success'>Selesai</span>";
                                         } else if ($row["status"] == "Dilakukan") {
                                             echo "<span class='badge badge-warning'>Dilakukan</span>";
