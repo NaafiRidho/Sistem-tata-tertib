@@ -149,6 +149,8 @@
         .dataTables_filter {
             float: right !important;
         }
+
+
     </style>
 </head>
 
@@ -252,7 +254,7 @@
                 </div>
                 <!-- Body Modal -->
                 <div class="modal-body">
-                    <img id="gambar" src="" alt="">
+                    <img id="gambar" src="" alt="" style="max-height: 300px; display: block; margin: auto;">
                     <form enctype="multipart/form-data" method="POST" action="dosenLapor.php">
                         <div class="form-group">
                             <label for="nama" class="required">Nama Mahasiswa</label>
@@ -394,6 +396,21 @@
             });
         });
     </script>
+    <script>
+    function previewImage(event) {
+        const file = event.target.files[0];
+        const imgElement = document.getElementById('gambar');
+        
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imgElement.src = e.target.result;
+                imgElement.style.display = 'block'; // Ensure the image is visible after setting the source
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
 </body>
 
 </html>
