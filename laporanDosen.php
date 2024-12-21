@@ -268,7 +268,8 @@
                   INNER JOIN tingkat AS t ON t.tingkat_id = rp.tingkat_id
                   INNER JOIN dosen AS d ON d.dosen_id = rp.dosen_id
                   INNER JOIN mahasiswa AS m ON m.mahasiswa_id = rp.mahasiswa_id
-                  WHERE d.user_id = ? AND rp.status NOT IN('Selesai')";
+                  WHERE d.user_id = ? AND rp.status NOT IN('Selesai')
+                  ORDER BY rp.pelaporan_id DESC";
 
                         $params = array($user_id);
                         $stmt = sqlsrv_prepare($conn, $query, $params);

@@ -240,7 +240,8 @@
             INNER JOIN dbo.tingkat AS t ON p.tingkat_id = t.tingkat_id
             INNER JOIN dbo.pelanggaran pl ON pl.pelanggaran_id = p.pelanggaran_id
             LEFT JOIN dbo.aju_banding ab ON p.pelaporan_id = ab.pelaporan_id
-            WHERE u.user_id = ? AND p.status NOT IN('Dibatalkan','Selesai')";
+            WHERE u.user_id = ? AND p.status NOT IN('Dibatalkan','Selesai')
+            ORDER BY p.pelaporan_id DESC";
 
             $params = array($user_id);
             $stmt = sqlsrv_prepare($conn, $query, $params);
