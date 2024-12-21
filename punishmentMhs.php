@@ -150,7 +150,13 @@
             float: right !important;
         }
 
+        .badge {
+            width: 80px;
+        }
 
+        .badge.bg-secondary {
+            width: auto;
+        }
     </style>
 </head>
 
@@ -159,7 +165,7 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="menu">
-        <img src="logo.png" style="width: 120px; height: 120px;">
+            <img src="logo.png" style="width: 120px; height: 120px;">
             <h2>Si Tertib</h2>
             <a href="dashboardMhs.php">
                 <i class="bi bi-columns-gap"></i> <span>Dashboard</span>
@@ -192,6 +198,7 @@
                     <th>Sanksi</th>
                     <th>Tingkat</th>
                     <th>Aksi</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -199,13 +206,19 @@
                 include "koneksi.php";
 
                 $user_id = $_COOKIE['user_id'];
-                $query = "SELECT rp.pelaporan_id, p.pelanggaran, t.sanksi, t.tingkat, m.mahasiswa_id, k.kelas_id, rp.tanggal FROM riwayat_pelaporan AS rp 
+                $query = "SELECT rp.pelaporan_id, p.pelanggaran, t.sanksi, t.tingkat, m.mahasiswa_id, k.kelas_id, rp.tanggal, d.status FROM riwayat_pelaporan AS rp 
                           INNER JOIN mahasiswa AS m ON rp.mahasiswa_id = m.mahasiswa_id
                           INNER JOIN kelas AS k ON k.kelas_id = m.kelas_id
                           INNER JOIN pelanggaran AS p ON p.pelanggaran_id = rp.pelanggaran_id
                           INNER JOIN tingkat AS t ON t.tingkat_id = p.tingkat_id
                           INNER JOIN [user] AS u ON u.user_id = m.user_id
-                          WHERE u.user_id= ? AND rp.status NOT IN('Selesai', 'Dibatalkan')";
+                          LEFT JOIN [document] AS d ON d.document_id = (
+                          SELECT TOP 1 document_id
+                          FROM [document]
+                          WHERE document.pelaporan_id = rp.pelaporan_id
+                          ORDER BY document.document_id DESC
+                          )
+                          WHERE u.user_id= ? AND rp.status IN('Diterima')";
                 $params = array($user_id);
                 $stmt = sqlsrv_prepare($conn, $query, $params);
                 if ($stmt == false) {
@@ -214,7 +227,7 @@
                 if (sqlsrv_execute($stmt)) {
                     $no = 1;
                     while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-                        ?>
+                ?>
                         <tr>
                             <td><?php echo $no++ ?></td>
                             <td><?php echo $row['pelaporan_id'] ?></td>
@@ -236,10 +249,23 @@
                                     <i class="bi bi-cloud-arrow-up"></i> Unggah
                                 </button>
                             </td>
+                            <td>
+                                <?php
+                                if ($row['status'] == 'Ditolak') {
+                                    echo '<span class="badge bg-danger">Ditolak</span>';
+                                } elseif ($row['status'] == 'Ditinjau') {
+                                    echo '<span class="badge bg-warning text-dark">Ditinjau</span>';
+                                } elseif ($row['status'] == 'Diterima') {
+                                    echo '<span class="badge bg-success">Diterima</span>';
+                                } else {
+                                    echo '<span class="badge bg-secondary" style="width="auto">Tidak Diketahui</span>';
+                                }
+                                ?>
+                            </td>
                         </tr><?php
-                    }
-                }
-                ?>
+                            }
+                        }
+                                ?>
             </tbody>
         </table>
     </div>
@@ -292,9 +318,14 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="upload-surat" class="required">Unggah Bukti</label>
-                            <input type="file" id="upload-surat" class="form-control" name="upload-surat" required>
+                            <label for="upload-surat" class="form-label">Unggah Bukti</label>
+                            <div class="input-group">
+                                <button type="button" class="btn btn-primary" onclick="document.getElementById('upload-surat').click();">
+                                    <i class="bi bi-upload me-2"></i>Pilih File</button>
+                                <input type="file" id="upload-surat" class="form-control d-none" name="upload-surat" required>
+                            </div>
                         </div>
+
                     </form>
                 </div>
                 <!-- Footer Modal -->
@@ -318,16 +349,16 @@
             document.querySelector('.sidebar').classList.toggle('close');
             document.querySelector('.content').classList.toggle('shift');
         }
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('#example').DataTable();
 
-            $(document).on('click', '.btn-cetak-surat', function () {
+            $(document).on('click', '.btn-cetak-surat', function() {
                 const pelanggaran_id = $(this).data('pelanggaran_id');
 
                 window.location.href = `suratPunishment.php?pelanggaran_id=${pelanggaran_id}`;
             });
 
-            $(document).on('click', '.btn-upload-surat', function () {
+            $(document).on('click', '.btn-upload-surat', function() {
                 const pelanggaran_id = $(this).data('pelanggaran_id');
                 const mahasiswa_id = $(this).data('mahasiswa_id');
                 const kelas_id = $(this).data('kelas_id');
@@ -346,7 +377,7 @@
                         pelanggaran_id: pelanggaran_id
                     },
                     dataType: 'json',
-                    success: function (data) {
+                    success: function(data) {
                         $('#nama').val(data.namamhs);
                         $('#kelas').val(data.nama_kelas);
                         $('#nim').val(data.nim);
@@ -354,12 +385,12 @@
                         $('#tanggal').val(data.tanggal);
                         $('#gambar').attr('src', data.file);
                     },
-                    error: function (xhr, status, error) {
+                    error: function(xhr, status, error) {
                         console.log(xhr.responseText);
                     }
                 });
             });
-            $(document).on('click', '#simpanSurat', function () {
+            $(document).on('click', '#simpanSurat', function() {
                 var pelaporan_id = $("#modalUpload").data('pelaporan_id');
                 var fileSurat = $("#upload-surat")[0].files[0];
 
@@ -379,7 +410,7 @@
                     data: formData,
                     processData: false,
                     contentType: false,
-                    success: function (response) {
+                    success: function(response) {
                         if (response.success) {
                             alert(response.message);
                             $("#modalUpload").modal("hide");
@@ -388,7 +419,7 @@
                             alert(response.message || "Gagal mengunggah file.");
                         }
                     },
-                    error: function (xhr, status, error) {
+                    error: function(xhr, status, error) {
                         console.error("Error: ", xhr.responseText);
                         alert("Terjadi kesalahan saat mengirim data ke server.");
                     }
@@ -397,20 +428,20 @@
         });
     </script>
     <script>
-    function previewImage(event) {
-        const file = event.target.files[0];
-        const imgElement = document.getElementById('gambar');
-        
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                imgElement.src = e.target.result;
-                imgElement.style.display = 'block'; // Ensure the image is visible after setting the source
-            };
-            reader.readAsDataURL(file);
+        function previewImage(event) {
+            const file = event.target.files[0];
+            const imgElement = document.getElementById('gambar');
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imgElement.src = e.target.result;
+                    imgElement.style.display = 'block'; // Ensure the image is visible after setting the source
+                };
+                reader.readAsDataURL(file);
+            }
         }
-    }
-</script>
+    </script>
 </body>
 
 </html>
