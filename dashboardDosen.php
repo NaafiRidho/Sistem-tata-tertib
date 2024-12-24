@@ -164,7 +164,7 @@
             INNER JOIN riwayat_pelaporan AS rp ON rp.dosen_id = d.dosen_id
             INNER JOIN aju_banding AS ab ON ab.pelaporan_Id = rp.pelaporan_id
             INNER JOIN [user] AS u ON u.user_id = d.user_id
-            WHERE u.user_id = 7 AND ab.status NOT IN ('Diterima','Ditolak')";
+            WHERE u.user_id = ? AND ab.status NOT IN ('Diterima','Ditolak')";
   $params = array($user_id);
   $stmt = sqlsrv_prepare($conn, $query, $params);
   if ($stmt === false) {

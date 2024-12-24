@@ -137,10 +137,23 @@
       border-radius: 20px;
       padding: 8px 20px;
     }
+
+    .chart-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 600px;
+    }
   </style>
 </head>
 
-<body>
+<body onload=getData()>
   <div class="sidebar">
     <div class="menu">
       <img src="logo.png" style="width: 120px; height: 120px;">
@@ -158,77 +171,136 @@
   </div>
 
   <div class="content">
-    <h1>Dashboard</h1>
-    <div class="welcome-container">
-      <p>Selamat Datang Admin</p>
-      <div class="divider"></div>
-      <p>Sistem Tata Tertib</p>
+    <div class="content-1">
+      <h1>Dashboard</h1>
+      <div class="welcome-container">
+        <p>Selamat Datang Admin</p>
+        <div class="divider"></div>
+        <p>Sistem Tata Tertib</p>
+      </div>
+
+      <div class="row row-cols-1 row-cols-md-3 g-4">
+        <!-- Card 1 -->
+        <div class="col">
+          <div class="card text-center shadow-sm h-100">
+            <div class="card-body">
+              <i class="bi bi-check-circle display-4 text-primary mb-3"></i>
+              <h5 class="card-title">Jumlah Penyelesaian Pelanggaran</h5>
+              <?php
+              include "koneksi.php";
+              require_once "Database.php";
+
+              $db = new Database($conn);
+              $query = "SELECT COUNT(*) AS jumlahPenyelesaian FROM document AS d
+                    INNER JOIN riwayat_pelaporan AS rp ON rp.pelaporan_id = d.pelaporan_id";
+              $stmt = $db->executeQuery($query);
+              $row = $db->fetchAssoc($stmt);
+              ?>
+              <p class="card-text display-5"><?php echo $row['jumlahPenyelesaian'] ?></p>
+              <a href="laporanAdmin.php" class="btn btn-primary">
+                <i class="bi bi-info-circle-fill"></i> Info Terbaru</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="col">
+          <div class="card text-center shadow-sm h-100">
+            <div class="card-body">
+              <i class="bi bi-person-circle display-4 text-warning mb-3"></i>
+              <h5 class="card-title">Jumlah Dosen</h5>
+              <?php
+              $query = "SELECT COUNT(*) AS jumlahDosen FROM dosen";
+              $stmt = $db->executeQuery($query);
+              $row = $db->fetchAssoc($stmt);
+              ?>
+              <p class="card-text display-5"><?php echo $row['jumlahDosen'] ?></p>
+              <a href="dataDosen.php" class="btn btn-primary">
+                <i class="bi bi-info-circle-fill"></i> Info Terbaru</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="col">
+          <div class="card text-center shadow-sm h-100">
+            <div class="card-body">
+              <i class="bi bi-people-fill display-4 text-success mb-3"></i>
+              <h5 class="card-title">Jumlah Mahasiswa</h5>
+              <?php
+              $query = "SELECT COUNT(*) AS jumlahMahasiswa FROM mahasiswa";
+              $stmt = $db->executeQuery($query);
+              $row = $db->fetchAssoc($stmt);
+              ?>
+              <p class="card-text display-5"><?php echo $row['jumlahMahasiswa'] ?></p>
+              <a href="dataMhs.php" class="btn btn-primary">
+                <i class="bi bi-info-circle-fill"></i> Info Terbaru</a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-      <!-- Card 1 -->
-      <div class="col">
-        <div class="card text-center shadow-sm h-100">
-          <div class="card-body">
-            <i class="bi bi-check-circle display-4 text-primary mb-3"></i>
-            <h5 class="card-title">Jumlah Penyelesaian Pelanggaran</h5>
-            <?php
-            include "koneksi.php";
-            require_once "Database.php";
-
-            $db = new Database($conn);
-            $query = "SELECT COUNT(*) AS jumlahPenyelesaian FROM document AS d
-                  INNER JOIN riwayat_pelaporan AS rp ON rp.pelaporan_id = d.pelaporan_id";
-            $stmt = $db->executeQuery($query);
-            $row = $db->fetchAssoc($stmt);
-            ?>
-            <p class="card-text display-5"><?php echo $row['jumlahPenyelesaian'] ?></p>
-            <a href="laporanAdmin.php" class="btn btn-primary">
-              <i class="bi bi-info-circle-fill"></i> Info Terbaru</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 2 -->
-      <div class="col">
-        <div class="card text-center shadow-sm h-100">
-          <div class="card-body">
-            <i class="bi bi-person-circle display-4 text-warning mb-3"></i>
-            <h5 class="card-title">Jumlah Dosen</h5>
-            <?php
-            $query = "SELECT COUNT(*) AS jumlahDosen FROM dosen";
-            $stmt = $db->executeQuery($query);
-            $row = $db->fetchAssoc($stmt);
-            ?>
-            <p class="card-text display-5"><?php echo $row['jumlahDosen'] ?></p>
-            <a href="dataDosen.php" class="btn btn-primary">
-              <i class="bi bi-info-circle-fill"></i> Info Terbaru</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 3 -->
-      <div class="col">
-        <div class="card text-center shadow-sm h-100">
-          <div class="card-body">
-            <i class="bi bi-people-fill display-4 text-success mb-3"></i>
-            <h5 class="card-title">Jumlah Mahasiswa</h5>
-            <?php
-            $query = "SELECT COUNT(*) AS jumlahMahasiswa FROM mahasiswa";
-            $stmt = $db->executeQuery($query);
-            $row = $db->fetchAssoc($stmt);
-            ?>
-            <p class="card-text display-5"><?php echo $row['jumlahMahasiswa'] ?></p>
-            <a href="dataMhs.php" class="btn btn-primary">
-              <i class="bi bi-info-circle-fill"></i> Info Terbaru</a>
-          </div>
-        </div>
-      </div>
+    <!-- Chart Container -->
+    <div class="chart-container">
+      <canvas id="myChart"></canvas>
     </div>
+  </div>
 
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+  <script>
+    function getData() {
+      $.ajax({
+        type: "GET",
+        url: "getData.php",
+        success: function(response) {
+          console.log("Response from getData.php:", response); // Debugging
+          const totalLaporan = response.totalLaporan;
+          const totalLaporanSelesai = response.totalLaporanSelesai;
+
+          const ctx = document.getElementById('myChart').getContext('2d');
+          new Chart(ctx, {
+            type: 'pie',
+            data: {
+              labels: ['Total Laporan', 'Total Laporan Selesai'],
+              datasets: [{
+                label: 'Jumlah',
+                data: [totalLaporan, totalLaporanSelesai],
+                backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                ],
+                borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)',
+                ],
+                borderWidth: 1,
+              }],
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: 'top',
+                },
+                title: {
+                  display: true,
+                  text: 'Chart Total Laporan dan Laporan Selesai',
+                },
+              },
+            },
+          });
+        },
+        error: function(xhr, status, error) {
+          console.error("Error fetching data:", error);
+        }
+      });
+    }
+  </script>
 </body>
 
 </html>
