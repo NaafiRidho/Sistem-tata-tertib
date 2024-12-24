@@ -68,7 +68,6 @@
       border-left: 5px solid #ffcc00;
     }
 
-
     .logout a {
       display: block;
       text-align: center;
@@ -140,10 +139,23 @@
       padding: 8px 20px;
       width: 100%;
     }
+
+    .chart-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 600px;
+    }
   </style>
 </head>
 
-<body>
+<body onload=getData()>
   <?php
   include "koneksi.php";
 
@@ -174,55 +186,112 @@
     </div>
   </div>
 
-
   <div class="content">
-    <h1>Dashboard</h1>
-    <div class="welcome-container">
-      <p>Selamat Datang Dosen</p>
-      <div class="divider"></div>
-      <p>Sistem Tata Tertib</p>
-    </div>
-    <div class="card-dosen row mt-5">
-      <div class="col-md-6">
-        <div class="card text-center shadow-sm">
-          <div class="card-body">
-            <h5 class="card-title">Pelaporan Aju Banding</h5>
-            <p class="card-text display-5"><?php echo $row['jumlahBanding'] ?></p>
-            <a href="ajuBandingDosen.php" class="btn btn-primary">
-              <i class="bi bi-arrow-repeat"></i> Info Terbaru</a>
+    <div class="content-1">
+      <h1>Dashboard</h1>
+      <div class="welcome-container">
+        <p>Selamat Datang Dosen</p>
+        <div class="divider"></div>
+        <p>Sistem Tata Tertib</p>
+      </div>
+      <div class="card-dosen row mt-5">
+        <div class="col-md-6">
+          <div class="card text-center shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">Pelaporan Aju Banding</h5>
+              <p class="card-text display-5"><?php echo $row['jumlahBanding'] ?></p>
+              <a href="ajuBandingDosen.php" class="btn btn-primary">
+                <i class="bi bi-arrow-repeat"></i> Info Terbaru</a>
+            </div>
           </div>
         </div>
-      </div>
-      <?php
-      include "koneksi.php";
+        <?php
+        include "koneksi.php";
 
-      $user_id = $_COOKIE['user_id'];
-      $query = "SELECT COUNT(rp.pelaporan_id) AS jumlahPelaporan FROM dosen AS d
+        $query = "SELECT COUNT(rp.pelaporan_id) AS jumlahPelaporan FROM dosen AS d
             INNER JOIN riwayat_pelaporan AS rp ON rp.dosen_id = d.dosen_id
             INNER JOIN [user] AS u ON u.user_id = d.user_id
-            WHERE u.user_id = 7 AND rp.status NOT IN ('Selesai','Dibatal')";
-      $params = array($user_id);
-      $stmt = sqlsrv_prepare($conn, $query, $params);
-      if ($stmt === false) {
-        die(print_r(sqlsrv_errors(), true));
-      }
-      sqlsrv_execute($stmt);
-      $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
-      ?>
-      <div class="col-md-6">
-        <div class="card text-center shadow-sm">
-          <div class="card-body">
-            <h5 class="card-title">Total Jumlah Pelaporan</h5>
-            <p class="card-text display-5"><?php echo $row['jumlahPelaporan']; ?></p>
-            <a href="laporanDosen.php" class="btn btn-primary">
-              <i class="bi bi-eye"></i> Lihat Detail
-            </a>
+            WHERE u.user_id = ? AND rp.status NOT IN ('Selesai','Dibatal')";
+        $stmt = sqlsrv_prepare($conn, $query, $params);
+        if ($stmt === false) {
+          die(print_r(sqlsrv_errors(), true));
+        }
+        sqlsrv_execute($stmt);
+        $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+        ?>
+        <div class="col-md-6">
+          <div class="card text-center shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">Total Jumlah Pelaporan</h5>
+              <p class="card-text display-5"><?php echo $row['jumlahPelaporan']; ?></p>
+              <a href="laporanDosen.php" class="btn btn-primary">
+                <i class="bi bi-eye"></i> Lihat Detail
+              </a>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart Container -->
+    <div class="chart-container">
+      <canvas id="myChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+  <script>
+    function getData() {
+      $.ajax({
+        type: "GET",
+        url: "getJumlahLaporan.php",
+        success: function(response) {
+          var data = JSON.parse(response);
+          const totalLaporan = data.totalLaporan;
+          const totalAjuBanding = data.totalAjuBanding;
+
+          const ctx = document.getElementById('myChart').getContext('2d');
+          new Chart(ctx, {
+            type: 'pie',
+            data: {
+              labels: ['Total Laporan', 'Total Aju Banding'],
+              datasets: [{
+                label: 'Jumlah',
+                data: [totalLaporan, totalAjuBanding],
+                backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                ],
+                borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)',
+                ],
+                borderWidth: 1,
+              }, ],
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: 'top',
+                },
+                title: {
+                  display: true,
+                  text: 'Chart Total Laporan dan Aju Banding',
+                },
+              },
+            },
+          });
+        },
+        error: function(xhr, status, error) {
+          console.error("Error fetching data:", error);
+        },
+      });
+    }
+  </script>
 </body>
 
 </html>
