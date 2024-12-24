@@ -207,6 +207,7 @@
       <h2>Si Tertib</h2>
       <a href="dashboardAdmin.php"><i class="bi bi-columns-gap"></i> Dashboard</a>
       <a href="listTataTertibAdmin.php"><i class="bi bi-list-check"></i> List Tata Tertib</a>
+      <a href="listSanksiAdmin.php"><i class="bi bi-list-check"></i> List Sanksi</a>
       <a href="dataMhs.php"><i class="bi bi-person"></i> Data Mahasiswa</a>
       <a href="dataDosen.php" class="active"><i class="bi bi-person-badge"></i> Data Dosen</a>
       <a href="laporanAdmin.php"><i class="bi bi-exclamation-circle"></i> Pelanggaran Mahasiswa</a>
