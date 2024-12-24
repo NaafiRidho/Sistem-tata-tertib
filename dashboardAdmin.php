@@ -183,7 +183,7 @@
             ?>
             <p class="card-text display-5"><?php echo $row['jumlahPenyelesaian'] ?></p>
             <a href="laporanAdmin.php" class="btn btn-primary">
-              <i class="bi bi-arrow-repeat"></i> Info Terbaru</a>
+              <i class="bi bi-info-circle-fill"></i> Info Terbaru</a>
           </div>
         </div>
       </div>
@@ -201,7 +201,7 @@
             ?>
             <p class="card-text display-5"><?php echo $row['jumlahDosen'] ?></p>
             <a href="dataDosen.php" class="btn btn-primary">
-              <i class="bi bi-arrow-repeat"></i> Info Terbaru</a>
+              <i class="bi bi-info-circle-fill"></i> Info Terbaru</a>
           </div>
         </div>
       </div>
@@ -219,7 +219,7 @@
             ?>
             <p class="card-text display-5"><?php echo $row['jumlahMahasiswa'] ?></p>
             <a href="dataMhs.php" class="btn btn-primary">
-              <i class="bi bi-arrow-repeat"></i> Info Terbaru</a>
+              <i class="bi bi-info-circle-fill"></i> Info Terbaru</a>
           </div>
         </div>
       </div>
