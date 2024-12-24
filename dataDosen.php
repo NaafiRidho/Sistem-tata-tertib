@@ -15,7 +15,7 @@
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap" rel="stylesheet">
   <style>
-    body { 
+    body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
       background-color: #f9f9f9;
@@ -297,11 +297,19 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="modalFormLabel">Tambah Data Dosen</h5>
+              <h5 class="modal-title" id="modalFormLabel">Edit Data Dosen</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
               <form action="">
+                <div class="form-group">
+                  <label for="nama" class="form-label">Username Dosen</label>
+                  <input type="text" id="usernameEdit" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label for="nama" class="form-label">Password Dosen</label>
+                  <input type="text" id="passwordEdit" class="form-control" required>
+                </div>
                 <div class="form-group">
                   <label for="nama" class="form-label">Nama Dosen</label>
                   <input type="text" id="namaEdit" class="form-control" required>
@@ -395,6 +403,8 @@
               success: function(data) {
                 $("#namaEdit").val(data.nama);
                 $("#nidnEdit").val(data.nidn);
+                $("#usernameEdit").val(data.username);
+                $("#passwordEdit").val(data.password);
               },
               error: function(xhr, status, error) {
                 console.error("Error: ", xhr.responseText);
@@ -406,6 +416,8 @@
           $(document).on('click', '#saveEdit', function() {
             var nama = $("#namaEdit").val();
             var nidn = $("#nidnEdit").val();
+            var username = $("#usernameEdit").val();
+            var password = $("#passwordEdit").val();
             var dosen_id = $("#modalEdit").data('dosen_id')
 
             $.ajax({
@@ -415,7 +427,9 @@
               data: {
                 nama: nama,
                 nidn: nidn,
-                dosen_id
+                dosen_id: dosen_id,
+                username: username,
+                password: password
               },
               success: function(response) {
                 if (response.status === "success") {
@@ -435,7 +449,7 @@
             var dosen_id = $(this).data('dosen_id');
             $("#modalHapus").data('dosen_id', dosen_id);
           });
-          
+
 
           $(document).on('click', '#saveHapus', function() {
             var dosen_id = $('#modalHapus').data('dosen_id');
