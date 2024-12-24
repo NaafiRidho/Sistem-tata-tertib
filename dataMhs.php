@@ -298,6 +298,14 @@
         <div class="modal-body">
           <form action="">
             <div class="form-group">
+              <label for="nama" class="form-label">Username Mahasiswa</label>
+              <input type="text" id="usernameMhs" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="nama" class="form-label">Password Mahasiswa</label>
+              <input type="text" id="passwordMhs" class="form-control" required>
+            </div>
+            <div class="form-group">
               <label for="nama" class="form-label">Nama Mahasiswa</label>
               <input type="text" id="namaMhs" class="form-control" required>
             </div>
@@ -417,6 +425,8 @@
             $("#nimMhs").val(data.nim);
             $("#prodiMhs").val(data.prodi).trigger('change');
             $('#kelasMhs').val(data.nama_kelas);
+            $('#usernameMhs').val(data.username);
+            $('#passwordMhs').val(data.password);
             setTimeout(function() {
               $('#kelasMhs').val(data.nama_kelas);
             }, 500);
@@ -500,6 +510,8 @@
         var nama = $("#namaMhs").val();
         var prodi = $("#prodiMhs").val();
         var kelas = $("#kelasMhs").val();
+        var username = $("#usernameMhs").val();
+        var password = $("#passwordMhs").val();
         var mahasiswa_id = $("#modalEdit").data('mahasiswa_id');
 
         // Validasi data sebelum dikirim
@@ -516,7 +528,9 @@
             nim: nim,
             nama: nama,
             prodi: prodi,
-            kelas: kelas
+            kelas: kelas,
+            username: username,
+            password: password
           },
           dataType: "JSON",
           success: function(response) {
@@ -552,7 +566,7 @@
           },
           dataType: "JSON",
           success: function(response) {
-          console.log(response);
+            console.log(response);
             if (response.status === "success") {
               alert(response.message);
               $("#modalHapus").modal("hide");
