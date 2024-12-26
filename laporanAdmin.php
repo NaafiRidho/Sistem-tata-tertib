@@ -273,7 +273,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Apakah Anda Ingin Tolak Phunisment Pelanggaran Ini?
+                    <label for="alasanTolak" class="form-label">Alasam Anda Ingin Tolak Phunisment Pelanggaran Ini?</label>
+                    <textarea id="alasanTolak" class="form-control" require></textarea>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
@@ -336,13 +337,15 @@
 
             $(document).on('click', '#tolak', function() {
                 var document_id = $("#modalTolak").data('document_id');
+                var alasan = $('#alasanTolak').val()
 
                 $.ajax({
                     url: "tolakPelaporan.php",
                     method: "POST",
                     dataType: "JSON",
                     data: {
-                        document_id: document_id
+                        document_id: document_id,
+                        alasan: alasan
                     },
                     success: function(response) {
                         alert(response.message);

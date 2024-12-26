@@ -199,6 +199,7 @@
                     <th>Tingkat</th>
                     <th>Aksi</th>
                     <th>Status</th>
+                    <th>Alasan</th>
                 </tr>
             </thead>
             <tbody>
@@ -206,7 +207,7 @@
                 include "koneksi.php";
 
                 $user_id = $_COOKIE['user_id'];
-                $query = "SELECT rp.pelaporan_id, p.pelanggaran, t.sanksi, t.tingkat, m.mahasiswa_id, k.kelas_id, rp.tanggal, d.status FROM riwayat_pelaporan AS rp 
+                $query = "SELECT rp.pelaporan_id, p.pelanggaran, t.sanksi, t.tingkat, m.mahasiswa_id, k.kelas_id, rp.tanggal, d.status, d.alasan FROM riwayat_pelaporan AS rp 
                           INNER JOIN mahasiswa AS m ON rp.mahasiswa_id = m.mahasiswa_id
                           INNER JOIN kelas AS k ON k.kelas_id = m.kelas_id
                           INNER JOIN pelanggaran AS p ON p.pelanggaran_id = rp.pelanggaran_id
@@ -262,6 +263,7 @@
                                 }
                                 ?>
                             </td>
+                            <td><?php echo $row['alasan'] ?></td>
                         </tr><?php
                             }
                         }
