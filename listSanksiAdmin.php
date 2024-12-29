@@ -225,7 +225,7 @@
     </div>
 
     <div class="content">
-        <h1>List Tata Tertib</h1>
+        <h1>List Sanksi</h1>
         <div class="table-container">
             <div class="search-bar">
                 <button class="btn-add" data-bs-toggle="modal" data-bs-target="#modalAddRule">+ Buat Sanksi Baru</button>
