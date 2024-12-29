@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Si Tertib - Data Dosen">
     <meta name="keywords" content="Data Dosen, Si Tertib">
-    <title>List Tata Tertib</title>
+    <title>List Sanksi</title>
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Bootstrap CSS -->
@@ -225,7 +225,7 @@
     </div>
 
     <div class="content">
-        <h1>List Tata Tertib</h1>
+        <h1>List Sanksi</h1>
         <div class="table-container">
             <div class="search-bar">
                 <button class="btn-add" data-bs-toggle="modal" data-bs-target="#modalAddRule">+ Buat Sanksi Baru</button>
